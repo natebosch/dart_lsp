@@ -1,0 +1,9 @@
+name: dart_language_server
+version: 0.0.1-dev
+description: >-
+  A shim on the analysis server following the language server protocol
+
+dependencies:
+  stream_channel: ^1.5.0
+  async: 1.11.3
+  json_rpc_2: 2.0.3

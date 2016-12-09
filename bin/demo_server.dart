@@ -8,10 +8,10 @@ import 'package:dart_language_server/dart_language_server.dart';
 
 final random = new Random();
 
-void main() async {
-  var logFile = new File('/tmp/wirelog.txt');
+Future main() async {
+  var log = new File('/tmp/wirelog.txt').openWrite();
   var channel = new StdIOStreamChannel();
-  var logged = wireLog(channel, logFile);
+  var logged = wireLog(channel, log);
   Timer timer;
   var server = new Peer(logged);
   server
@@ -32,6 +32,8 @@ void main() async {
     });
   await server.listen();
   timer?.cancel();
+  log.write('Done\n');
+  log.close();
 }
 
 Iterable<int> _randomInts(int count) sync* {

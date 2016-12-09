@@ -10,14 +10,8 @@ class StdIOStreamChannel extends StreamChannelMixin<String> {
   final Stream<String> stream;
 
   factory StdIOStreamChannel() {
-    var outSink = new StreamSinkTransformer.fromHandlers(
-        handleData: _serialize,
-        handleError: (_, __, ___) {
-          print('Error!!!');
-        },
-        handleDone: (_) {
-          print('Done!!!');
-        }).bind(stdout);
+    var outSink = new StreamSinkTransformer.fromHandlers(handleData: _serialize)
+        .bind(stdout);
     var inStream = new _Parser().stream;
     return new StdIOStreamChannel._(inStream, outSink);
   }

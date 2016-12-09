@@ -13,8 +13,15 @@ Future main() async {
   var channel = new StdIOStreamChannel();
   var logged = wireLog(channel, log);
   Timer timer;
+  bool hasShutdown = false;
   var server = new Peer(logged);
   server
+    ..registerMethod('shutdown', () {
+      hasShutdown = true;
+    })
+    ..registerMethod('exit', () {
+      server.close();
+    })
     ..registerMethod('random_ints', (params) {
       return _randomInts(params['count'].value).toList();
     })
@@ -32,6 +39,11 @@ Future main() async {
     });
   await server.listen();
   timer?.cancel();
+  if (hasShutdown) {
+    exitCode = 0;
+  } else {
+    exitCode = 1;
+  }
   log.write('Done\n');
   log.close();
 }

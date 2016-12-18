@@ -85,10 +85,8 @@ void _notifyDiagnostics(String uri, Peer server, IOSink log) {
       });
     }
   }
-  new Future.delayed(const Duration(milliseconds: 200), () {
-    server.sendNotification('textDocument/publishDiagnostics',
-        {'uri': uri, 'diagnostics': diagnostics});
-  });
+  server.sendNotification('textDocument/publishDiagnostics',
+      {'uri': uri, 'diagnostics': diagnostics});
 }
 
 Iterable<int> _randomInts(int count) sync* {

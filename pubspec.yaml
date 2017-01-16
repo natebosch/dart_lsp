@@ -4,6 +4,13 @@ description: >-
   A shim on the analysis server following the language server protocol
 
 dependencies:
-  stream_channel: ^1.5.0
   async: 1.11.3
   json_rpc_2: 2.0.3
+  path: 1.4.1
+  stream_channel: ^1.5.0
+
+dev_dependencies:
+  build: 0.6.3
+  build_runner: 0.1.1
+  yaml: 2.1.12
+  dart_style: 0.2.14

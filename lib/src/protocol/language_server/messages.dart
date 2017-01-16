@@ -3,7 +3,6 @@ class VersionedTextDocumentIdentifier {
   final String uri;
 
   VersionedTextDocumentIdentifier._(this.version, this.uri);
-
   factory VersionedTextDocumentIdentifier(
       void init(VersionedTextDocumentIdentifier$Builder b)) {
     var b = new VersionedTextDocumentIdentifier$Builder._();
@@ -19,6 +18,15 @@ class VersionedTextDocumentIdentifier {
   Map toJson() => {"version": version, "uri": uri};
 
   @override
+  bool operator ==(Object other) {
+    if (other is! VersionedTextDocumentIdentifier) return false;
+    var o = other as VersionedTextDocumentIdentifier;
+    if (version != o.version) return false;
+    if (uri != o.uri) return false;
+    return true;
+  }
+
+  @override
   int get hashCode {
     int hash = 0;
     for (var field in [version, uri]) {
@@ -29,15 +37,6 @@ class VersionedTextDocumentIdentifier {
     hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
     hash = hash ^ (hash >> 11);
     return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
-  }
-
-  @override
-  bool operator ==(Object other) {
-    if (other is! VersionedTextDocumentIdentifier) return false;
-    var o = other as VersionedTextDocumentIdentifier;
-    if (version != o.version) return false;
-    if (uri != o.uri) return false;
-    return true;
   }
 }
 
@@ -54,7 +53,6 @@ class TextDocumentContentChangeEvent {
   final Range range;
 
   TextDocumentContentChangeEvent._(this.rangeLength, this.text, this.range);
-
   factory TextDocumentContentChangeEvent(
       void init(TextDocumentContentChangeEvent$Builder b)) {
     var b = new TextDocumentContentChangeEvent$Builder._();
@@ -74,6 +72,16 @@ class TextDocumentContentChangeEvent {
       {"rangeLength": rangeLength, "text": text, "range": range.toJson()};
 
   @override
+  bool operator ==(Object other) {
+    if (other is! TextDocumentContentChangeEvent) return false;
+    var o = other as TextDocumentContentChangeEvent;
+    if (rangeLength != o.rangeLength) return false;
+    if (text != o.text) return false;
+    if (range != o.range) return false;
+    return true;
+  }
+
+  @override
   int get hashCode {
     int hash = 0;
     for (var field in [rangeLength, text, range]) {
@@ -84,16 +92,6 @@ class TextDocumentContentChangeEvent {
     hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
     hash = hash ^ (hash >> 11);
     return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
-  }
-
-  @override
-  bool operator ==(Object other) {
-    if (other is! TextDocumentContentChangeEvent) return false;
-    var o = other as TextDocumentContentChangeEvent;
-    if (rangeLength != o.rangeLength) return false;
-    if (text != o.text) return false;
-    if (range != o.range) return false;
-    return true;
   }
 }
 
@@ -110,7 +108,6 @@ class Position {
   final int line;
 
   Position._(this.character, this.line);
-
   factory Position(void init(Position$Builder b)) {
     var b = new Position$Builder._();
     init(b);
@@ -124,6 +121,15 @@ class Position {
   Map toJson() => {"character": character, "line": line};
 
   @override
+  bool operator ==(Object other) {
+    if (other is! Position) return false;
+    var o = other as Position;
+    if (character != o.character) return false;
+    if (line != o.line) return false;
+    return true;
+  }
+
+  @override
   int get hashCode {
     int hash = 0;
     for (var field in [character, line]) {
@@ -134,15 +140,6 @@ class Position {
     hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
     hash = hash ^ (hash >> 11);
     return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
-  }
-
-  @override
-  bool operator ==(Object other) {
-    if (other is! Position) return false;
-    var o = other as Position;
-    if (character != o.character) return false;
-    if (line != o.line) return false;
-    return true;
   }
 }
 
@@ -158,7 +155,6 @@ class Diagnostics {
   final String uri;
 
   Diagnostics._(this.diagnostics, this.uri);
-
   factory Diagnostics(void init(Diagnostics$Builder b)) {
     var b = new Diagnostics$Builder._();
     init(b);
@@ -177,6 +173,15 @@ class Diagnostics {
       {"diagnostics": diagnostics.map((v) => v.toJson()).toList(), "uri": uri};
 
   @override
+  bool operator ==(Object other) {
+    if (other is! Diagnostics) return false;
+    var o = other as Diagnostics;
+    if (diagnostics != o.diagnostics) return false;
+    if (uri != o.uri) return false;
+    return true;
+  }
+
+  @override
   int get hashCode {
     int hash = 0;
     for (var field in [diagnostics, uri]) {
@@ -187,15 +192,6 @@ class Diagnostics {
     hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
     hash = hash ^ (hash >> 11);
     return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
-  }
-
-  @override
-  bool operator ==(Object other) {
-    if (other is! Diagnostics) return false;
-    var o = other as Diagnostics;
-    if (diagnostics != o.diagnostics) return false;
-    if (uri != o.uri) return false;
-    return true;
   }
 }
 
@@ -210,7 +206,6 @@ class TextDocumentIdentifier {
   final String uri;
 
   TextDocumentIdentifier._(this.uri);
-
   factory TextDocumentIdentifier(void init(TextDocumentIdentifier$Builder b)) {
     var b = new TextDocumentIdentifier$Builder._();
     init(b);
@@ -224,6 +219,14 @@ class TextDocumentIdentifier {
   Map toJson() => {"uri": uri};
 
   @override
+  bool operator ==(Object other) {
+    if (other is! TextDocumentIdentifier) return false;
+    var o = other as TextDocumentIdentifier;
+    if (uri != o.uri) return false;
+    return true;
+  }
+
+  @override
   int get hashCode {
     int hash = 0;
     for (var field in [uri]) {
@@ -234,14 +237,6 @@ class TextDocumentIdentifier {
     hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
     hash = hash ^ (hash >> 11);
     return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
-  }
-
-  @override
-  bool operator ==(Object other) {
-    if (other is! TextDocumentIdentifier) return false;
-    var o = other as TextDocumentIdentifier;
-    if (uri != o.uri) return false;
-    return true;
   }
 }
 
@@ -256,7 +251,6 @@ class Range {
   final Position start;
 
   Range._(this.end, this.start);
-
   factory Range(void init(Range$Builder b)) {
     var b = new Range$Builder._();
     init(b);
@@ -272,6 +266,15 @@ class Range {
   Map toJson() => {"end": end.toJson(), "start": start.toJson()};
 
   @override
+  bool operator ==(Object other) {
+    if (other is! Range) return false;
+    var o = other as Range;
+    if (end != o.end) return false;
+    if (start != o.start) return false;
+    return true;
+  }
+
+  @override
   int get hashCode {
     int hash = 0;
     for (var field in [end, start]) {
@@ -282,15 +285,6 @@ class Range {
     hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
     hash = hash ^ (hash >> 11);
     return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
-  }
-
-  @override
-  bool operator ==(Object other) {
-    if (other is! Range) return false;
-    var o = other as Range;
-    if (end != o.end) return false;
-    if (start != o.start) return false;
-    return true;
   }
 }
 
@@ -309,7 +303,6 @@ class Diagnostic {
   final dynamic code;
 
   Diagnostic._(this.source, this.range, this.severity, this.message, this.code);
-
   factory Diagnostic(void init(Diagnostic$Builder b)) {
     var b = new Diagnostic$Builder._();
     init(b);
@@ -332,6 +325,18 @@ class Diagnostic {
       };
 
   @override
+  bool operator ==(Object other) {
+    if (other is! Diagnostic) return false;
+    var o = other as Diagnostic;
+    if (source != o.source) return false;
+    if (range != o.range) return false;
+    if (severity != o.severity) return false;
+    if (message != o.message) return false;
+    if (code != o.code) return false;
+    return true;
+  }
+
+  @override
   int get hashCode {
     int hash = 0;
     for (var field in [source, range, severity, message, code]) {
@@ -342,18 +347,6 @@ class Diagnostic {
     hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
     hash = hash ^ (hash >> 11);
     return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
-  }
-
-  @override
-  bool operator ==(Object other) {
-    if (other is! Diagnostic) return false;
-    var o = other as Diagnostic;
-    if (source != o.source) return false;
-    if (range != o.range) return false;
-    if (severity != o.severity) return false;
-    if (message != o.message) return false;
-    if (code != o.code) return false;
-    return true;
   }
 }
 
@@ -374,7 +367,6 @@ class TextDocumentItem {
   final String uri;
 
   TextDocumentItem._(this.version, this.text, this.languageId, this.uri);
-
   factory TextDocumentItem(void init(TextDocumentItem$Builder b)) {
     var b = new TextDocumentItem$Builder._();
     init(b);
@@ -391,6 +383,17 @@ class TextDocumentItem {
       {"version": version, "text": text, "languageId": languageId, "uri": uri};
 
   @override
+  bool operator ==(Object other) {
+    if (other is! TextDocumentItem) return false;
+    var o = other as TextDocumentItem;
+    if (version != o.version) return false;
+    if (text != o.text) return false;
+    if (languageId != o.languageId) return false;
+    if (uri != o.uri) return false;
+    return true;
+  }
+
+  @override
   int get hashCode {
     int hash = 0;
     for (var field in [version, text, languageId, uri]) {
@@ -401,17 +404,6 @@ class TextDocumentItem {
     hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
     hash = hash ^ (hash >> 11);
     return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
-  }
-
-  @override
-  bool operator ==(Object other) {
-    if (other is! TextDocumentItem) return false;
-    var o = other as TextDocumentItem;
-    if (version != o.version) return false;
-    if (text != o.text) return false;
-    if (languageId != o.languageId) return false;
-    if (uri != o.uri) return false;
-    return true;
   }
 }
 

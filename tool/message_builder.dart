@@ -30,10 +30,35 @@ Description _parseDescription(String name, Map params) {
     return new EnumType(
         name, params['wireType'], _parseEnumValues(params['enumValues']));
   }
+  if (params.containsKey('subclassBy')) {
+    return _parseSubclassedMessage(name, params);
+  }
   var fields = params.containsKey('fields')
       ? _parseFields(params['fields'])
       : _parseFields(params);
   return new Message(name, fields);
+}
+
+Description _parseSubclassedMessage(String name, Map params) {
+  var parentField = params['subclassBy'];
+  var subclasses = <Message>[];
+  var subclassSelections = <String, String>{};
+  var descriptions = params['subclasses'];
+  for (var subclass in descriptions.keys) {
+    var description = descriptions[subclass];
+    var fields = {};
+    if (description.containsKey('fields')) {
+      fields.addAll(description['fields']);
+    }
+    var parentFieldToken = description['selectOn'] is String
+        ? '"${description['selectOn']}"'
+        : '${description.selectOn}';
+    subclasses.add(new Message(subclass, _parseFields(fields), name,
+        parentField.keys.single, parentFieldToken));
+    subclassSelections[parentFieldToken] = subclass;
+  }
+  return new SubclassedMessage(
+      name, subclasses, parentField.keys.single, subclassSelections);
 }
 
 Iterable<EnumValue> _parseEnumValues(Map values) =>
@@ -92,39 +117,74 @@ class EnumValue {
   String get wireId => (wireValue is String) ? '"$wireValue"' : '$wireValue';
 }
 
+class SubclassedMessage implements Description {
+  final String name;
+  final List<Message> subclasses;
+  final String subclassBy;
+  final Map<String, String> subclassSelections;
+  SubclassedMessage(
+      this.name, this.subclasses, this.subclassBy, this.subclassSelections);
+
+  @override
+  String get implementation {
+    var selection = new StringBuffer();
+    for (var key in subclassSelections.keys) {
+      var ctor = 'new ${subclassSelections[key]}.fromJson(params)';
+      selection.writeln('if (selectBy == $key) return $ctor;');
+    }
+    return '''
+  abstract class $name {
+    factory $name.fromJson(Map params) {
+      var selectBy = params["$subclassBy"];
+      $selection
+      throw new ArgumentError('Could not match $name for \$selectBy');
+    }
+    Map toJson();
+  }
+
+  ${subclasses.map((c) => c.implementation).join('\n')}
+  ''';
+  }
+}
+
 class Message implements Description {
   final String name;
   final List<Field> fields;
-  Message(this.name, this.fields);
+  final String parent;
+  final String parentField;
+  final String parentFieldToken;
+  Message(this.name, this.fields,
+      [this.parent, this.parentField, this.parentFieldToken]);
+
+  Iterable<String> get _fieldNames => fields.map((f) => f.name);
+
+  String get _builderName => '$name\$Builder';
 
   @override
   String get implementation {
     final finalDeclarations = fields.map((f) => 'final ${f.declaration}');
-    final fieldNames = fields.map((f) => f.name);
-    final equalityChecks =
-        fields.map((f) => 'if(${f.name} != o.${f.name}) return false;');
-    var builderName = '$name\$Builder';
+    var implementStatement = parent == null ? '' : 'implements $parent';
+    final parentFieldInitializer =
+        parentField == null ? '' : 'final $parentField = $parentFieldToken;';
+    final parentFieldJson =
+        parentField == null ? '' : '"$parentField": $parentFieldToken,';
     return '''
-  class $name {
+  class $name $implementStatement {
+    $parentFieldInitializer
     ${finalDeclarations.join('\n')}
 
-    $name._(${fieldNames.map((f) => 'this.$f').join(',')});
+    $_ctors
 
-    factory $name(void init($builderName b)) {
-      var b = new $builderName._();
-      init(b);
-      return new $name._(${fieldNames.map((f) => 'b.$f').join(', ')});
-    }
+    Map toJson() => {$parentFieldJson
+      ${fields.map((f) => f.toJson).join(', ')}};
 
-    factory $name.fromJson(Map params) =>
-      new $name._(${fields.map((f) => f.fromParams).join(', ')});
-
-    Map toJson() => {${fields.map((f) => f.toJson).join(', ')}};
+    @override
+    $_equality
 
     @override
     int get hashCode {
       int hash = 0;
-      for(var field in [${fieldNames.join(', ')}]) {
+      for(var field in [${_fieldNames.join(', ')}]) {
         hash = 0x1fffffff & (hash + field.hashCode);
         hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
         hash ^= hash >> 6;
@@ -134,22 +194,48 @@ class Message implements Description {
       return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
     }
 
-    @override
+  }
+
+  class $_builderName {
+    ${fields.map((f) => f.declaration).join('\n')}
+
+    $_builderName._();
+  }
+  ''';
+  }
+
+  String get _equality {
+    if (fields.isEmpty) {
+      return 'bool operator==(Object other) => other is $name;';
+    }
+    final equalityChecks =
+        fields.map((f) => 'if(${f.name} != o.${f.name}) return false;');
+    return '''
     bool operator==(Object other) {
       if(other is! $name) return false;
       var o = other as $name;
       ${equalityChecks.join('\n')}
       return true;
     }
+    ''';
   }
 
-  class $builderName {
-    ${fields.map((f) => f.declaration).join('\n')}
+  String get _ctors => fields.isNotEmpty
+      ? '''
+    $name._(${_fieldNames.map((f) => 'this.$f').join(',')});
+    factory $name(void init($_builderName b)) {
+      var b = new $_builderName._();
+      init(b);
+      return new $name._(${_fieldNames.map((f) => 'b.$f').join(', ')});
+    }
 
-    $builderName._();
-  }
-  ''';
-  }
+    factory $name.fromJson(Map params) =>
+      new $name._(${fields.map((f) => f.fromParams).join(', ')});
+    '''
+      : '''
+      const $name();
+      const $name.fromJson([_]);
+    ''';
 }
 
 class Field {

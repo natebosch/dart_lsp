@@ -5,7 +5,7 @@ AnalysisErrors:
 
 AnalysisError:
   severity: AnalysisErrorSeverity
-  type: String #enum AnalysisErrorType
+  type: AnalysisErrorType
   location: Location
   message: String
   correction: String
@@ -37,3 +37,25 @@ AnalysisErrorType:
     syntacticError: SYNTACTIC_ERROR
     todo: TODO
   wireType: String
+
+ContentOverlayUpdate:
+  subclassBy:
+    type: String
+  subclasses:
+    AddContentOverlay:
+      selectOn: add
+      fields:
+        content: String
+    ChangeContentOverlay:
+      selectOn: change
+      fields:
+        edits:
+          listType: SourceEdit
+    RemoveContentOverlay:
+      selectOn: remove
+
+SourceEdit:
+  offset: int
+  length: int
+  replacement: String
+  id: String

@@ -6,6 +6,7 @@ description: >-
 dependencies:
   async: 1.11.3
   json_rpc_2: 2.0.3
+  logging: 0.11.3
   path: 1.4.1
   stream_channel: ^1.5.0
 

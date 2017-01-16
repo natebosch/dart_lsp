@@ -14,7 +14,7 @@ class MessageBuilder implements Builder {
     var descriptions = loadYaml(buildStep.input.stringContents);
     var result = new StringBuffer();
     for (var name in descriptions.keys) {
-      result.write(_classFor(name, descriptions[name]));
+      result.write(_parseDescription(name, descriptions[name]).implementation);
     }
     var formatter = new DartFormatter();
     buildStep.writeAsString(new Asset(
@@ -23,19 +23,21 @@ class MessageBuilder implements Builder {
   }
 }
 
-String _classFor(String name, Map params) {
-  final message = _parseMessage(name, params);
-  return message.implementation;
-}
-
 const _primitives = const ['String', 'int', 'bool', 'dynamic'];
 
-Message _parseMessage(String name, Map params) {
+Description _parseDescription(String name, Map params) {
+  if (params.containsKey('enumValues')) {
+    return new EnumType(
+        name, params['wireType'], _parseEnumValues(params['enumValues']));
+  }
   var fields = params.containsKey('fields')
       ? _parseFields(params['fields'])
       : _parseFields(params);
   return new Message(name, fields);
 }
+
+Iterable<EnumValue> _parseEnumValues(Map values) =>
+    values.keys.map((name) => new EnumValue(name, values[name]));
 
 Iterable<Field> _parseFields(Map fields) =>
     fields.keys.map((name) => new Field(name, _parseFieldType(fields[name])));
@@ -53,11 +55,49 @@ FieldType _parseFieldType(dynamic /*String|Map*/ field) {
   throw 'Unhandled field type [$field]';
 }
 
-class Message {
+class Description {
+  String get implementation;
+}
+
+class EnumType implements Description {
+  final String name;
+  final String wireType;
+  final List<EnumValue> values;
+  EnumType(this.name, this.wireType, this.values);
+  @override
+  String get implementation {
+    var instantiations =
+        values.map((v) => '${v.name} = const $name._(${v.wireId});');
+    return '''
+  class $name {
+    ${instantiations.map((i) => 'static const $i').join('\n')}
+    final $wireType value;
+    const $name._(this.value);
+    factory $name.fromJson($wireType value) {
+      const values = const {
+        ${values.map((v) => '${v.wireId}: $name.${v.name}').join(',\n')}
+      };
+      return values[value];
+    }
+    $wireType toJson() => value;
+  }
+  ''';
+  }
+}
+
+class EnumValue {
+  final String name;
+  final dynamic /*String|int*/ wireValue;
+  EnumValue(this.name, this.wireValue);
+  String get wireId => (wireValue is String) ? '"$wireValue"' : '$wireValue';
+}
+
+class Message implements Description {
   final String name;
   final List<Field> fields;
   Message(this.name, this.fields);
 
+  @override
   String get implementation {
     final finalDeclarations = fields.map((f) => 'final ${f.declaration}');
     final fieldNames = fields.map((f) => f.name);

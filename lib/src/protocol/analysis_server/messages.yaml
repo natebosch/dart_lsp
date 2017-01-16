@@ -1,0 +1,39 @@
+AnalysisErrors:
+  file: String
+  errors:
+    listType: AnalysisError
+
+AnalysisError:
+  severity: AnalysisErrorSeverity
+  type: String #enum AnalysisErrorType
+  location: Location
+  message: String
+  correction: String
+  code: String
+  hasFix: bool
+
+Location:
+  file: String
+  offset: int
+  length: int
+  startLine: int
+  startColumn: int
+
+AnalysisErrorSeverity:
+  enumValues:
+    info: INFO
+    warning: WARNING
+    error: ERROR
+  wireType: String
+
+AnalysisErrorType:
+  enumValues:
+    checkedModeCompileTimeError: CHECKED_MODE_COMPILE_TIME_ERROR
+    compileTimeError: COMPILE_TYPE_ERROR
+    hint: HINT
+    lint: LINT
+    staticTypeWarning: STATIC_TYPE_WARNING
+    staticWarning: STATIC_WARNING
+    syntacticError: SYNTACTIC_ERROR
+    todo: TODO
+  wireType: String

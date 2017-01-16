@@ -1,0 +1,37 @@
+TextDocumentItem:
+  uri: String
+  text: String
+  languageId: String
+  version: int
+
+TextDocumentIdentifier:
+  uri: String
+
+VersionedTextDocumentIdentifier:
+  uri: String
+  version: int
+
+TextDocumentContentChangeEvent:
+  range: Range
+  rangeLength: int
+  text: String
+
+Range:
+  start: Position
+  end: Position
+
+Position:
+  line: int
+  character: int
+
+Diagnostics:
+  uri: String
+  diagnostics:
+    listType: Diagnostic
+
+Diagnostic:
+  range: Range
+  severity: int
+  code: dynamic
+  source: String
+  message: String

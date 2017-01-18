@@ -14,7 +14,7 @@ Future main() async {
     });
     var log = new Logger('main');
     log.info('Starting');
-    var shim = await startShimmedServer();
+    var shim = await startShimmedServer('/tmp/analyzer_wirelog.txt');
     await new StdIOLanguageServer.start(shim, '/tmp/lsp_wirelog.txt').onDone;
   }, onError: (e) {
     errorLog.write('Error direct! $e\n');

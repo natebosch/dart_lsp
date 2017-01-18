@@ -13,8 +13,14 @@ class MessageBuilder implements Builder {
   Future build(BuildStep buildStep) async {
     var descriptions = loadYaml(buildStep.input.stringContents);
     var result = new StringBuffer();
+    var hasList = false;
     for (var name in descriptions.keys) {
-      result.write(_parseDescription(name, descriptions[name]).implementation);
+      var description = _parseDescription(name, descriptions[name]);
+      if (description.hasListField) hasList = true;
+      result.write(description.implementation);
+    }
+    if (hasList) {
+      result.write(_deepEquals);
     }
     var formatter = new DartFormatter();
     buildStep.writeAsString(new Asset(
@@ -22,6 +28,21 @@ class MessageBuilder implements Builder {
         formatter.format(result.toString())));
   }
 }
+
+const _deepEquals = '''
+_deepEquals(dynamic left, dynamic right) {
+  if (left is List && right is List) {
+    var leftLength = left.length;
+    var rightLength = right.length;
+    if (leftLength != rightLength) return false;
+    for(int i = 0; i < leftLength; i++) {
+      if(!_deepEquals(left[i], right[i])) return false;
+    }
+    return true;
+  }
+  return left == right;
+}
+''';
 
 const _primitives = const ['String', 'int', 'bool', 'dynamic'];
 
@@ -82,6 +103,7 @@ FieldType _parseFieldType(dynamic /*String|Map*/ field) {
 
 class Description {
   String get implementation;
+  bool get hasListField;
 }
 
 class EnumType implements Description {
@@ -89,6 +111,9 @@ class EnumType implements Description {
   final String wireType;
   final List<EnumValue> values;
   EnumType(this.name, this.wireType, this.values);
+  @override
+  bool get hasListField => false;
+
   @override
   String get implementation {
     var instantiations =
@@ -126,6 +151,9 @@ class SubclassedMessage implements Description {
       this.name, this.subclasses, this.subclassBy, this.subclassSelections);
 
   @override
+  bool get hasListField => subclasses.any((m) => m.hasListField);
+
+  @override
   String get implementation {
     var selection = new StringBuffer();
     for (var key in subclassSelections.keys) {
@@ -159,6 +187,9 @@ class Message implements Description {
   Iterable<String> get _fieldNames => fields.map((f) => f.name);
 
   String get _builderName => '$name\$Builder';
+
+  @override
+  bool get hasListField => fields.any((f) => f.type is ListFieldType);
 
   @override
   String get implementation {
@@ -209,7 +240,7 @@ class Message implements Description {
       return 'bool operator==(Object other) => other is $name;';
     }
     final equalityChecks =
-        fields.map((f) => 'if(${f.name} != o.${f.name}) return false;');
+        fields.map((f) => 'if(${f.equalityCheck('o')}) return false;');
     return '''
     bool operator==(Object other) {
       if(other is! $name) return false;
@@ -249,6 +280,9 @@ class Field {
   }
 
   String get declaration => '${type.declaration} $name;';
+
+  String equalityCheck(String other) =>
+      type.equalityCheck(name, '$other.$name');
 }
 
 abstract class FieldType {
@@ -256,19 +290,28 @@ abstract class FieldType {
   String fromParams(String name);
   String get declaration;
   bool get isPrimitive;
+  String equalityCheck(String leftToken, String rightToken);
 }
 
 class PrimitiveFieldType implements FieldType {
   final String name;
   PrimitiveFieldType(this.name);
+
   @override
   String get toJsonSuffix => '';
+
   @override
   String fromParams(String fieldValue) => fieldValue;
+
   @override
   String get declaration => '$name';
+
   @override
   bool get isPrimitive => true;
+
+  @override
+  bool equalityCheck(String leftToken, String rightToken) =>
+      '$leftToken != $rightToken';
 }
 
 class MessageFieldType extends FieldType {
@@ -286,6 +329,10 @@ class MessageFieldType extends FieldType {
 
   @override
   bool get isPrimitive => false;
+
+  @override
+  String equalityCheck(String leftToken, String rightToken) =>
+      '$leftToken != $rightToken';
 }
 
 class ListFieldType extends FieldType {
@@ -309,4 +356,8 @@ class ListFieldType extends FieldType {
 
   @override
   bool get isPrimitive => typeArgument.isPrimitive;
+
+  @override
+  String equalityCheck(String leftToken, String rightToken) =>
+      '!_deepEquals($leftToken, $rightToken)';
 }

@@ -176,7 +176,7 @@ class Diagnostics {
   bool operator ==(Object other) {
     if (other is! Diagnostics) return false;
     var o = other as Diagnostics;
-    if (diagnostics != o.diagnostics) return false;
+    if (!_deepEquals(diagnostics, o.diagnostics)) return false;
     if (uri != o.uri) return false;
     return true;
   }
@@ -414,4 +414,17 @@ class TextDocumentItem$Builder {
   String uri;
 
   TextDocumentItem$Builder._();
+}
+
+_deepEquals(dynamic left, dynamic right) {
+  if (left is List && right is List) {
+    var leftLength = left.length;
+    var rightLength = right.length;
+    if (leftLength != rightLength) return false;
+    for (int i = 0; i < leftLength; i++) {
+      if (!_deepEquals(left[i], right[i])) return false;
+    }
+    return true;
+  }
+  return left == right;
 }

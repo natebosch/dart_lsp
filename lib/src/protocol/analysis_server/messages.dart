@@ -22,7 +22,7 @@ class AnalysisErrors {
   bool operator ==(Object other) {
     if (other is! AnalysisErrors) return false;
     var o = other as AnalysisErrors;
-    if (errors != o.errors) return false;
+    if (!_deepEquals(errors, o.errors)) return false;
     if (file != o.file) return false;
     return true;
   }
@@ -228,7 +228,7 @@ class ChangeContentOverlay implements ContentOverlayUpdate {
   bool operator ==(Object other) {
     if (other is! ChangeContentOverlay) return false;
     var o = other as ChangeContentOverlay;
-    if (edits != o.edits) return false;
+    if (!_deepEquals(edits, o.edits)) return false;
     return true;
   }
 
@@ -447,4 +447,17 @@ class AnalysisError$Builder {
   String code;
 
   AnalysisError$Builder._();
+}
+
+_deepEquals(dynamic left, dynamic right) {
+  if (left is List && right is List) {
+    var leftLength = left.length;
+    var rightLength = right.length;
+    if (leftLength != rightLength) return false;
+    for (int i = 0; i < leftLength; i++) {
+      if (!_deepEquals(left[i], right[i])) return false;
+    }
+    return true;
+  }
+  return left == right;
 }

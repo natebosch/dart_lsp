@@ -19,8 +19,9 @@ dependencies:
 dev_dependencies:
   build: ^0.6.3
   build_runner: ^0.1.1
-  yaml: ^2.1.12
   dart_style: ^0.2.14
+  test: ^0.12.18
+  yaml: ^2.1.12
 
 executables:
   dart_language_server: dart_language_server

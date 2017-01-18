@@ -7,6 +7,7 @@ import 'protocol/analysis_server/interface.dart';
 import 'protocol/analysis_server/messages.dart';
 import 'protocol/language_server/interface.dart';
 import 'protocol/language_server/messages.dart';
+import 'utils/async.dart';
 
 Future<LanguageServer> startShimmedServer([String wirelogPath]) async {
   var client = await SubprocessAnalysisServer.start(wirelogPath);
@@ -76,8 +77,9 @@ class AnalysisServerAdapter implements LanguageServer {
   }
 
   @override
-  Stream<Diagnostics> get diagnostics =>
-      _server.analysisErrors.map(_toDiagnostics);
+  Stream<Diagnostics> get diagnostics => _server.analysisErrors
+      .transform(distinctUntilChanged())
+      .map(_toDiagnostics);
 }
 
 Diagnostics _toDiagnostics(AnalysisErrors errors) => new Diagnostics((b) => b

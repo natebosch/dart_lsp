@@ -59,3 +59,84 @@ SourceEdit:
   length: int
   replacement: String
   id: String
+
+CompletionRequest:
+  file: String
+  offset: int
+
+CompletionResults:
+  id: String
+  replacementOffset: int
+  replacementLength: int
+  results:
+    listType: CompletionSuggestion
+  isLast: bool
+
+CompletionSuggestion:
+  kind: CompletionSuggestionKind
+  relevance: int
+  completion: String
+  selectionOffset: int
+  selectionLength: int
+  isDeprecated: bool
+  isPotential: bool
+  docSummary: String
+  docComplete: String
+  declaringType: String
+  element: Element
+  returnType: String
+  parameterNames:
+    listType: String
+  parameterTypes:
+    listType: String
+  requiredParameterCount: int
+  hasNamedParameters: bool
+  parameterName: String
+  paramterType: String
+  importUri: String
+
+CompletionSuggestionKind:
+  enumValues:
+    argumentList: ARGUMENT_LIST
+    import: IMPORT
+    identifier: IDENTIFIER
+    invocation: INVOCATION
+    keyword: KEYWORD
+    namedArgument: NAMED_ARGUMENT
+    optionalArgument: OPTIONAL_ARGUMENT
+    parameter: PARAMETER
+  wireType: String
+
+Element:
+  kind: ElementKind
+  name: String
+  location: Location
+  flags: int
+  parameters: String
+  returnType: String
+  typeParameters: String
+
+ElementKind:
+  enumValues:
+    classElement: CLASS
+    classTypeAlias: CLASS_TYPE_ALIAS
+    compilationUnit: COMPILATION_UNIT
+    constructor: CONSTRUCTOR
+    enumElement: ENUM
+    enumConstant: ENUM_CONSTANT
+    field: FIELD
+    file: FILE
+    function: FUNCTION
+    functionTypeAlias: FUNCTION_TYPE_ALIAS
+    getter: GETTER
+    label: LABEL
+    library: LIBRARY
+    localVariable: LOCAL_VARIABLE
+    method: METHOD
+    parameter: PARAMETER
+    prefix: PREFIX
+    setter: SETTER
+    topLevelVariable: TOP_LEVEL_VARIABLE
+    typeParameter: TYPE_PARAMETER
+    unknown: UNKNOWN
+  wireType: String

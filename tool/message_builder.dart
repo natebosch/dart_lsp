@@ -121,15 +121,15 @@ class EnumType implements Description {
     return '''
   class $name {
     ${instantiations.map((i) => 'static const $i').join('\n')}
-    final $wireType value;
-    const $name._(this.value);
+    final $wireType _value;
+    const $name._(this._value);
     factory $name.fromJson($wireType value) {
       const values = const {
         ${values.map((v) => '${v.wireId}: $name.${v.name}').join(',\n')}
       };
       return values[value];
     }
-    $wireType toJson() => value;
+    $wireType toJson() => _value;
   }
   ''';
   }

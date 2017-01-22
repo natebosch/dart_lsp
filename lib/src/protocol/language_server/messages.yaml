@@ -35,3 +35,65 @@ Diagnostic:
   code: dynamic
   source: String
   message: String
+
+TextDocumentPositionParams:
+  textDocument: TextDocumentIdentifier
+  position: Position
+
+CompletionList:
+  isIncomplete: bool
+  items:
+    listType: CompletionItem
+
+CompletionItem:
+  label: String
+  kind: CompletionItemKind
+  detail: String
+  documentation: String
+  sortText: String
+  filterText: String
+  insertText: String
+  insertTextFormat: InsertTextFormat
+  textEdit: TextEdit
+  additionalTextEdits:
+    listType: TextEdit
+  command: Command
+  data: dynamic
+
+CompletionItemKind:
+  enumValues:
+    text: 1
+    method: 2
+    function: 3
+    constructor: 4
+    field: 5
+    variable: 6
+    classKind: 7
+    interface: 8
+    module: 9
+    property: 10
+    unit: 11
+    value: 12
+    enumKind: 13
+    keyword: 14
+    snippet: 15
+    color: 16
+    file: 17
+    reference: 18
+  wireType: int
+
+InsertTextFormat:
+  enumValues:
+    plainText: 1
+    snippet: 2
+  wireType: int
+
+TextEdit:
+  range: Range
+  newText: String
+
+Command:
+  title: String
+  command: String
+  arguments:
+    listType: dynamic

@@ -101,7 +101,7 @@ FieldType _parseFieldType(dynamic /*String|Map*/ field) {
   throw 'Unhandled field type [$field]';
 }
 
-class Description {
+abstract class Description {
   String get implementation;
   bool get hasListField;
 }
@@ -310,7 +310,7 @@ class PrimitiveFieldType implements FieldType {
   bool get isPrimitive => true;
 
   @override
-  bool equalityCheck(String leftToken, String rightToken) =>
+  String equalityCheck(String leftToken, String rightToken) =>
       '$leftToken != $rightToken';
 }
 

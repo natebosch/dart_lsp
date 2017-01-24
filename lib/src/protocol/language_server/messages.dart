@@ -313,89 +313,94 @@ class TextDocumentItem$Builder {
 
 class CompletionItem {
   final TextEdit textEdit;
+  final Range range;
+  final CompletionItemKind kind;
+  final String documentation;
+  final String insertText;
+  final InsertTextFormat insertTextFormat;
+  final Command command;
   final String sortText;
   final dynamic data;
   final String filterText;
   final String detail;
-  final CompletionItemKind kind;
   final List<TextEdit> additionalTextEdits;
-  final String documentation;
   final String label;
-  final String insertText;
-  final Command command;
-  final InsertTextFormat insertTextFormat;
 
   CompletionItem._(
       this.textEdit,
+      this.range,
+      this.kind,
+      this.documentation,
+      this.insertText,
+      this.insertTextFormat,
+      this.command,
       this.sortText,
       this.data,
       this.filterText,
       this.detail,
-      this.kind,
       this.additionalTextEdits,
-      this.documentation,
-      this.label,
-      this.insertText,
-      this.command,
-      this.insertTextFormat);
+      this.label);
   factory CompletionItem(void init(CompletionItem$Builder b)) {
     var b = new CompletionItem$Builder._();
     init(b);
     return new CompletionItem._(
         b.textEdit,
+        b.range,
+        b.kind,
+        b.documentation,
+        b.insertText,
+        b.insertTextFormat,
+        b.command,
         b.sortText,
         b.data,
         b.filterText,
         b.detail,
-        b.kind,
         b.additionalTextEdits,
-        b.documentation,
-        b.label,
-        b.insertText,
-        b.command,
-        b.insertTextFormat);
+        b.label);
   }
 
   factory CompletionItem.fromJson(Map params) => new CompletionItem._(
       params.containsKey("textEdit")
           ? new TextEdit.fromJson(params["textEdit"])
           : null,
+      params.containsKey("range") ? new Range.fromJson(params["range"]) : null,
+      params.containsKey("kind")
+          ? new CompletionItemKind.fromJson(params["kind"])
+          : null,
+      params.containsKey("documentation") ? params["documentation"] : null,
+      params.containsKey("insertText") ? params["insertText"] : null,
+      params.containsKey("insertTextFormat")
+          ? new InsertTextFormat.fromJson(params["insertTextFormat"])
+          : null,
+      params.containsKey("command")
+          ? new Command.fromJson(params["command"])
+          : null,
       params.containsKey("sortText") ? params["sortText"] : null,
       params.containsKey("data") ? params["data"] : null,
       params.containsKey("filterText") ? params["filterText"] : null,
       params.containsKey("detail") ? params["detail"] : null,
-      params.containsKey("kind")
-          ? new CompletionItemKind.fromJson(params["kind"])
-          : null,
       params.containsKey("additionalTextEdits")
           ? params["additionalTextEdits"]
               .map((v) => new TextEdit.fromJson(v))
               .toList()
           : null,
-      params.containsKey("documentation") ? params["documentation"] : null,
-      params.containsKey("label") ? params["label"] : null,
-      params.containsKey("insertText") ? params["insertText"] : null,
-      params.containsKey("command")
-          ? new Command.fromJson(params["command"])
-          : null,
-      params.containsKey("insertTextFormat")
-          ? new InsertTextFormat.fromJson(params["insertTextFormat"])
-          : null);
+      params.containsKey("label") ? params["label"] : null);
 
   Map toJson() => {
         "textEdit": textEdit.toJson(),
+        "range": range.toJson(),
+        "kind": kind.toJson(),
+        "documentation": documentation,
+        "insertText": insertText,
+        "insertTextFormat": insertTextFormat.toJson(),
+        "command": command.toJson(),
         "sortText": sortText,
         "data": data,
         "filterText": filterText,
         "detail": detail,
-        "kind": kind.toJson(),
         "additionalTextEdits":
             additionalTextEdits.map((v) => v.toJson()).toList(),
-        "documentation": documentation,
-        "label": label,
-        "insertText": insertText,
-        "command": command.toJson(),
-        "insertTextFormat": insertTextFormat.toJson()
+        "label": label
       };
 
   @override
@@ -403,17 +408,18 @@ class CompletionItem {
     if (other is! CompletionItem) return false;
     var o = other as CompletionItem;
     if (textEdit != o.textEdit) return false;
+    if (range != o.range) return false;
+    if (kind != o.kind) return false;
+    if (documentation != o.documentation) return false;
+    if (insertText != o.insertText) return false;
+    if (insertTextFormat != o.insertTextFormat) return false;
+    if (command != o.command) return false;
     if (sortText != o.sortText) return false;
     if (data != o.data) return false;
     if (filterText != o.filterText) return false;
     if (detail != o.detail) return false;
-    if (kind != o.kind) return false;
     if (!_deepEquals(additionalTextEdits, o.additionalTextEdits)) return false;
-    if (documentation != o.documentation) return false;
     if (label != o.label) return false;
-    if (insertText != o.insertText) return false;
-    if (command != o.command) return false;
-    if (insertTextFormat != o.insertTextFormat) return false;
     return true;
   }
 
@@ -422,17 +428,18 @@ class CompletionItem {
     int hash = 0;
     for (var field in [
       textEdit,
+      range,
+      kind,
+      documentation,
+      insertText,
+      insertTextFormat,
+      command,
       sortText,
       data,
       filterText,
       detail,
-      kind,
       additionalTextEdits,
-      documentation,
-      label,
-      insertText,
-      command,
-      insertTextFormat
+      label
     ]) {
       hash = 0x1fffffff & (hash + field.hashCode);
       hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
@@ -446,17 +453,18 @@ class CompletionItem {
 
 class CompletionItem$Builder {
   TextEdit textEdit;
+  Range range;
+  CompletionItemKind kind;
+  String documentation;
+  String insertText;
+  InsertTextFormat insertTextFormat;
+  Command command;
   String sortText;
   dynamic data;
   String filterText;
   String detail;
-  CompletionItemKind kind;
   List<TextEdit> additionalTextEdits;
-  String documentation;
   String label;
-  String insertText;
-  Command command;
-  InsertTextFormat insertTextFormat;
 
   CompletionItem$Builder._();
 }

@@ -11,7 +11,8 @@ class MessageBuilder implements Builder {
 
   @override
   Future build(BuildStep buildStep) async {
-    var descriptions = loadYaml(buildStep.input.stringContents);
+    var descriptions =
+        loadYaml(await buildStep.readAsString(buildStep.inputId));
     var result = new StringBuffer();
     var hasList = false;
     for (var name in descriptions.keys) {
@@ -23,9 +24,8 @@ class MessageBuilder implements Builder {
       result.write(_deepEquals);
     }
     var formatter = new DartFormatter();
-    buildStep.writeAsString(new Asset(
-        buildStep.input.id.changeExtension('.dart'),
-        formatter.format(result.toString())));
+    buildStep.writeAsString(buildStep.inputId.changeExtension('.dart'),
+        formatter.format(result.toString()));
   }
 }
 

@@ -1,3 +1,113 @@
+class AnalysisErrors {
+  final List<AnalysisError> errors;
+  final String file;
+
+  AnalysisErrors._(this.errors, this.file);
+  factory AnalysisErrors(void init(AnalysisErrors$Builder b)) {
+    var b = new AnalysisErrors$Builder._();
+    init(b);
+    return new AnalysisErrors._(b.errors, b.file);
+  }
+
+  factory AnalysisErrors.fromJson(Map params) => new AnalysisErrors._(
+      params.containsKey("errors")
+          ? params["errors"].map((v) => new AnalysisError.fromJson(v)).toList()
+          : null,
+      params.containsKey("file") ? params["file"] : null);
+
+  Map toJson() =>
+      {"errors": errors.map((v) => v.toJson()).toList(), "file": file};
+
+  @override
+  bool operator ==(Object other) {
+    if (other is! AnalysisErrors) return false;
+    var o = other as AnalysisErrors;
+    if (!_deepEquals(errors, o.errors)) return false;
+    if (file != o.file) return false;
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    int hash = 0;
+    for (var field in [errors, file]) {
+      hash = 0x1fffffff & (hash + field.hashCode);
+      hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
+      hash ^= hash >> 6;
+    }
+    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
+    hash = hash ^ (hash >> 11);
+    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
+  }
+}
+
+class AnalysisErrors$Builder {
+  List<AnalysisError> errors;
+  String file;
+
+  AnalysisErrors$Builder._();
+}
+
+class SourceEdit {
+  final int length;
+  final String id;
+  final String replacement;
+  final int offset;
+
+  SourceEdit._(this.length, this.id, this.replacement, this.offset);
+  factory SourceEdit(void init(SourceEdit$Builder b)) {
+    var b = new SourceEdit$Builder._();
+    init(b);
+    return new SourceEdit._(b.length, b.id, b.replacement, b.offset);
+  }
+
+  factory SourceEdit.fromJson(Map params) => new SourceEdit._(
+      params.containsKey("length") ? params["length"] : null,
+      params.containsKey("id") ? params["id"] : null,
+      params.containsKey("replacement") ? params["replacement"] : null,
+      params.containsKey("offset") ? params["offset"] : null);
+
+  Map toJson() => {
+        "length": length,
+        "id": id,
+        "replacement": replacement,
+        "offset": offset
+      };
+
+  @override
+  bool operator ==(Object other) {
+    if (other is! SourceEdit) return false;
+    var o = other as SourceEdit;
+    if (length != o.length) return false;
+    if (id != o.id) return false;
+    if (replacement != o.replacement) return false;
+    if (offset != o.offset) return false;
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    int hash = 0;
+    for (var field in [length, id, replacement, offset]) {
+      hash = 0x1fffffff & (hash + field.hashCode);
+      hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
+      hash ^= hash >> 6;
+    }
+    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
+    hash = hash ^ (hash >> 11);
+    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
+  }
+}
+
+class SourceEdit$Builder {
+  int length;
+  String id;
+  String replacement;
+  int offset;
+
+  SourceEdit$Builder._();
+}
+
 class CompletionResults {
   final int replacementOffset;
   final String id;
@@ -79,23 +189,6 @@ class CompletionResults$Builder {
   CompletionResults$Builder._();
 }
 
-class AnalysisErrorSeverity {
-  static const info = const AnalysisErrorSeverity._("INFO");
-  static const error = const AnalysisErrorSeverity._("ERROR");
-  static const warning = const AnalysisErrorSeverity._("WARNING");
-  final String _value;
-  const AnalysisErrorSeverity._(this._value);
-  factory AnalysisErrorSeverity.fromJson(String value) {
-    const values = const {
-      "INFO": AnalysisErrorSeverity.info,
-      "ERROR": AnalysisErrorSeverity.error,
-      "WARNING": AnalysisErrorSeverity.warning
-    };
-    return values[value];
-  }
-  String toJson() => _value;
-}
-
 class ElementKind {
   static const localVariable = const ElementKind._("LOCAL_VARIABLE");
   static const function = const ElementKind._("FUNCTION");
@@ -147,6 +240,208 @@ class ElementKind {
     return values[value];
   }
   String toJson() => _value;
+}
+
+class AnalysisErrorSeverity {
+  static const info = const AnalysisErrorSeverity._("INFO");
+  static const error = const AnalysisErrorSeverity._("ERROR");
+  static const warning = const AnalysisErrorSeverity._("WARNING");
+  final String _value;
+  const AnalysisErrorSeverity._(this._value);
+  factory AnalysisErrorSeverity.fromJson(String value) {
+    const values = const {
+      "INFO": AnalysisErrorSeverity.info,
+      "ERROR": AnalysisErrorSeverity.error,
+      "WARNING": AnalysisErrorSeverity.warning
+    };
+    return values[value];
+  }
+  String toJson() => _value;
+}
+
+class Element {
+  final Location location;
+  final int flags;
+  final String name;
+  final String typeParameters;
+  final String parameters;
+  final ElementKind kind;
+  final String returnType;
+
+  Element._(this.location, this.flags, this.name, this.typeParameters,
+      this.parameters, this.kind, this.returnType);
+  factory Element(void init(Element$Builder b)) {
+    var b = new Element$Builder._();
+    init(b);
+    return new Element._(b.location, b.flags, b.name, b.typeParameters,
+        b.parameters, b.kind, b.returnType);
+  }
+
+  factory Element.fromJson(Map params) => new Element._(
+      params.containsKey("location")
+          ? new Location.fromJson(params["location"])
+          : null,
+      params.containsKey("flags") ? params["flags"] : null,
+      params.containsKey("name") ? params["name"] : null,
+      params.containsKey("typeParameters") ? params["typeParameters"] : null,
+      params.containsKey("parameters") ? params["parameters"] : null,
+      params.containsKey("kind")
+          ? new ElementKind.fromJson(params["kind"])
+          : null,
+      params.containsKey("returnType") ? params["returnType"] : null);
+
+  Map toJson() => {
+        "location": location.toJson(),
+        "flags": flags,
+        "name": name,
+        "typeParameters": typeParameters,
+        "parameters": parameters,
+        "kind": kind.toJson(),
+        "returnType": returnType
+      };
+
+  @override
+  bool operator ==(Object other) {
+    if (other is! Element) return false;
+    var o = other as Element;
+    if (location != o.location) return false;
+    if (flags != o.flags) return false;
+    if (name != o.name) return false;
+    if (typeParameters != o.typeParameters) return false;
+    if (parameters != o.parameters) return false;
+    if (kind != o.kind) return false;
+    if (returnType != o.returnType) return false;
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    int hash = 0;
+    for (var field in [
+      location,
+      flags,
+      name,
+      typeParameters,
+      parameters,
+      kind,
+      returnType
+    ]) {
+      hash = 0x1fffffff & (hash + field.hashCode);
+      hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
+      hash ^= hash >> 6;
+    }
+    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
+    hash = hash ^ (hash >> 11);
+    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
+  }
+}
+
+class Element$Builder {
+  Location location;
+  int flags;
+  String name;
+  String typeParameters;
+  String parameters;
+  ElementKind kind;
+  String returnType;
+
+  Element$Builder._();
+}
+
+class CompletionSuggestionKind {
+  static const keyword = const CompletionSuggestionKind._("KEYWORD");
+  static const optionalArgument =
+      const CompletionSuggestionKind._("OPTIONAL_ARGUMENT");
+  static const argumentList = const CompletionSuggestionKind._("ARGUMENT_LIST");
+  static const import = const CompletionSuggestionKind._("IMPORT");
+  static const parameter = const CompletionSuggestionKind._("PARAMETER");
+  static const identifier = const CompletionSuggestionKind._("IDENTIFIER");
+  static const invocation = const CompletionSuggestionKind._("INVOCATION");
+  static const namedArgument =
+      const CompletionSuggestionKind._("NAMED_ARGUMENT");
+  final String _value;
+  const CompletionSuggestionKind._(this._value);
+  factory CompletionSuggestionKind.fromJson(String value) {
+    const values = const {
+      "KEYWORD": CompletionSuggestionKind.keyword,
+      "OPTIONAL_ARGUMENT": CompletionSuggestionKind.optionalArgument,
+      "ARGUMENT_LIST": CompletionSuggestionKind.argumentList,
+      "IMPORT": CompletionSuggestionKind.import,
+      "PARAMETER": CompletionSuggestionKind.parameter,
+      "IDENTIFIER": CompletionSuggestionKind.identifier,
+      "INVOCATION": CompletionSuggestionKind.invocation,
+      "NAMED_ARGUMENT": CompletionSuggestionKind.namedArgument
+    };
+    return values[value];
+  }
+  String toJson() => _value;
+}
+
+class Location {
+  final int length;
+  final String file;
+  final int startLine;
+  final int startColumn;
+  final int offset;
+
+  Location._(
+      this.length, this.file, this.startLine, this.startColumn, this.offset);
+  factory Location(void init(Location$Builder b)) {
+    var b = new Location$Builder._();
+    init(b);
+    return new Location._(
+        b.length, b.file, b.startLine, b.startColumn, b.offset);
+  }
+
+  factory Location.fromJson(Map params) => new Location._(
+      params.containsKey("length") ? params["length"] : null,
+      params.containsKey("file") ? params["file"] : null,
+      params.containsKey("startLine") ? params["startLine"] : null,
+      params.containsKey("startColumn") ? params["startColumn"] : null,
+      params.containsKey("offset") ? params["offset"] : null);
+
+  Map toJson() => {
+        "length": length,
+        "file": file,
+        "startLine": startLine,
+        "startColumn": startColumn,
+        "offset": offset
+      };
+
+  @override
+  bool operator ==(Object other) {
+    if (other is! Location) return false;
+    var o = other as Location;
+    if (length != o.length) return false;
+    if (file != o.file) return false;
+    if (startLine != o.startLine) return false;
+    if (startColumn != o.startColumn) return false;
+    if (offset != o.offset) return false;
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    int hash = 0;
+    for (var field in [length, file, startLine, startColumn, offset]) {
+      hash = 0x1fffffff & (hash + field.hashCode);
+      hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
+      hash ^= hash >> 6;
+    }
+    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
+    hash = hash ^ (hash >> 11);
+    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
+  }
+}
+
+class Location$Builder {
+  int length;
+  String file;
+  int startLine;
+  int startColumn;
+  int offset;
+
+  Location$Builder._();
 }
 
 abstract class ContentOverlayUpdate {
@@ -282,133 +577,6 @@ class RemoveContentOverlay implements ContentOverlayUpdate {
 
 class RemoveContentOverlay$Builder {
   RemoveContentOverlay$Builder._();
-}
-
-class Location {
-  final int length;
-  final String file;
-  final int startLine;
-  final int startColumn;
-  final int offset;
-
-  Location._(
-      this.length, this.file, this.startLine, this.startColumn, this.offset);
-  factory Location(void init(Location$Builder b)) {
-    var b = new Location$Builder._();
-    init(b);
-    return new Location._(
-        b.length, b.file, b.startLine, b.startColumn, b.offset);
-  }
-
-  factory Location.fromJson(Map params) => new Location._(
-      params.containsKey("length") ? params["length"] : null,
-      params.containsKey("file") ? params["file"] : null,
-      params.containsKey("startLine") ? params["startLine"] : null,
-      params.containsKey("startColumn") ? params["startColumn"] : null,
-      params.containsKey("offset") ? params["offset"] : null);
-
-  Map toJson() => {
-        "length": length,
-        "file": file,
-        "startLine": startLine,
-        "startColumn": startColumn,
-        "offset": offset
-      };
-
-  @override
-  bool operator ==(Object other) {
-    if (other is! Location) return false;
-    var o = other as Location;
-    if (length != o.length) return false;
-    if (file != o.file) return false;
-    if (startLine != o.startLine) return false;
-    if (startColumn != o.startColumn) return false;
-    if (offset != o.offset) return false;
-    return true;
-  }
-
-  @override
-  int get hashCode {
-    int hash = 0;
-    for (var field in [length, file, startLine, startColumn, offset]) {
-      hash = 0x1fffffff & (hash + field.hashCode);
-      hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
-      hash ^= hash >> 6;
-    }
-    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
-    hash = hash ^ (hash >> 11);
-    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
-  }
-}
-
-class Location$Builder {
-  int length;
-  String file;
-  int startLine;
-  int startColumn;
-  int offset;
-
-  Location$Builder._();
-}
-
-class CompletionSuggestionKind {
-  static const keyword = const CompletionSuggestionKind._("KEYWORD");
-  static const optionalArgument =
-      const CompletionSuggestionKind._("OPTIONAL_ARGUMENT");
-  static const argumentList = const CompletionSuggestionKind._("ARGUMENT_LIST");
-  static const import = const CompletionSuggestionKind._("IMPORT");
-  static const parameter = const CompletionSuggestionKind._("PARAMETER");
-  static const identifier = const CompletionSuggestionKind._("IDENTIFIER");
-  static const invocation = const CompletionSuggestionKind._("INVOCATION");
-  static const namedArgument =
-      const CompletionSuggestionKind._("NAMED_ARGUMENT");
-  final String _value;
-  const CompletionSuggestionKind._(this._value);
-  factory CompletionSuggestionKind.fromJson(String value) {
-    const values = const {
-      "KEYWORD": CompletionSuggestionKind.keyword,
-      "OPTIONAL_ARGUMENT": CompletionSuggestionKind.optionalArgument,
-      "ARGUMENT_LIST": CompletionSuggestionKind.argumentList,
-      "IMPORT": CompletionSuggestionKind.import,
-      "PARAMETER": CompletionSuggestionKind.parameter,
-      "IDENTIFIER": CompletionSuggestionKind.identifier,
-      "INVOCATION": CompletionSuggestionKind.invocation,
-      "NAMED_ARGUMENT": CompletionSuggestionKind.namedArgument
-    };
-    return values[value];
-  }
-  String toJson() => _value;
-}
-
-class AnalysisErrorType {
-  static const staticWarning = const AnalysisErrorType._("STATIC_WARNING");
-  static const lint = const AnalysisErrorType._("LINT");
-  static const syntacticError = const AnalysisErrorType._("SYNTACTIC_ERROR");
-  static const checkedModeCompileTimeError =
-      const AnalysisErrorType._("CHECKED_MODE_COMPILE_TIME_ERROR");
-  static const compileTimeError =
-      const AnalysisErrorType._("COMPILE_TYPE_ERROR");
-  static const staticTypeWarning =
-      const AnalysisErrorType._("STATIC_TYPE_WARNING");
-  static const hint = const AnalysisErrorType._("HINT");
-  static const todo = const AnalysisErrorType._("TODO");
-  final String _value;
-  const AnalysisErrorType._(this._value);
-  factory AnalysisErrorType.fromJson(String value) {
-    const values = const {
-      "STATIC_WARNING": AnalysisErrorType.staticWarning,
-      "LINT": AnalysisErrorType.lint,
-      "SYNTACTIC_ERROR": AnalysisErrorType.syntacticError,
-      "CHECKED_MODE_COMPILE_TIME_ERROR":
-          AnalysisErrorType.checkedModeCompileTimeError,
-      "COMPILE_TYPE_ERROR": AnalysisErrorType.compileTimeError,
-      "STATIC_TYPE_WARNING": AnalysisErrorType.staticTypeWarning,
-      "HINT": AnalysisErrorType.hint,
-      "TODO": AnalysisErrorType.todo
-    };
-    return values[value];
-  }
-  String toJson() => _value;
 }
 
 class CompletionSuggestion {
@@ -613,6 +781,37 @@ class CompletionSuggestion$Builder {
   CompletionSuggestion$Builder._();
 }
 
+class AnalysisErrorType {
+  static const staticWarning = const AnalysisErrorType._("STATIC_WARNING");
+  static const lint = const AnalysisErrorType._("LINT");
+  static const syntacticError = const AnalysisErrorType._("SYNTACTIC_ERROR");
+  static const checkedModeCompileTimeError =
+      const AnalysisErrorType._("CHECKED_MODE_COMPILE_TIME_ERROR");
+  static const compileTimeError =
+      const AnalysisErrorType._("COMPILE_TYPE_ERROR");
+  static const staticTypeWarning =
+      const AnalysisErrorType._("STATIC_TYPE_WARNING");
+  static const hint = const AnalysisErrorType._("HINT");
+  static const todo = const AnalysisErrorType._("TODO");
+  final String _value;
+  const AnalysisErrorType._(this._value);
+  factory AnalysisErrorType.fromJson(String value) {
+    const values = const {
+      "STATIC_WARNING": AnalysisErrorType.staticWarning,
+      "LINT": AnalysisErrorType.lint,
+      "SYNTACTIC_ERROR": AnalysisErrorType.syntacticError,
+      "CHECKED_MODE_COMPILE_TIME_ERROR":
+          AnalysisErrorType.checkedModeCompileTimeError,
+      "COMPILE_TYPE_ERROR": AnalysisErrorType.compileTimeError,
+      "STATIC_TYPE_WARNING": AnalysisErrorType.staticTypeWarning,
+      "HINT": AnalysisErrorType.hint,
+      "TODO": AnalysisErrorType.todo
+    };
+    return values[value];
+  }
+  String toJson() => _value;
+}
+
 class AnalysisError {
   final Location location;
   final String message;
@@ -702,252 +901,6 @@ class AnalysisError$Builder {
   String code;
 
   AnalysisError$Builder._();
-}
-
-class AnalysisErrors {
-  final List<AnalysisError> errors;
-  final String file;
-
-  AnalysisErrors._(this.errors, this.file);
-  factory AnalysisErrors(void init(AnalysisErrors$Builder b)) {
-    var b = new AnalysisErrors$Builder._();
-    init(b);
-    return new AnalysisErrors._(b.errors, b.file);
-  }
-
-  factory AnalysisErrors.fromJson(Map params) => new AnalysisErrors._(
-      params.containsKey("errors")
-          ? params["errors"].map((v) => new AnalysisError.fromJson(v)).toList()
-          : null,
-      params.containsKey("file") ? params["file"] : null);
-
-  Map toJson() =>
-      {"errors": errors.map((v) => v.toJson()).toList(), "file": file};
-
-  @override
-  bool operator ==(Object other) {
-    if (other is! AnalysisErrors) return false;
-    var o = other as AnalysisErrors;
-    if (!_deepEquals(errors, o.errors)) return false;
-    if (file != o.file) return false;
-    return true;
-  }
-
-  @override
-  int get hashCode {
-    int hash = 0;
-    for (var field in [errors, file]) {
-      hash = 0x1fffffff & (hash + field.hashCode);
-      hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
-      hash ^= hash >> 6;
-    }
-    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
-    hash = hash ^ (hash >> 11);
-    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
-  }
-}
-
-class AnalysisErrors$Builder {
-  List<AnalysisError> errors;
-  String file;
-
-  AnalysisErrors$Builder._();
-}
-
-class SourceEdit {
-  final int length;
-  final String id;
-  final String replacement;
-  final int offset;
-
-  SourceEdit._(this.length, this.id, this.replacement, this.offset);
-  factory SourceEdit(void init(SourceEdit$Builder b)) {
-    var b = new SourceEdit$Builder._();
-    init(b);
-    return new SourceEdit._(b.length, b.id, b.replacement, b.offset);
-  }
-
-  factory SourceEdit.fromJson(Map params) => new SourceEdit._(
-      params.containsKey("length") ? params["length"] : null,
-      params.containsKey("id") ? params["id"] : null,
-      params.containsKey("replacement") ? params["replacement"] : null,
-      params.containsKey("offset") ? params["offset"] : null);
-
-  Map toJson() => {
-        "length": length,
-        "id": id,
-        "replacement": replacement,
-        "offset": offset
-      };
-
-  @override
-  bool operator ==(Object other) {
-    if (other is! SourceEdit) return false;
-    var o = other as SourceEdit;
-    if (length != o.length) return false;
-    if (id != o.id) return false;
-    if (replacement != o.replacement) return false;
-    if (offset != o.offset) return false;
-    return true;
-  }
-
-  @override
-  int get hashCode {
-    int hash = 0;
-    for (var field in [length, id, replacement, offset]) {
-      hash = 0x1fffffff & (hash + field.hashCode);
-      hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
-      hash ^= hash >> 6;
-    }
-    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
-    hash = hash ^ (hash >> 11);
-    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
-  }
-}
-
-class SourceEdit$Builder {
-  int length;
-  String id;
-  String replacement;
-  int offset;
-
-  SourceEdit$Builder._();
-}
-
-class CompletionRequest {
-  final String file;
-  final int offset;
-
-  CompletionRequest._(this.file, this.offset);
-  factory CompletionRequest(void init(CompletionRequest$Builder b)) {
-    var b = new CompletionRequest$Builder._();
-    init(b);
-    return new CompletionRequest._(b.file, b.offset);
-  }
-
-  factory CompletionRequest.fromJson(Map params) => new CompletionRequest._(
-      params.containsKey("file") ? params["file"] : null,
-      params.containsKey("offset") ? params["offset"] : null);
-
-  Map toJson() => {"file": file, "offset": offset};
-
-  @override
-  bool operator ==(Object other) {
-    if (other is! CompletionRequest) return false;
-    var o = other as CompletionRequest;
-    if (file != o.file) return false;
-    if (offset != o.offset) return false;
-    return true;
-  }
-
-  @override
-  int get hashCode {
-    int hash = 0;
-    for (var field in [file, offset]) {
-      hash = 0x1fffffff & (hash + field.hashCode);
-      hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
-      hash ^= hash >> 6;
-    }
-    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
-    hash = hash ^ (hash >> 11);
-    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
-  }
-}
-
-class CompletionRequest$Builder {
-  String file;
-  int offset;
-
-  CompletionRequest$Builder._();
-}
-
-class Element {
-  final Location location;
-  final int flags;
-  final String name;
-  final String typeParameters;
-  final String parameters;
-  final ElementKind kind;
-  final String returnType;
-
-  Element._(this.location, this.flags, this.name, this.typeParameters,
-      this.parameters, this.kind, this.returnType);
-  factory Element(void init(Element$Builder b)) {
-    var b = new Element$Builder._();
-    init(b);
-    return new Element._(b.location, b.flags, b.name, b.typeParameters,
-        b.parameters, b.kind, b.returnType);
-  }
-
-  factory Element.fromJson(Map params) => new Element._(
-      params.containsKey("location")
-          ? new Location.fromJson(params["location"])
-          : null,
-      params.containsKey("flags") ? params["flags"] : null,
-      params.containsKey("name") ? params["name"] : null,
-      params.containsKey("typeParameters") ? params["typeParameters"] : null,
-      params.containsKey("parameters") ? params["parameters"] : null,
-      params.containsKey("kind")
-          ? new ElementKind.fromJson(params["kind"])
-          : null,
-      params.containsKey("returnType") ? params["returnType"] : null);
-
-  Map toJson() => {
-        "location": location.toJson(),
-        "flags": flags,
-        "name": name,
-        "typeParameters": typeParameters,
-        "parameters": parameters,
-        "kind": kind.toJson(),
-        "returnType": returnType
-      };
-
-  @override
-  bool operator ==(Object other) {
-    if (other is! Element) return false;
-    var o = other as Element;
-    if (location != o.location) return false;
-    if (flags != o.flags) return false;
-    if (name != o.name) return false;
-    if (typeParameters != o.typeParameters) return false;
-    if (parameters != o.parameters) return false;
-    if (kind != o.kind) return false;
-    if (returnType != o.returnType) return false;
-    return true;
-  }
-
-  @override
-  int get hashCode {
-    int hash = 0;
-    for (var field in [
-      location,
-      flags,
-      name,
-      typeParameters,
-      parameters,
-      kind,
-      returnType
-    ]) {
-      hash = 0x1fffffff & (hash + field.hashCode);
-      hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
-      hash ^= hash >> 6;
-    }
-    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
-    hash = hash ^ (hash >> 11);
-    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
-  }
-}
-
-class Element$Builder {
-  Location location;
-  int flags;
-  String name;
-  String typeParameters;
-  String parameters;
-  ElementKind kind;
-  String returnType;
-
-  Element$Builder._();
 }
 
 _deepEquals(dynamic left, dynamic right) {

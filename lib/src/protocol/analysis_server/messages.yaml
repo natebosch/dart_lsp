@@ -60,10 +60,6 @@ SourceEdit:
   replacement: String
   id: String
 
-CompletionRequest:
-  file: String
-  offset: int
-
 CompletionResults:
   id: String
   replacementOffset: int

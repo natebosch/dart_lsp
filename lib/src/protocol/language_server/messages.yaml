@@ -36,10 +36,6 @@ Diagnostic:
   source: String
   message: String
 
-TextDocumentPositionParams:
-  textDocument: TextDocumentIdentifier
-  position: Position
-
 CompletionList:
   isIncomplete: bool
   items:

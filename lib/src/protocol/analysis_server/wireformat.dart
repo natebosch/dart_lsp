@@ -79,7 +79,7 @@ class RpcClient {
     if (message.containsKey('id')) {
       var id = message['id'];
       _log.fine('Completing request: $id');
-      _outstandingRequests[id].complete(message);
+      _outstandingRequests[id].complete(message['result']);
       _outstandingRequests.remove(id);
     } else {
       var event = message['event'];

@@ -27,14 +27,22 @@ class SubprocessAnalysisServer implements AnalysisServer {
   }
 
   void _notifications() {
-    _client.registerEventHandler('analysis.errors', (params) {
-      _analysisErrors.add(new AnalysisErrors.fromJson(params));
-    });
+    _client
+      ..registerEventHandler('analysis.errors', (params) {
+        _analysisErrors.add(new AnalysisErrors.fromJson(params));
+      })
+      ..registerEventHandler('completion.results', (params) {
+        _completionResults.add(new CompletionResults.fromJson(params));
+      });
   }
 
   @override
   Stream<AnalysisErrors> get analysisErrors => _analysisErrors.stream;
   final _analysisErrors = new StreamController<AnalysisErrors>();
+
+  @override
+  Stream<CompletionResults> get completionResults => _completionResults.stream;
+  final _completionResults = new StreamController<CompletionResults>();
 
   @override
   Future<Null> shutdown() async {
@@ -62,5 +70,12 @@ class SubprocessAnalysisServer implements AnalysisServer {
         new Map.fromIterable(files.keys, value: (file) => files[file].toJson());
     await _client
         .sendRequest('analysis.updateContent', {'files': serializable});
+  }
+
+  @override
+  Future<String> completionGetSuggestions(String file, int offset) async {
+    var result = await _client.sendRequest(
+        'completion.getSuggestions', {'file': file, 'offset': offset});
+    return result['id'];
   }
 }

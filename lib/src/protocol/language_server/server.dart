@@ -25,6 +25,7 @@ class StdIOLanguageServer {
     _lifecycleMethods(peer);
     _fileHandlingMethods(peer);
     _diagnosticNotifications(peer);
+    _completionMethods(peer);
 
     peer.listen();
 
@@ -71,5 +72,16 @@ class StdIOLanguageServer {
       peer.sendNotification(
           'textDocument/publishDiagnostics', diagnostics.toJson());
     });
+  }
+
+  void _completionMethods(Peer peer) {
+    peer
+      ..registerMethod('textDocument/completion', (params) async {
+        var documentId =
+            new TextDocumentIdentifier.fromJson(params['textDocument'].value);
+        var position = new Position.fromJson(params['position'].value);
+        return (await _server.textDocumentCompletion(documentId, position))
+            .toJson();
+      });
   }
 }

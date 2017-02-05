@@ -786,60 +786,6 @@ class Range$Builder {
   Range$Builder._();
 }
 
-class TextDocumentPositionParams {
-  final Position position;
-  final TextDocumentIdentifier textDocument;
-
-  TextDocumentPositionParams._(this.position, this.textDocument);
-  factory TextDocumentPositionParams(
-      void init(TextDocumentPositionParams$Builder b)) {
-    var b = new TextDocumentPositionParams$Builder._();
-    init(b);
-    return new TextDocumentPositionParams._(b.position, b.textDocument);
-  }
-
-  factory TextDocumentPositionParams.fromJson(Map params) =>
-      new TextDocumentPositionParams._(
-          params.containsKey("position")
-              ? new Position.fromJson(params["position"])
-              : null,
-          params.containsKey("textDocument")
-              ? new TextDocumentIdentifier.fromJson(params["textDocument"])
-              : null);
-
-  Map toJson() =>
-      {"position": position.toJson(), "textDocument": textDocument.toJson()};
-
-  @override
-  bool operator ==(Object other) {
-    if (other is! TextDocumentPositionParams) return false;
-    var o = other as TextDocumentPositionParams;
-    if (position != o.position) return false;
-    if (textDocument != o.textDocument) return false;
-    return true;
-  }
-
-  @override
-  int get hashCode {
-    int hash = 0;
-    for (var field in [position, textDocument]) {
-      hash = 0x1fffffff & (hash + field.hashCode);
-      hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
-      hash ^= hash >> 6;
-    }
-    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
-    hash = hash ^ (hash >> 11);
-    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
-  }
-}
-
-class TextDocumentPositionParams$Builder {
-  Position position;
-  TextDocumentIdentifier textDocument;
-
-  TextDocumentPositionParams$Builder._();
-}
-
 _deepEquals(dynamic left, dynamic right) {
   if (left is List && right is List) {
     var leftLength = left.length;

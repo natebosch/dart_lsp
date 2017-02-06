@@ -7,6 +7,7 @@ import 'package:logging/logging.dart';
 import 'package:stream_channel/stream_channel.dart';
 
 import '../../utils/wirelog.dart';
+import '../../utils/split_marker.dart';
 
 typedef void EventHandler(dynamic /*json serializable*/ params);
 
@@ -28,7 +29,7 @@ class RpcClient {
       sink.add(UTF8.encode(data));
     });
     var inStrings = utf8Transformer.bind(process.stdin);
-    var outStrings = process.stdout.map(UTF8.decode);
+    var outStrings = process.stdout.map(UTF8.decode).transform(splitMarker());
     var channel = new StreamChannel(outStrings, inStrings);
 
     if (wirelogPath != null) {

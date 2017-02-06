@@ -62,7 +62,7 @@ class TextEdit {
       params.containsKey("newText") ? params["newText"] : null,
       params.containsKey("range") ? new Range.fromJson(params["range"]) : null);
 
-  Map toJson() => {"newText": newText, "range": range.toJson()};
+  Map toJson() => {"newText": newText, "range": range?.toJson()};
 
   @override
   bool operator ==(Object other) {
@@ -112,7 +112,7 @@ class CompletionList {
       params.containsKey("isIncomplete") ? params["isIncomplete"] : null);
 
   Map toJson() => {
-        "items": items.map((v) => v.toJson()).toList(),
+        "items": items?.map((v) => v?.toJson())?.toList(),
         "isIncomplete": isIncomplete
       };
 
@@ -213,7 +213,7 @@ class Diagnostic {
 
   Map toJson() => {
         "source": source,
-        "range": range.toJson(),
+        "range": range?.toJson(),
         "severity": severity,
         "message": message,
         "code": code
@@ -387,19 +387,19 @@ class CompletionItem {
       params.containsKey("label") ? params["label"] : null);
 
   Map toJson() => {
-        "textEdit": textEdit.toJson(),
-        "range": range.toJson(),
-        "kind": kind.toJson(),
+        "textEdit": textEdit?.toJson(),
+        "range": range?.toJson(),
+        "kind": kind?.toJson(),
         "documentation": documentation,
         "insertText": insertText,
-        "insertTextFormat": insertTextFormat.toJson(),
-        "command": command.toJson(),
+        "insertTextFormat": insertTextFormat?.toJson(),
+        "command": command?.toJson(),
         "sortText": sortText,
         "data": data,
         "filterText": filterText,
         "detail": detail,
         "additionalTextEdits":
-            additionalTextEdits.map((v) => v.toJson()).toList(),
+            additionalTextEdits?.map((v) => v?.toJson())?.toList(),
         "label": label
       };
 
@@ -538,7 +538,7 @@ class TextDocumentContentChangeEvent {
               : null);
 
   Map toJson() =>
-      {"rangeLength": rangeLength, "text": text, "range": range.toJson()};
+      {"rangeLength": rangeLength, "text": text, "range": range?.toJson()};
 
   @override
   bool operator ==(Object other) {
@@ -591,8 +591,10 @@ class Diagnostics {
           : null,
       params.containsKey("uri") ? params["uri"] : null);
 
-  Map toJson() =>
-      {"diagnostics": diagnostics.map((v) => v.toJson()).toList(), "uri": uri};
+  Map toJson() => {
+        "diagnostics": diagnostics?.map((v) => v?.toJson())?.toList(),
+        "uri": uri
+      };
 
   @override
   bool operator ==(Object other) {
@@ -754,7 +756,7 @@ class Range {
           ? new Position.fromJson(params["start"])
           : null);
 
-  Map toJson() => {"end": end.toJson(), "start": start.toJson()};
+  Map toJson() => {"end": end?.toJson(), "start": start?.toJson()};
 
   @override
   bool operator ==(Object other) {

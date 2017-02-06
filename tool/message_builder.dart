@@ -319,7 +319,7 @@ class MessageFieldType extends FieldType {
   MessageFieldType(this.name);
 
   @override
-  String get toJsonSuffix => '.toJson()';
+  String get toJsonSuffix => '?.toJson()';
 
   @override
   String fromParams(String fieldValue) => 'new $name.fromJson($fieldValue)';
@@ -342,7 +342,7 @@ class ListFieldType extends FieldType {
   @override
   String get toJsonSuffix {
     if (typeArgument.isPrimitive) return '';
-    return '.map((v) => v${typeArgument.toJsonSuffix}).toList()';
+    return '?.map((v) => v${typeArgument.toJsonSuffix})?.toList()';
   }
 
   @override

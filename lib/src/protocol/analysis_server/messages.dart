@@ -16,7 +16,7 @@ class AnalysisErrors {
       params.containsKey("file") ? params["file"] : null);
 
   Map toJson() =>
-      {"errors": errors.map((v) => v.toJson()).toList(), "file": file};
+      {"errors": errors?.map((v) => v?.toJson())?.toList(), "file": file};
 
   @override
   bool operator ==(Object other) {
@@ -144,7 +144,7 @@ class CompletionResults {
         "id": id,
         "isLast": isLast,
         "replacementLength": replacementLength,
-        "results": results.map((v) => v.toJson()).toList()
+        "results": results?.map((v) => v?.toJson())?.toList()
       };
 
   @override
@@ -291,12 +291,12 @@ class Element {
       params.containsKey("returnType") ? params["returnType"] : null);
 
   Map toJson() => {
-        "location": location.toJson(),
+        "location": location?.toJson(),
         "flags": flags,
         "name": name,
         "typeParameters": typeParameters,
         "parameters": parameters,
-        "kind": kind.toJson(),
+        "kind": kind?.toJson(),
         "returnType": returnType
       };
 
@@ -474,7 +474,7 @@ class ChangeContentOverlay implements ContentOverlayUpdate {
           : null);
 
   Map toJson() =>
-      {"type": "change", "edits": edits.map((v) => v.toJson()).toList()};
+      {"type": "change", "edits": edits?.map((v) => v?.toJson())?.toList()};
 
   @override
   bool operator ==(Object other) {
@@ -679,7 +679,7 @@ class CompletionSuggestion {
         "parameterTypes": parameterTypes,
         "isPotential": isPotential,
         "importUri": importUri,
-        "kind": kind.toJson(),
+        "kind": kind?.toJson(),
         "selectionOffset": selectionOffset,
         "isDeprecated": isDeprecated,
         "parameterNames": parameterNames,
@@ -688,7 +688,7 @@ class CompletionSuggestion {
         "relevance": relevance,
         "requiredParameterCount": requiredParameterCount,
         "completion": completion,
-        "element": element.toJson(),
+        "element": element?.toJson(),
         "selectionLength": selectionLength,
         "parameterName": parameterName,
         "docSummary": docSummary,
@@ -846,12 +846,12 @@ class AnalysisError {
       params.containsKey("code") ? params["code"] : null);
 
   Map toJson() => {
-        "location": location.toJson(),
+        "location": location?.toJson(),
         "message": message,
         "correction": correction,
-        "type": type.toJson(),
+        "type": type?.toJson(),
         "hasFix": hasFix,
-        "severity": severity.toJson(),
+        "severity": severity?.toJson(),
         "code": code
       };
 

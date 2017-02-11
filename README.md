@@ -11,18 +11,22 @@ than it's [default][analysis server api].
 [dart analysis server]: https://github.com/dart-lang/sdk/tree/master/pkg/analysis_server
 [analysis server api]: https://goo.gl/02kGvm
 
-## Demo Server
-
-The file `bin/demo_server.dart` implements a language server which is mostly
-useful for testing integration against an editor. This server supports file
-handling and will send diagnostic errors wherever it sees the string `error` in
-a file.
-
 ## Dart Language Server
 
-The file `bin/dart_language_server.dart` implements a partial adapter of the
-analysis server following the language server protocol. This server supports
-file handling and forwards analysis errors as diagnostics.
+The executable `dart_language_server` implements a partial adapter of the
+analysis server following the language server protocol.
+
+### Features
+
+Support is working or planned for:
+
+- [ ] Initialize/Configuration calls (`initialize`, capabilities, etc)
+- [x] File tracking (open, change)
+- [x] Diagnostic notifications
+- [x] Completion suggestions
+- [ ] Jump to definition
+
+Support for further language server features is not planned.
 
 # Installing
 
@@ -30,3 +34,8 @@ file handling and forwards analysis errors as diagnostics.
 
 If you have the pub bin directory in your path (you should be warned during the
 previous command if not) the server can be run as `dart_language_server`.
+
+# A note on compatibility
+
+Development is done based on the protocol spec but not against a reference
+editor plugin - there are likely t be protocol bugs.

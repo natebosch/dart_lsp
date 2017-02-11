@@ -133,8 +133,10 @@ CompletionItem _toCompletionItem(List<String> lines,
     new CompletionItem((b) => b
       ..label = suggestion.completion
       ..kind = _completionKind(suggestion.kind)
-      ..range = rangeFromOffset(
-          lines, results.replacementOffset, results.replacementLength)
+      ..textEdit = new TextEdit((b) => b
+        ..newText = suggestion.completion
+        ..range = rangeFromOffset(
+            lines, results.replacementOffset, results.replacementLength))
       ..detail = suggestion.docSummary);
 
 Diagnostic _toDiagnostic(List<String> lines, AnalysisError error) =>

@@ -50,7 +50,6 @@ CompletionItem:
   filterText: String
   insertText: String
   insertTextFormat: InsertTextFormat
-  range: Range
   textEdit: TextEdit
   additionalTextEdits:
     listType: TextEdit

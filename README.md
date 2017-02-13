@@ -38,4 +38,4 @@ previous command if not) the server can be run as `dart_language_server`.
 # A note on compatibility
 
 Development is done based on the protocol spec but not against a reference
-editor plugin - there are likely t be protocol bugs.
+editor plugin - there are likely to be protocol bugs.

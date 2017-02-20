@@ -255,6 +255,53 @@ class Diagnostic$Builder {
   Diagnostic$Builder._();
 }
 
+class Location {
+  final Range range;
+  final String uri;
+
+  Location._(this.range, this.uri);
+  factory Location(void init(Location$Builder b)) {
+    var b = new Location$Builder._();
+    init(b);
+    return new Location._(b.range, b.uri);
+  }
+
+  factory Location.fromJson(Map params) => new Location._(
+      params.containsKey("range") ? new Range.fromJson(params["range"]) : null,
+      params.containsKey("uri") ? params["uri"] : null);
+
+  Map toJson() => {"range": range?.toJson(), "uri": uri};
+
+  @override
+  bool operator ==(Object other) {
+    if (other is! Location) return false;
+    var o = other as Location;
+    if (range != o.range) return false;
+    if (uri != o.uri) return false;
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    int hash = 0;
+    for (var field in [range, uri]) {
+      hash = 0x1fffffff & (hash + field.hashCode);
+      hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
+      hash ^= hash >> 6;
+    }
+    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
+    hash = hash ^ (hash >> 11);
+    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
+  }
+}
+
+class Location$Builder {
+  Range range;
+  String uri;
+
+  Location$Builder._();
+}
+
 class TextDocumentItem {
   final int version;
   final String text;

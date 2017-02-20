@@ -1,3 +1,7 @@
+# 0.0.3
+
+- Add support for GoToDefinition
+
 # 0.0.2
 
 - Add (almost entirely untested) support for completion suggestions.

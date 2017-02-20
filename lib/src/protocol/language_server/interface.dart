@@ -14,5 +14,7 @@ abstract class LanguageServer {
   void textDocumentDidClose(TextDocumentIdentifier documentId) {}
   Future<CompletionList> textDocumentCompletion(
       TextDocumentIdentifier documentId, Position position);
+  Future<Location> textDocumentDefinition(
+      TextDocumentIdentifier documentId, Position position);
   Stream<Diagnostics> get diagnostics;
 }

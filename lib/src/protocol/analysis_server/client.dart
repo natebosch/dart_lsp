@@ -78,4 +78,16 @@ class SubprocessAnalysisServer implements AnalysisServer {
         'completion.getSuggestions', {'file': file, 'offset': offset});
     return result['id'];
   }
+
+  @override
+  Future<NavigationResult> analysisGetNavigation(
+      String file, int offset, int length) async {
+    var result = await _client.sendRequest('analysis.getNavigation',
+        {'file': file, 'offset': offset, 'length': length});
+    return new NavigationResult((b) => b
+      ..files = result['files']
+      ..targets = result['targets'].map((t) => new NavigationTarget.fromJson(t))
+      ..regions =
+          result['regions'].map(((r) => new NavigationRegion.fromJson(r))));
+  }
 }

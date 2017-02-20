@@ -1,11 +1,12 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:path/path.dart' as p;
 
 import 'position_convert.dart';
 import 'protocol/analysis_server/client.dart';
 import 'protocol/analysis_server/interface.dart';
-import 'protocol/analysis_server/messages.dart';
+import 'protocol/analysis_server/messages.dart' hide Location;
 import 'protocol/language_server/interface.dart';
 import 'protocol/language_server/messages.dart';
 import 'utils/async.dart';
@@ -102,6 +103,23 @@ class AnalysisServerAdapter implements LanguageServer {
           .remove(id)
           .complete(_toCompletionList(_files[path], results));
     });
+  }
+
+  @override
+  Future<Location> textDocumentDefinition(
+      TextDocumentIdentifier documentId, Position position) async {
+    var path = Uri.parse(documentId.uri).path;
+    var offset = offsetFromPosition(_files[path], position);
+    var result = await _server.analysisGetNavigation(path, offset, 1);
+    var target = result.targets.first;
+    var targetFile = result.files[target.fileIndex];
+    if (!_files.containsKey(targetFile)) {
+      _files[targetFile] = new File(targetFile).readAsLinesSync();
+    }
+    return new Location((b) => b
+      ..uri = _toFileUri(targetFile)
+      ..range =
+          rangeFromOffset(_files[targetFile], target.offset, target.length));
   }
 
   @override

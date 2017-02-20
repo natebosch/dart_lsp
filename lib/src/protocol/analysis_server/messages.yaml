@@ -136,3 +136,25 @@ ElementKind:
     typeParameter: TYPE_PARAMETER
     unknown: UNKNOWN
   wireType: String
+
+NavigationResult:
+  files:
+    listType: String
+  targets:
+    listType: NavigationTarget
+  regions:
+    listType: NavigationRegion
+
+NavigationTarget:
+  kind: ElementKind
+  fileIndex: int
+  offset: int
+  length: int
+  startLine: int
+  startColumn: int
+
+NavigationRegion:
+  offset: int
+  length: int
+  targets:
+    listType: int

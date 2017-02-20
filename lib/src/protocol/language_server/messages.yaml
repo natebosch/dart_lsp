@@ -93,3 +93,7 @@ Command:
   command: String
   arguments:
     listType: dynamic
+
+Location:
+  uri: String
+  range: Range

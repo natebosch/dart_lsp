@@ -1,5 +1,5 @@
 import 'protocol/analysis_server/messages.dart';
-import 'protocol/language_server/messages.dart';
+import 'protocol/language_server/messages.dart' hide Location;
 
 int offsetFromPosition(List<String> lines, Position position) =>
     _offset(lines, position.line, position.character);

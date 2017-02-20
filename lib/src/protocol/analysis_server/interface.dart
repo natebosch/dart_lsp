@@ -9,6 +9,8 @@ abstract class AnalysisServer {
       [Map<String, String> packageRoots]) async {}
   Future<Null> updateContent(Map<String, ContentOverlayUpdate> files) async {}
   Future<String> completionGetSuggestions(String file, int offset);
+  Future<NavigationResult> analysisGetNavigation(
+      String file, int offset, int length);
 
   Stream<AnalysisErrors> get analysisErrors;
   Stream<CompletionResults> get completionResults;

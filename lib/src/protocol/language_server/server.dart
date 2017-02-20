@@ -82,6 +82,13 @@ class StdIOLanguageServer {
         var position = new Position.fromJson(params['position'].value);
         return (await _server.textDocumentCompletion(documentId, position))
             .toJson();
+      })
+      ..registerMethod('textDocument/definition', (params) async {
+        var documentId =
+            new TextDocumentIdentifier.fromJson(params['textDocument'].value);
+        var position = new Position.fromJson(params['position'].value);
+        return (await _server.textDocumentDefinition(documentId, position))
+            .toJson();
       });
   }
 }

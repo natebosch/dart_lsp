@@ -24,7 +24,7 @@ Support is working or planned for:
 - [x] File tracking (open, change)
 - [x] Diagnostic notifications
 - [x] Completion suggestions
-- [ ] Jump to definition
+- [x] Jump to definition
 
 Support for further language server features is not planned.
 

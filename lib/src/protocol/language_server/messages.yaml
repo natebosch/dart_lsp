@@ -97,3 +97,105 @@ Command:
 Location:
   uri: String
   range: Range
+
+DynamicRegistrationCapability:
+  dynamicRegistration: bool
+
+WorkspaceClientCapabilities:
+  applyEdit: bool
+  didChangeConfiguration: DynamicRegistrationCapability
+  didChangeWatchedFiles: DynamicRegistrationCapability
+  symbol: DynamicRegistrationCapability
+  executeCommand: DynamicRegistrationCapability
+
+SynchronizationCapabilities:
+  dynamicRegistration: bool
+  willSave: bool
+  willSaveWaitUntil: bool
+  didSave: bool
+
+CompletionItemCapabilities:
+  snippetSupport: bool
+
+CompletionCapabilities:
+  dynamicRegistration: bool
+  completionItem: CompletionItemCapabilities
+
+TextDocumentClientCapabilities:
+  synchronization: SynchronizationCapabilities
+  completion: CompletionCapabilities
+  hover: DynamicRegistrationCapability
+  references: DynamicRegistrationCapability
+  documentHighlight: DynamicRegistrationCapability
+  documentSymbol: DynamicRegistrationCapability
+  formatting: DynamicRegistrationCapability
+  onTypeFormatting: DynamicRegistrationCapability
+  definition: DynamicRegistrationCapability
+  codeAction: DynamicRegistrationCapability
+  codeLens: DynamicRegistrationCapability
+  documentLink: DynamicRegistrationCapability
+  rename: DynamicRegistrationCapability
+
+ClientCapabilities:
+  workspace: WorkspaceClientCapabilities
+  textDocument: TextDocumentClientCapabilities
+
+TextDocumentSyncKind:
+  enumValues:
+    none: 0
+    full: 1
+    incremental: 2
+  wireType: int
+
+CompletionOptions:
+  resolveProvider: bool
+  triggerCharacters:
+    listType: String
+
+SignatureHelpOptions:
+  triggerCharacters:
+    listType: String
+
+CodeLensOptions:
+  resolveProvider: bool
+
+DocumentOnTypeFormattingOptions:
+  firstTriggerCharacter: String
+  moreTriggerCharacter:
+    listType: String
+
+DocumentLinkOptions:
+  resolveProvider: bool
+
+ExecuteCommandOptions:
+  commands:
+    listType: String
+
+SaveOptions:
+  includeText: bool
+
+TextDocumentSyncOptions:
+  openClose: bool
+  change: TextDocumentSyncKind
+  willSave: bool
+  willSaveWaitUntil: bool
+  save: bool
+
+ServerCapabilities:
+  textDocumentSync: TextDocumentSyncOptions
+  hoverProvider: bool
+  completionProvider: CompletionOptions
+  signatureHelpProvider: SignatureHelpOptions
+  definitionProvider: bool
+  referencesProvider: bool
+  documentHighlightsProvider: bool
+  documentSymbolProvider: bool
+  workspaceSymbolProvider: bool
+  codeActionProvider: bool
+  codeLensProvider: bool
+  documentFormattingProvider: bool
+  documentRangeFormattingProvider: bool
+  documentOnTypeFormattingProvider: bool
+  renameProvider: bool
+  documentLinkProvider: DocumentLinkOptions
+  executeCommandProvider: ExecuteCommandOptions

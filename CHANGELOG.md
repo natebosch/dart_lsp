@@ -1,3 +1,7 @@
+# 0.0.4
+
+- Add the initialize method for better spec compliance
+
 # 0.0.3
 
 - Add support for GoToDefinition

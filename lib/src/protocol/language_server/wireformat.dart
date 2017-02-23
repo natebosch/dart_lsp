@@ -34,17 +34,12 @@ class _Parser {
   int _contentLength = -1;
 
   _Parser() {
-    stdin.lineMode = false;
     stdin.expand((bytes) => bytes).listen(_handleByte, onDone: () {
       _streamCtl.close();
     });
   }
 
   void _handleByte(int byte) {
-    if (byte == 4) {
-      _streamCtl.close();
-      return;
-    }
     _buffer.add(byte);
     if (_headerMode && _headerComplete) {
       _contentLength = _parseContentLength();

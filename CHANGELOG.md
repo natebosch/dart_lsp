@@ -1,3 +1,8 @@
+# 0.0.5-dev
+
+- Fix an error with sdk 1.22 where `lineMode` cannot be set on stdin when it is
+  a pipe
+
 # 0.0.4
 
 - Add the initialize method for better spec compliance

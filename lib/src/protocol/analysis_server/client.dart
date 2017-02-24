@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:path/path.dart' as p;
 
+import '../../logging/logs.dart';
 import 'interface.dart';
 import 'messages.dart';
 import 'wireformat.dart';
@@ -16,9 +17,9 @@ String get _analysisServer =>
 class SubprocessAnalysisServer implements AnalysisServer {
   final RpcClient _client;
 
-  static Future<AnalysisServer> start([String wirelogPath]) async {
+  static Future<AnalysisServer> start() async {
     var process = await Process.start(_dart, [_analysisServer]);
-    var client = new RpcClient('AnalysisServer', process, wirelogPath);
+    var client = new RpcClient('AnalysisServer', process, analyzerChannel);
     return new SubprocessAnalysisServer._(client);
   }
 

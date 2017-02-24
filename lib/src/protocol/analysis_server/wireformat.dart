@@ -6,7 +6,6 @@ import 'package:async/async.dart';
 import 'package:logging/logging.dart';
 import 'package:stream_channel/stream_channel.dart';
 
-import '../../utils/wirelog.dart';
 import '../../utils/split_marker.dart';
 
 typedef void EventHandler(dynamic /*json serializable*/ params);
@@ -23,7 +22,8 @@ class RpcClient {
 
   int _requestId = 0;
 
-  factory RpcClient(String name, Process process, [String wirelogPath]) {
+  factory RpcClient(String name, Process process,
+      [StreamChannelTransformer<String, String> wirelog]) {
     final utf8Transformer = new StreamSinkTransformer.fromHandlers(
         handleData: (String data, EventSink<List<int>> sink) {
       sink.add(UTF8.encode(data));
@@ -32,13 +32,8 @@ class RpcClient {
     var outStrings = process.stdout.map(UTF8.decode).transform(splitMarker());
     var channel = new StreamChannel(outStrings, inStrings);
 
-    if (wirelogPath != null) {
-      var channelLog = new File(wirelogPath).openWrite();
-      channel = wireLog(channel, channelLog);
-      process.exitCode.then((exitCode) {
-        channelLog.writeln('Analysis Server exited [$exitCode]');
-        channelLog.close();
-      });
+    if (wirelog != null) {
+      channel = wirelog.bind(channel);
     }
     return new RpcClient._(channel, new Logger('$name-rpc'));
   }

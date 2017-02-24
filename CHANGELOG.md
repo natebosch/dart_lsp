@@ -2,6 +2,8 @@
 
 - Fix an error with sdk 1.22 where `lineMode` cannot be set on stdin when it is
   a pipe
+- Separate logs by client. Log names are prefixed with client's directory and
+  pid
 
 # 0.0.4
 

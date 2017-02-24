@@ -1,25 +1,19 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:json_rpc_2/json_rpc_2.dart';
-import 'package:logging/logging.dart';
+import 'package:path/path.dart' as p;
 
-import '../../utils/wirelog.dart';
+import '../../logging/logs.dart';
 import 'interface.dart';
 import 'messages.dart';
 import 'wireformat.dart';
 
 class StdIOLanguageServer {
   final LanguageServer _server;
-  final _log = new Logger('StdIOLanguageServer');
 
-  StdIOLanguageServer.start(this._server, [String wirelogPath]) {
+  StdIOLanguageServer.start(this._server) {
     var channel = new StdIOStreamChannel();
-    IOSink channelLog;
-    if (wirelogPath != null) {
-      channelLog = new File(wirelogPath).openWrite();
-      channel = wireLog(channel, channelLog);
-    }
+    channel = lspChannel.bind(channel);
     var peer = new Peer(channel);
 
     _lifecycleMethods(peer);
@@ -28,13 +22,6 @@ class StdIOLanguageServer {
     _completionMethods(peer);
 
     peer.listen();
-
-    _server.onDone.catchError((e) {
-      channelLog?.writeln('Server failed: $e');
-    }).whenComplete(() {
-      channelLog?.writeln('Done');
-      channelLog?.close();
-    });
   }
 
   Future<Null> get onDone => _server.onDone;
@@ -47,7 +34,11 @@ class StdIOLanguageServer {
     peer
       ..registerMethod('initialize', (params) {
         _isInitialized = true;
-        _log.info('Initializing for pid ${params['processId'].value}');
+        var clientDir = p.basename(params['rootUri'].value);
+        var clientPid = params['processId'].value;
+        var clientName = '$clientDir-$clientPid';
+        var enableTrace = params['trace'].value == 'messages';
+        startLogging(clientName, enableTrace);
         return {'capabilities': _serverCapabilities.toJson()};
       })
       ..registerMethod('shutdown', _server.shutdown)

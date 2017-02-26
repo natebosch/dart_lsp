@@ -96,7 +96,7 @@ class StdIOLanguageServer {
             new TextDocumentIdentifier.fromJson(params['textDocument'].value);
         var position = new Position.fromJson(params['position'].value);
         return (await _server.textDocumentDefinition(documentId, position))
-            .toJson();
+            ?.toJson();
       });
   }
 }

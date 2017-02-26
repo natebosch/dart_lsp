@@ -111,6 +111,7 @@ class AnalysisServerAdapter implements LanguageServer {
     var path = Uri.parse(documentId.uri).path;
     var offset = offsetFromPosition(_files[path], position);
     var result = await _server.analysisGetNavigation(path, offset, 1);
+    if (result.targets.isEmpty) return null;
     var target = result.targets.first;
     var targetFile = result.files[target.fileIndex];
     if (!_files.containsKey(targetFile)) {

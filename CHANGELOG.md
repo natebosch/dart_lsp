@@ -4,6 +4,8 @@
   a pipe
 - Separate logs by client. Log names are prefixed with client's directory and
   pid
+- Fix a buf causing a stack trace when attempting to jump to a token with no
+  definition
 
 # 0.0.4
 

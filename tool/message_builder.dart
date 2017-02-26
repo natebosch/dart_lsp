@@ -15,7 +15,7 @@ class MessageBuilder implements Builder {
         loadYaml(await buildStep.readAsString(buildStep.inputId));
     var result = new StringBuffer();
     var hasList = false;
-    for (var name in descriptions.keys) {
+    for (var name in descriptions.keys.toList()..sort()) {
       var description = _parseDescription(name, descriptions[name]);
       if (description.hasListField) hasList = true;
       result.write(description.implementation);
@@ -65,7 +65,7 @@ Description _parseSubclassedMessage(String name, Map params) {
   var subclasses = <Message>[];
   var subclassSelections = <String, String>{};
   var descriptions = params['subclasses'];
-  for (var subclass in descriptions.keys) {
+  for (var subclass in descriptions.keys.toList()..sort()) {
     var description = descriptions[subclass];
     var fields = {};
     if (description.containsKey('fields')) {
@@ -82,11 +82,15 @@ Description _parseSubclassedMessage(String name, Map params) {
       name, subclasses, parentField.keys.single, subclassSelections);
 }
 
-Iterable<EnumValue> _parseEnumValues(Map values) =>
-    values.keys.map((name) => new EnumValue(name, values[name]));
+Iterable<EnumValue> _parseEnumValues(Map values) {
+  var names = values.keys.toList()..sort();
+  return names.map((name) => new EnumValue(name, values[name]));
+}
 
-Iterable<Field> _parseFields(Map fields) =>
-    fields.keys.map((name) => new Field(name, _parseFieldType(fields[name])));
+Iterable<Field> _parseFields(Map fields) {
+  var names = fields.keys.toList()..sort();
+  return names.map((name) => new Field(name, _parseFieldType(fields[name])));
+}
 
 FieldType _parseFieldType(dynamic /*String|Map*/ field) {
   if (field is String) {
@@ -109,7 +113,7 @@ abstract class Description {
 class EnumType implements Description {
   final String name;
   final String wireType;
-  final List<EnumValue> values;
+  final Iterable<EnumValue> values;
   EnumType(this.name, this.wireType, this.values);
   @override
   bool get hasListField => false;

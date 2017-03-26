@@ -6,6 +6,7 @@
   pid
 - Fix a buf causing a stack trace when attempting to jump to a token with no
   definition
+- Ignore updates to old file versions
 
 # 0.0.4
 

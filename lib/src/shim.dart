@@ -20,6 +20,7 @@ Future<LanguageServer> startShimmedServer() async {
 class AnalysisServerAdapter implements LanguageServer {
   final AnalysisServer _server;
   final _files = <String, List<String>>{};
+  final _fileVersions = <String, int>{};
 
   AnalysisServerAdapter(this._server) {
     _listeners();
@@ -53,6 +54,7 @@ class AnalysisServerAdapter implements LanguageServer {
   Future<Null> textDocumentDidOpen(TextDocumentItem document) async {
     var path = Uri.parse(document.uri).path;
     _files[path] = document.text.split('\n');
+    _fileVersions[path] = document.version;
     var directory = p.dirname(path);
     if (!_openDirectories.contains(directory)) {
       _openDirectories.add(directory);
@@ -68,7 +70,8 @@ class AnalysisServerAdapter implements LanguageServer {
   Future<Null> textDocumentDidChange(VersionedTextDocumentIdentifier documentId,
       List<TextDocumentContentChangeEvent> changes) async {
     var path = Uri.parse(documentId.uri).path;
-    // TODO: Assumes version is latest
+    if (_fileVersions[path] > documentId.version) return;
+    _fileVersions[path] = documentId.version;
     // TODO: Assumes the entire file is sent
     assert(changes.length == 1);
     _files[path] = changes.single.text.split('\n');

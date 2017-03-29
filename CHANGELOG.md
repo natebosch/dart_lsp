@@ -1,4 +1,4 @@
-# 0.0.5-dev
+# 0.0.5
 
 - Fix an error with sdk 1.22 where `lineMode` cannot be set on stdin when it is
   a pipe

@@ -1,3 +1,7 @@
+# 0.0.6
+
+- Fix a bug for clients which do not send a `trace` parameter to initialize call
+
 # 0.0.5
 
 - Fix an error with sdk 1.22 where `lineMode` cannot be set on stdin when it is

@@ -34,10 +34,10 @@ class StdIOLanguageServer {
     peer
       ..registerMethod('initialize', (params) {
         _isInitialized = true;
-        var clientDir = p.basename(params['rootUri'].value);
-        var clientPid = params['processId'].value;
+        var clientDir = p.basename(params['rootUri'].valueOr(''));
+        var clientPid = params['processId'].valueOr(0);
         var clientName = '$clientDir-$clientPid';
-        var enableTrace = params['trace'].value == 'messages';
+        var enableTrace = params['trace'].valueOr('off') == 'messages';
         startLogging(clientName, enableTrace);
         return {'capabilities': _serverCapabilities.toJson()};
       })

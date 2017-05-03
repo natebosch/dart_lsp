@@ -1,3 +1,7 @@
+# 0.0.7-dev
+
+- Add logging of uncaught asynchronous error logs to a hardcoded path in /tmp
+
 # 0.0.6
 
 - Fix a bug for clients which do not send a `trace` parameter to initialize call

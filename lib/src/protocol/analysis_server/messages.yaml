@@ -158,3 +158,26 @@ NavigationRegion:
   length: int
   targets:
     listType: int
+
+SearchResults:
+  id: String
+  results:
+    listType: SearchResult
+
+SearchResult:
+  location: Location
+  kind: SearchResultKind
+  isPotential: bool
+  path:
+    listType: Element
+
+SearchResultKind:
+  enumValues:
+    declaration: DECLARATION
+    invocation: INVOCATION
+    read: READ
+    readWrite: READ_WRITE
+    reference: REFERENCE
+    unknown: UNKNOWN
+    write: WRITE
+  wireType: String

@@ -1020,6 +1020,51 @@ class Range$Builder {
   Range$Builder._();
 }
 
+class ReferenceContext {
+  final bool includeDeclaration;
+
+  ReferenceContext._(this.includeDeclaration);
+  factory ReferenceContext(void init(ReferenceContext$Builder b)) {
+    var b = new ReferenceContext$Builder._();
+    init(b);
+    return new ReferenceContext._(b.includeDeclaration);
+  }
+
+  factory ReferenceContext.fromJson(Map params) =>
+      new ReferenceContext._(params.containsKey("includeDeclaration")
+          ? params["includeDeclaration"]
+          : null);
+
+  Map toJson() => {"includeDeclaration": includeDeclaration};
+
+  @override
+  bool operator ==(Object other) {
+    if (other is! ReferenceContext) return false;
+    var o = other as ReferenceContext;
+    if (includeDeclaration != o.includeDeclaration) return false;
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    int hash = 0;
+    for (var field in [includeDeclaration]) {
+      hash = 0x1fffffff & (hash + field.hashCode);
+      hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
+      hash ^= hash >> 6;
+    }
+    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
+    hash = hash ^ (hash >> 11);
+    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
+  }
+}
+
+class ReferenceContext$Builder {
+  bool includeDeclaration;
+
+  ReferenceContext$Builder._();
+}
+
 class SaveOptions {
   final bool includeText;
 

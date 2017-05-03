@@ -97,6 +97,19 @@ class StdIOLanguageServer {
         var position = new Position.fromJson(params['position'].value);
         return (await _server.textDocumentDefinition(documentId, position))
             ?.toJson();
+      })
+      ..registerMethod('textDocument/references', (params) async {
+        if (!_isInitialized) {
+          throw new RpcException(_notInitialized, _notInitializedMessage);
+        }
+        var documentId =
+            new TextDocumentIdentifier.fromJson(params['textDocument'].value);
+        var position = new Position.fromJson(params['position'].value);
+        var context = new ReferenceContext.fromJson(params['context'].value);
+        return (await _server.textDocumentReferences(
+                documentId, position, context))
+            ?.map((r) => r.toJson())
+            ?.toList();
       });
   }
 }

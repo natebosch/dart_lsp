@@ -106,6 +106,11 @@ class AnalysisServerAdapter implements LanguageServer {
           .remove(id)
           .complete(_toCompletionList(_files[path], results));
     });
+    _server.searchResults.listen((results) {
+      var id = results.id;
+      if (!_searchResults.containsKey(id)) throw 'Missing element search $id';
+      _searchResults.remove(id).complete(_toLocationList(results, _files));
+    });
   }
 
   @override
@@ -127,6 +132,19 @@ class AnalysisServerAdapter implements LanguageServer {
   }
 
   @override
+  Future<List<Location>> textDocumentReferences(
+      TextDocumentIdentifier documentId,
+      Position position,
+      ReferenceContext context) async {
+    var path = Uri.parse(documentId.uri).path;
+    var offset = offsetFromPosition(_files[path], position);
+    var id = await _server.findElementReferences(path, offset, true);
+    return (_searchResults[id] = new Completer<List<Location>>()).future;
+  }
+
+  final _searchResults = <String, Completer<List<Location>>>{};
+
+  @override
   Stream<Diagnostics> get diagnostics => _server.analysisErrors
           .transform(distinctUntilChanged())
           .where((errors) => _files.containsKey(errors.file))
@@ -135,6 +153,16 @@ class AnalysisServerAdapter implements LanguageServer {
         return _toDiagnostics(lines, errors);
       });
 }
+
+List<Location> _toLocationList(
+        SearchResults results, Map<String, List<String>> files) =>
+    results.results
+        .map((result) => result.location)
+        .where((location) => files.containsKey(location.file))
+        .map((location) => new Location((b) => b
+          ..uri = _toFileUri(location.file)
+          ..range = rangeFromLocation(files[location.file], location)))
+        .toList();
 
 Diagnostics _toDiagnostics(List<String> lines, AnalysisErrors errors) =>
     new Diagnostics((b) => b

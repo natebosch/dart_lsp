@@ -16,5 +16,9 @@ abstract class LanguageServer {
       TextDocumentIdentifier documentId, Position position);
   Future<Location> textDocumentDefinition(
       TextDocumentIdentifier documentId, Position position);
+  Future<List<Location>> textDocumentReferences(
+      TextDocumentIdentifier documentId,
+      Position position,
+      ReferenceContext context);
   Stream<Diagnostics> get diagnostics;
 }

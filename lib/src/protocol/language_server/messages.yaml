@@ -199,3 +199,6 @@ ServerCapabilities:
   renameProvider: bool
   documentLinkProvider: DocumentLinkOptions
   executeCommandProvider: ExecuteCommandOptions
+
+ReferenceContext:
+  includeDeclaration: bool

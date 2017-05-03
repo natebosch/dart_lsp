@@ -1038,6 +1038,147 @@ class NavigationTarget$Builder {
   NavigationTarget$Builder._();
 }
 
+class SearchResult {
+  final bool isPotential;
+  final SearchResultKind kind;
+  final Location location;
+  final List<Element> path;
+
+  SearchResult._(this.isPotential, this.kind, this.location, this.path);
+  factory SearchResult(void init(SearchResult$Builder b)) {
+    var b = new SearchResult$Builder._();
+    init(b);
+    return new SearchResult._(b.isPotential, b.kind, b.location, b.path);
+  }
+
+  factory SearchResult.fromJson(Map params) => new SearchResult._(
+      params.containsKey("isPotential") ? params["isPotential"] : null,
+      params.containsKey("kind")
+          ? new SearchResultKind.fromJson(params["kind"])
+          : null,
+      params.containsKey("location")
+          ? new Location.fromJson(params["location"])
+          : null,
+      params.containsKey("path")
+          ? params["path"].map((v) => new Element.fromJson(v)).toList()
+          : null);
+
+  Map toJson() => {
+        "isPotential": isPotential,
+        "kind": kind?.toJson(),
+        "location": location?.toJson(),
+        "path": path?.map((v) => v?.toJson())?.toList()
+      };
+
+  @override
+  bool operator ==(Object other) {
+    if (other is! SearchResult) return false;
+    var o = other as SearchResult;
+    if (isPotential != o.isPotential) return false;
+    if (kind != o.kind) return false;
+    if (location != o.location) return false;
+    if (!_deepEquals(path, o.path)) return false;
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    int hash = 0;
+    for (var field in [isPotential, kind, location, path]) {
+      hash = 0x1fffffff & (hash + field.hashCode);
+      hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
+      hash ^= hash >> 6;
+    }
+    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
+    hash = hash ^ (hash >> 11);
+    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
+  }
+}
+
+class SearchResult$Builder {
+  bool isPotential;
+  SearchResultKind kind;
+  Location location;
+  List<Element> path;
+
+  SearchResult$Builder._();
+}
+
+class SearchResultKind {
+  static const declaration = const SearchResultKind._("DECLARATION");
+  static const invocation = const SearchResultKind._("INVOCATION");
+  static const read = const SearchResultKind._("READ");
+  static const readWrite = const SearchResultKind._("READ_WRITE");
+  static const reference = const SearchResultKind._("REFERENCE");
+  static const unknown = const SearchResultKind._("UNKNOWN");
+  static const write = const SearchResultKind._("WRITE");
+  final String _value;
+  const SearchResultKind._(this._value);
+  factory SearchResultKind.fromJson(String value) {
+    const values = const {
+      "DECLARATION": SearchResultKind.declaration,
+      "INVOCATION": SearchResultKind.invocation,
+      "READ": SearchResultKind.read,
+      "READ_WRITE": SearchResultKind.readWrite,
+      "REFERENCE": SearchResultKind.reference,
+      "UNKNOWN": SearchResultKind.unknown,
+      "WRITE": SearchResultKind.write
+    };
+    return values[value];
+  }
+  String toJson() => _value;
+}
+
+class SearchResults {
+  final String id;
+  final List<SearchResult> results;
+
+  SearchResults._(this.id, this.results);
+  factory SearchResults(void init(SearchResults$Builder b)) {
+    var b = new SearchResults$Builder._();
+    init(b);
+    return new SearchResults._(b.id, b.results);
+  }
+
+  factory SearchResults.fromJson(Map params) => new SearchResults._(
+      params.containsKey("id") ? params["id"] : null,
+      params.containsKey("results")
+          ? params["results"].map((v) => new SearchResult.fromJson(v)).toList()
+          : null);
+
+  Map toJson() =>
+      {"id": id, "results": results?.map((v) => v?.toJson())?.toList()};
+
+  @override
+  bool operator ==(Object other) {
+    if (other is! SearchResults) return false;
+    var o = other as SearchResults;
+    if (id != o.id) return false;
+    if (!_deepEquals(results, o.results)) return false;
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    int hash = 0;
+    for (var field in [id, results]) {
+      hash = 0x1fffffff & (hash + field.hashCode);
+      hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
+      hash ^= hash >> 6;
+    }
+    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
+    hash = hash ^ (hash >> 11);
+    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
+  }
+}
+
+class SearchResults$Builder {
+  String id;
+  List<SearchResult> results;
+
+  SearchResults$Builder._();
+}
+
 class SourceEdit {
   final String id;
   final int length;

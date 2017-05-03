@@ -11,7 +11,10 @@ abstract class AnalysisServer {
   Future<String> completionGetSuggestions(String file, int offset);
   Future<NavigationResult> analysisGetNavigation(
       String file, int offset, int length);
+  Future<String> findElementReferences(
+      String file, int offset, bool includePotential);
 
   Stream<AnalysisErrors> get analysisErrors;
   Stream<CompletionResults> get completionResults;
+  Stream<SearchResults> get searchResults;
 }

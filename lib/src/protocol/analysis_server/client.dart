@@ -34,6 +34,9 @@ class SubprocessAnalysisServer implements AnalysisServer {
       })
       ..registerEventHandler('completion.results', (params) {
         _completionResults.add(new CompletionResults.fromJson(params));
+      })
+      ..registerEventHandler('search.results', (params) {
+        _searchResults.add(new SearchResults.fromJson(params));
       });
   }
 
@@ -44,6 +47,10 @@ class SubprocessAnalysisServer implements AnalysisServer {
   @override
   Stream<CompletionResults> get completionResults => _completionResults.stream;
   final _completionResults = new StreamController<CompletionResults>();
+
+  @override
+  Stream<SearchResults> get searchResults => _searchResults.stream;
+  final _searchResults = new StreamController<SearchResults>();
 
   @override
   Future<Null> shutdown() async {
@@ -90,5 +97,13 @@ class SubprocessAnalysisServer implements AnalysisServer {
       ..targets = result['targets'].map((t) => new NavigationTarget.fromJson(t))
       ..regions =
           result['regions'].map(((r) => new NavigationRegion.fromJson(r))));
+  }
+
+  @override
+  Future<String> findElementReferences(
+      String file, int offset, bool includePotential) async {
+    var result = await _client.sendRequest('search.findElementReferences',
+        {'file': file, 'offset': offset, 'includePotential': includePotential});
+    return result['id'];
   }
 }

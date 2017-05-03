@@ -1,6 +1,8 @@
 # 0.0.7-dev
 
 - Add logging of uncaught asynchronous error logs to a hardcoded path in /tmp
+- Bug Fix: Drop diagnostics for files not opened yet in the editor instead of
+  crashing
 
 # 0.0.6
 

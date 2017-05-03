@@ -127,8 +127,10 @@ class AnalysisServerAdapter implements LanguageServer {
   }
 
   @override
-  Stream<Diagnostics> get diagnostics =>
-      _server.analysisErrors.transform(distinctUntilChanged()).map((errors) {
+  Stream<Diagnostics> get diagnostics => _server.analysisErrors
+          .transform(distinctUntilChanged())
+          .where((errors) => _files.containsKey(errors.file))
+          .map((errors) {
         var lines = _files[errors.file];
         return _toDiagnostics(lines, errors);
       });

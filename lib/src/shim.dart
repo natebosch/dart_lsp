@@ -9,7 +9,6 @@ import 'protocol/analysis_server/interface.dart';
 import 'protocol/analysis_server/messages.dart' hide Location;
 import 'protocol/language_server/interface.dart';
 import 'protocol/language_server/messages.dart';
-import 'utils/async.dart';
 
 Future<LanguageServer> startShimmedServer() async {
   var client = await SubprocessAnalysisServer.start();
@@ -146,7 +145,7 @@ class AnalysisServerAdapter implements LanguageServer {
 
   @override
   Stream<Diagnostics> get diagnostics => _server.analysisErrors
-          .transform(distinctUntilChanged())
+          .distinct()
           .where((errors) => _files.containsKey(errors.file))
           .map((errors) {
         var lines = _files[errors.file];

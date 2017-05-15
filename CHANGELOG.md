@@ -1,3 +1,8 @@
+# 0.0.8
+
+- Add more information in completion item `detail` field. Add full doc comment
+  to `documentation` field.
+
 # 0.0.7
 
 - Add logging of uncaught asynchronous error logs to a hardcoded path in /tmp

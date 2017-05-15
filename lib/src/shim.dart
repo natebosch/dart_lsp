@@ -184,7 +184,23 @@ CompletionItem _toCompletionItem(List<String> lines,
         ..newText = suggestion.completion
         ..range = rangeFromOffset(
             lines, results.replacementOffset, results.replacementLength))
-      ..detail = suggestion.docSummary);
+      ..detail = _completionItemDetail(suggestion)
+      ..documentation = suggestion.docComplete);
+
+String _completionItemDetail(CompletionSuggestion suggestion) {
+  if (suggestion.returnType != null && suggestion.docSummary != null) {
+    return '${suggestion.returnType} : ${suggestion.docSummary}';
+  }
+  if (suggestion.docSummary != null) return suggestion.docSummary;
+  if (suggestion.returnType != null) return suggestion.returnType;
+  if (suggestion.parameterName != null) {
+    if (suggestion.parameterType != null) {
+      return '${suggestion.parameterName} : ${suggestion.parameterType}';
+    }
+    return '${suggestion.parameterName}';
+  }
+  return null;
+}
 
 Diagnostic _toDiagnostic(List<String> lines, AnalysisError error) =>
     new Diagnostic((b) => b

@@ -281,8 +281,8 @@ class CompletionSuggestion {
   final CompletionSuggestionKind kind;
   final String parameterName;
   final List<String> parameterNames;
+  final String parameterType;
   final List<String> parameterTypes;
-  final String paramterType;
   final int relevance;
   final int requiredParameterCount;
   final String returnType;
@@ -302,8 +302,8 @@ class CompletionSuggestion {
       this.kind,
       this.parameterName,
       this.parameterNames,
+      this.parameterType,
       this.parameterTypes,
-      this.paramterType,
       this.relevance,
       this.requiredParameterCount,
       this.returnType,
@@ -325,8 +325,8 @@ class CompletionSuggestion {
         b.kind,
         b.parameterName,
         b.parameterNames,
+        b.parameterType,
         b.parameterTypes,
-        b.paramterType,
         b.relevance,
         b.requiredParameterCount,
         b.returnType,
@@ -354,8 +354,8 @@ class CompletionSuggestion {
           : null,
       params.containsKey("parameterName") ? params["parameterName"] : null,
       params.containsKey("parameterNames") ? params["parameterNames"] : null,
+      params.containsKey("parameterType") ? params["parameterType"] : null,
       params.containsKey("parameterTypes") ? params["parameterTypes"] : null,
-      params.containsKey("paramterType") ? params["paramterType"] : null,
       params.containsKey("relevance") ? params["relevance"] : null,
       params.containsKey("requiredParameterCount")
           ? params["requiredParameterCount"]
@@ -377,8 +377,8 @@ class CompletionSuggestion {
         "kind": kind?.toJson(),
         "parameterName": parameterName,
         "parameterNames": parameterNames,
+        "parameterType": parameterType,
         "parameterTypes": parameterTypes,
-        "paramterType": paramterType,
         "relevance": relevance,
         "requiredParameterCount": requiredParameterCount,
         "returnType": returnType,
@@ -402,8 +402,8 @@ class CompletionSuggestion {
     if (kind != o.kind) return false;
     if (parameterName != o.parameterName) return false;
     if (!_deepEquals(parameterNames, o.parameterNames)) return false;
+    if (parameterType != o.parameterType) return false;
     if (!_deepEquals(parameterTypes, o.parameterTypes)) return false;
-    if (paramterType != o.paramterType) return false;
     if (relevance != o.relevance) return false;
     if (requiredParameterCount != o.requiredParameterCount) return false;
     if (returnType != o.returnType) return false;
@@ -428,8 +428,8 @@ class CompletionSuggestion {
       kind,
       parameterName,
       parameterNames,
+      parameterType,
       parameterTypes,
-      paramterType,
       relevance,
       requiredParameterCount,
       returnType,
@@ -459,8 +459,8 @@ class CompletionSuggestion$Builder {
   CompletionSuggestionKind kind;
   String parameterName;
   List<String> parameterNames;
+  String parameterType;
   List<String> parameterTypes;
-  String paramterType;
   int relevance;
   int requiredParameterCount;
   String returnType;

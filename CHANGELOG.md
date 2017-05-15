@@ -1,10 +1,9 @@
-# 0.0.7-dev
+# 0.0.7
 
 - Add logging of uncaught asynchronous error logs to a hardcoded path in /tmp
-- Bug Fix: Drop diagnostics for files not opened yet in the editor instead of
-  crashing
-- Add support for textDocument/references call. Only supports showing references
-  in files that have already been opened by the client.
+- Bug Fix: Support forwarding diagnostics for files that haven't already been
+  opened in the editor
+- Add support for `textDocument/references` call.
 
 # 0.0.6
 

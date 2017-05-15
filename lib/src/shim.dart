@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:path/path.dart' as p;
 
@@ -9,6 +8,7 @@ import 'protocol/analysis_server/interface.dart';
 import 'protocol/analysis_server/messages.dart' hide Location;
 import 'protocol/language_server/interface.dart';
 import 'protocol/language_server/messages.dart';
+import 'utils/file_cache.dart';
 
 Future<LanguageServer> startShimmedServer() async {
   var client = await SubprocessAnalysisServer.start();
@@ -18,7 +18,9 @@ Future<LanguageServer> startShimmedServer() async {
 /// Wraps an [AnalysisServer] and exposes it as a [LanguageServer].
 class AnalysisServerAdapter implements LanguageServer {
   final AnalysisServer _server;
-  final _files = <String, List<String>>{};
+
+  final _files = new FileCache();
+
   final _fileVersions = <String, int>{};
 
   AnalysisServerAdapter(this._server) {
@@ -121,9 +123,6 @@ class AnalysisServerAdapter implements LanguageServer {
     if (result.targets.isEmpty) return null;
     var target = result.targets.first;
     var targetFile = result.files[target.fileIndex];
-    if (!_files.containsKey(targetFile)) {
-      _files[targetFile] = new File(targetFile).readAsLinesSync();
-    }
     return new Location((b) => b
       ..uri = _toFileUri(targetFile)
       ..range =
@@ -135,6 +134,7 @@ class AnalysisServerAdapter implements LanguageServer {
       TextDocumentIdentifier documentId,
       Position position,
       ReferenceContext context) async {
+    //TODO: Not returning definition regardless of [context]
     var path = Uri.parse(documentId.uri).path;
     var offset = offsetFromPosition(_files[path], position);
     var id = await _server.findElementReferences(path, offset, true);
@@ -144,20 +144,16 @@ class AnalysisServerAdapter implements LanguageServer {
   final _searchResults = <String, Completer<List<Location>>>{};
 
   @override
-  Stream<Diagnostics> get diagnostics => _server.analysisErrors
-          .distinct()
-          .where((errors) => _files.containsKey(errors.file))
-          .map((errors) {
+  Stream<Diagnostics> get diagnostics =>
+      _server.analysisErrors.distinct().map((errors) {
         var lines = _files[errors.file];
         return _toDiagnostics(lines, errors);
       });
 }
 
-List<Location> _toLocationList(
-        SearchResults results, Map<String, List<String>> files) =>
+List<Location> _toLocationList(SearchResults results, FileCache files) =>
     results.results
         .map((result) => result.location)
-        .where((location) => files.containsKey(location.file))
         .map((location) => new Location((b) => b
           ..uri = _toFileUri(location.file)
           ..range = rangeFromLocation(files[location.file], location)))

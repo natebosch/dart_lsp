@@ -37,8 +37,7 @@ class StdIOLanguageServer {
         var clientDir = p.basename(params['rootUri'].valueOr(''));
         var clientPid = params['processId'].valueOr(0);
         var clientName = '$clientDir-$clientPid';
-        var enableTrace = params['trace'].valueOr('off') == 'messages';
-        startLogging(clientName, enableTrace);
+        startLogging(clientName, params['trace'].valueOr('off'));
         return {'capabilities': _serverCapabilities.toJson()};
       })
       ..registerMethod('shutdown', _server.shutdown)

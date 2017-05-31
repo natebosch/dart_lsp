@@ -14,13 +14,16 @@ StreamChannelTransformer<String, String> lspChannel = _lspWireLog.transformer;
 
 final _logs = <IOSink>[];
 
-void startLogging(String clientName, bool enableTrace) {
-  var logSink = new File('/tmp/dart-lang-server-$clientName.log').openWrite();
-  Logger.root.level = Level.ALL;
-  Logger.root.onRecord.listen((record) {
-    logSink.write('${record.level.name}: ${record.time}: ${record.message}\n');
-  });
-  if (enableTrace) {
+void startLogging(String clientName, String traceLevel) {
+  if (traceLevel == 'verbose') {
+    var logSink = new File('/tmp/dart-lang-server-$clientName.log').openWrite();
+    Logger.root.level = Level.ALL;
+    Logger.root.onRecord.listen((record) {
+      logSink
+          .write('${record.level.name}: ${record.time}: ${record.message}\n');
+    });
+  }
+  if (traceLevel == 'verbose' || traceLevel == 'messages') {
     var analyzerLog =
         new File('/tmp/analyzer-wirelog-$clientName.log').openWrite();
     _analyzerWireLog.attach(analyzerLog);

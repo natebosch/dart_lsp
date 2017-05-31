@@ -4,6 +4,7 @@
   to `documentation` field.
 - Bug fix: Avoid duplicates in reference list when the same file shows up in
   multiple analysis roots.
+- Only write logs when 'verbose' or 'message' trace level is used.
 
 # 0.0.7
 

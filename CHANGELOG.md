@@ -2,6 +2,8 @@
 
 - Add more information in completion item `detail` field. Add full doc comment
   to `documentation` field.
+- Bug fix: Avoid duplicates in reference list when the same file shows up in
+  multiple analysis roots.
 
 # 0.0.7
 

@@ -154,6 +154,7 @@ class AnalysisServerAdapter implements LanguageServer {
 List<Location> _toLocationList(SearchResults results, FileCache files) =>
     results.results
         .map((result) => result.location)
+        .toSet()
         .map((location) => new Location((b) => b
           ..uri = _toFileUri(location.file)
           ..range = rangeFromLocation(files[location.file], location)))

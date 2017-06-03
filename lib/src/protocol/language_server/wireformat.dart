@@ -10,10 +10,14 @@ class StdIOStreamChannel extends StreamChannelMixin<String> {
   final Stream<String> stream;
 
   factory StdIOStreamChannel() {
-    var outSink = new StreamSinkTransformer.fromHandlers(handleData: _serialize)
-        .bind(stdout);
-    var inStream = new _Parser().stream;
-    return new StdIOStreamChannel._(inStream, outSink);
+    var parser = new _Parser();
+    var outSink = new StreamSinkTransformer.fromHandlers(
+        handleData: _serialize,
+        handleDone: (sink) {
+          sink.close();
+          parser.close();
+        }).bind(stdout);
+    return new StdIOStreamChannel._(parser.stream, outSink);
   }
 
   StdIOStreamChannel._(this.stream, this.sink);
@@ -33,11 +37,16 @@ class _Parser {
   bool _headerMode = true;
   int _contentLength = -1;
 
+  StreamSubscription _subscription;
+
   _Parser() {
-    stdin.expand((bytes) => bytes).listen(_handleByte, onDone: () {
+    _subscription =
+        stdin.expand((bytes) => bytes).listen(_handleByte, onDone: () {
       _streamCtl.close();
     });
   }
+
+  Future<Null> close() => _subscription.cancel();
 
   void _handleByte(int byte) {
     _buffer.add(byte);

@@ -10,6 +10,7 @@ import 'wireformat.dart';
 
 class StdIOLanguageServer {
   final LanguageServer _server;
+  Future<Null> onDone;
 
   StdIOLanguageServer.start(this._server) {
     var channel = new StdIOStreamChannel();
@@ -22,9 +23,9 @@ class StdIOLanguageServer {
     _completionMethods(peer);
 
     peer.listen();
-  }
 
-  Future<Null> get onDone => _server.onDone;
+    onDone = _server.onDone.then((_) => peer.close()).then((_) => null);
+  }
 
   bool _isInitialized = false;
   static const _notInitialized = -32002;

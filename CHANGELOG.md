@@ -1,3 +1,7 @@
+# 0.0.9
+
+- Bug fix: Allow the process to exit when the server is done.
+
 # 0.0.8
 
 - Add more information in completion item `detail` field. Add full doc comment

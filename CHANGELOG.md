@@ -1,3 +1,7 @@
+# 0.0.10
+
+- Improved `CompletionItemKind` for completion suggestions.
+
 # 0.0.9
 
 - Bug fix: Allow the process to exit when the server is done.

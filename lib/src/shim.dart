@@ -180,7 +180,7 @@ CompletionItem _toCompletionItem(List<String> lines,
         CompletionSuggestion suggestion, CompletionResults results) =>
     new CompletionItem((b) => b
       ..label = suggestion.completion
-      ..kind = _completionKind(suggestion.kind)
+      ..kind = _completionKind(suggestion)
       ..textEdit = new TextEdit((b) => b
         ..newText = suggestion.completion
         ..range = rangeFromOffset(
@@ -217,8 +217,36 @@ const _severities = const <AnalysisErrorSeverity, int>{
   AnalysisErrorSeverity.error: 1
 };
 
-CompletionItemKind _completionKind(CompletionSuggestionKind suggestionKind) {
-  switch (suggestionKind) {
+CompletionItemKind _completionKind(CompletionSuggestion suggestion) {
+  if (suggestion.element != null) {
+    switch (suggestion.element.kind) {
+      case ElementKind.getter:
+      case ElementKind.setter:
+      case ElementKind.field:
+        return CompletionItemKind.field;
+      case ElementKind.function:
+        return CompletionItemKind.function;
+      case ElementKind.method:
+        return CompletionItemKind.method;
+      case ElementKind.localVariable:
+      case ElementKind.topLevelVariable:
+        return CompletionItemKind.variable;
+      case ElementKind.classElement:
+      case ElementKind.classTypeAlias:
+        return CompletionItemKind.classKind;
+      case ElementKind.constructor:
+        return CompletionItemKind.constructor;
+      case ElementKind.enumConstant:
+      case ElementKind.enumElement:
+        return CompletionItemKind.enumKind;
+      case ElementKind.file:
+        return CompletionItemKind.file;
+      case ElementKind.library:
+      case ElementKind.compilationUnit:
+        return CompletionItemKind.module;
+    }
+  }
+  switch (suggestion.kind) {
     case CompletionSuggestionKind.argumentList:
       return CompletionItemKind.snippet; // ?
     case CompletionSuggestionKind.import:

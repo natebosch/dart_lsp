@@ -1,3 +1,7 @@
+# 0.0.11
+
+- Bug Fix: Conform to spec for headers - use a space after the colon.
+
 # 0.0.10
 
 - Improved `CompletionItemKind` for completion suggestions.

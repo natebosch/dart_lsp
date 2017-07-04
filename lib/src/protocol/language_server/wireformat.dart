@@ -25,7 +25,7 @@ class StdIOStreamChannel extends StreamChannelMixin<String> {
 
 void _serialize(String data, EventSink<List<int>> sink) {
   var message = UTF8.encode(data);
-  var header = 'Content-Length:${message.length}\r\n\r\n';
+  var header = 'Content-Length: ${message.length}\r\n\r\n';
   sink.add([]..addAll(ASCII.encode(header))..addAll(message));
 }
 

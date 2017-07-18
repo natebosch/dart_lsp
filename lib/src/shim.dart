@@ -121,24 +121,32 @@ class AnalysisServerAdapter implements LanguageServer {
     var offset = offsetFromPosition(_files[path], position);
     var result = await _server.analysisGetNavigation(path, offset, 1);
     if (result.targets.isEmpty) return null;
-    var target = result.targets.first;
-    var targetFile = result.files[target.fileIndex];
-    return new Location((b) => b
-      ..uri = _toFileUri(targetFile)
-      ..range =
-          rangeFromOffset(_files[targetFile], target.offset, target.length));
+    return _navigationLocations(result).first;
   }
+
+  Iterable<Location> _navigationLocations(NavigationResult result) =>
+      result.targets.map((t) {
+        var file = result.files[t.fileIndex];
+        return new Location((b) => b
+          ..uri = _toFileUri(file)
+          ..range = rangeFromOffset(_files[file], t.offset, t.length));
+      });
 
   @override
   Future<List<Location>> textDocumentReferences(
       TextDocumentIdentifier documentId,
       Position position,
       ReferenceContext context) async {
-    //TODO: Not returning definition regardless of [context]
     var path = Uri.parse(documentId.uri).path;
     var offset = offsetFromPosition(_files[path], position);
     var id = await _server.findElementReferences(path, offset, true);
-    return (_searchResults[id] = new Completer<List<Location>>()).future;
+    var references =
+        (_searchResults[id] = new Completer<List<Location>>()).future;
+    if (context.includeDeclaration) {
+      var definition = await _server.analysisGetNavigation(path, offset, 1);
+      return (await references)..addAll(_navigationLocations(definition));
+    }
+    return references;
   }
 
   final _searchResults = <String, Completer<List<Location>>>{};

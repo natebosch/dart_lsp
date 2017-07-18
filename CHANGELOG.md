@@ -1,3 +1,7 @@
+# 0.0.12
+
+- Include definition in list of element references.
+
 # 0.0.11
 
 - Bug Fix: Conform to spec for headers - use a space after the colon.

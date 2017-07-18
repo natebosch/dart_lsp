@@ -6,8 +6,9 @@ import 'package:yaml/yaml.dart';
 
 class MessageBuilder implements Builder {
   @override
-  List<AssetId> declareOutputs(AssetId input) =>
-      input.extension == '.yaml' ? [input.changeExtension('.dart')] : const [];
+  final buildExtensions = const {
+    '.yaml': const ['.dart']
+  };
 
   @override
   Future build(BuildStep buildStep) async {

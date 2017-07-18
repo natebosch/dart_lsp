@@ -1,5 +1,5 @@
 name: dart_language_server
-version: 0.0.12
+version: 0.0.13-dev
 description: >-
   A shim on the analysis server following the language server protocol
 homepage: https://github.com/natebosch/dart_language_server
@@ -18,9 +18,9 @@ dependencies:
   stream_transform: ^0.0.3
 
 dev_dependencies:
-  build: ^0.7.0
-  build_runner: ^0.2.0
-  dart_style: ^0.2.14
+  build: ^0.9.0
+  build_runner: ^0.3.0
+  dart_style: ^1.0.7
   test: ^0.12.18
   yaml: ^2.1.12
 

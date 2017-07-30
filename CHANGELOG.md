@@ -1,3 +1,7 @@
+# 0.0.13
+
+- Add `textDocument/hover` - finds the `dartdoc` string for an element.
+
 # 0.0.12
 
 - Include definition in list of element references.

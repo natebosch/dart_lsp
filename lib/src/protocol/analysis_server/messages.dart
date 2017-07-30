@@ -776,6 +776,152 @@ class ElementKind {
   String toJson() => _value;
 }
 
+class HoverInformation {
+  final String containingClassDescription;
+  final String containingLibraryName;
+  final String containingLibraryPath;
+  final String dartdoc;
+  final String elementDescription;
+  final String elementKind;
+  final bool isDeprecated;
+  final int length;
+  final int offset;
+  final String parameter;
+  final String propagatedType;
+  final String staticType;
+
+  HoverInformation._(
+      this.containingClassDescription,
+      this.containingLibraryName,
+      this.containingLibraryPath,
+      this.dartdoc,
+      this.elementDescription,
+      this.elementKind,
+      this.isDeprecated,
+      this.length,
+      this.offset,
+      this.parameter,
+      this.propagatedType,
+      this.staticType);
+  factory HoverInformation(void init(HoverInformation$Builder b)) {
+    var b = new HoverInformation$Builder._();
+    init(b);
+    return new HoverInformation._(
+        b.containingClassDescription,
+        b.containingLibraryName,
+        b.containingLibraryPath,
+        b.dartdoc,
+        b.elementDescription,
+        b.elementKind,
+        b.isDeprecated,
+        b.length,
+        b.offset,
+        b.parameter,
+        b.propagatedType,
+        b.staticType);
+  }
+
+  factory HoverInformation.fromJson(Map params) => new HoverInformation._(
+      params.containsKey("containingClassDescription")
+          ? params["containingClassDescription"]
+          : null,
+      params.containsKey("containingLibraryName")
+          ? params["containingLibraryName"]
+          : null,
+      params.containsKey("containingLibraryPath")
+          ? params["containingLibraryPath"]
+          : null,
+      params.containsKey("dartdoc") ? params["dartdoc"] : null,
+      params.containsKey("elementDescription")
+          ? params["elementDescription"]
+          : null,
+      params.containsKey("elementKind") ? params["elementKind"] : null,
+      params.containsKey("isDeprecated") ? params["isDeprecated"] : null,
+      params.containsKey("length") ? params["length"] : null,
+      params.containsKey("offset") ? params["offset"] : null,
+      params.containsKey("parameter") ? params["parameter"] : null,
+      params.containsKey("propagatedType") ? params["propagatedType"] : null,
+      params.containsKey("staticType") ? params["staticType"] : null);
+
+  Map toJson() => {
+        "containingClassDescription": containingClassDescription,
+        "containingLibraryName": containingLibraryName,
+        "containingLibraryPath": containingLibraryPath,
+        "dartdoc": dartdoc,
+        "elementDescription": elementDescription,
+        "elementKind": elementKind,
+        "isDeprecated": isDeprecated,
+        "length": length,
+        "offset": offset,
+        "parameter": parameter,
+        "propagatedType": propagatedType,
+        "staticType": staticType
+      };
+
+  @override
+  bool operator ==(Object other) {
+    if (other is! HoverInformation) return false;
+    var o = other as HoverInformation;
+    if (containingClassDescription != o.containingClassDescription)
+      return false;
+    if (containingLibraryName != o.containingLibraryName) return false;
+    if (containingLibraryPath != o.containingLibraryPath) return false;
+    if (dartdoc != o.dartdoc) return false;
+    if (elementDescription != o.elementDescription) return false;
+    if (elementKind != o.elementKind) return false;
+    if (isDeprecated != o.isDeprecated) return false;
+    if (length != o.length) return false;
+    if (offset != o.offset) return false;
+    if (parameter != o.parameter) return false;
+    if (propagatedType != o.propagatedType) return false;
+    if (staticType != o.staticType) return false;
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    int hash = 0;
+    for (var field in [
+      containingClassDescription,
+      containingLibraryName,
+      containingLibraryPath,
+      dartdoc,
+      elementDescription,
+      elementKind,
+      isDeprecated,
+      length,
+      offset,
+      parameter,
+      propagatedType,
+      staticType
+    ]) {
+      hash = 0x1fffffff & (hash + field.hashCode);
+      hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
+      hash ^= hash >> 6;
+    }
+    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
+    hash = hash ^ (hash >> 11);
+    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
+  }
+}
+
+class HoverInformation$Builder {
+  String containingClassDescription;
+  String containingLibraryName;
+  String containingLibraryPath;
+  String dartdoc;
+  String elementDescription;
+  String elementKind;
+  bool isDeprecated;
+  int length;
+  int offset;
+  String parameter;
+  String propagatedType;
+  String staticType;
+
+  HoverInformation$Builder._();
+}
+
 class Location {
   final String file;
   final int length;

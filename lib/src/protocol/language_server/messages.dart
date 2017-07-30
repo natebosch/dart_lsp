@@ -862,6 +862,53 @@ class ExecuteCommandOptions$Builder {
   ExecuteCommandOptions$Builder._();
 }
 
+class Hover {
+  final String contents;
+  final Range range;
+
+  Hover._(this.contents, this.range);
+  factory Hover(void init(Hover$Builder b)) {
+    var b = new Hover$Builder._();
+    init(b);
+    return new Hover._(b.contents, b.range);
+  }
+
+  factory Hover.fromJson(Map params) => new Hover._(
+      params.containsKey("contents") ? params["contents"] : null,
+      params.containsKey("range") ? new Range.fromJson(params["range"]) : null);
+
+  Map toJson() => {"contents": contents, "range": range?.toJson()};
+
+  @override
+  bool operator ==(Object other) {
+    if (other is! Hover) return false;
+    var o = other as Hover;
+    if (contents != o.contents) return false;
+    if (range != o.range) return false;
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    int hash = 0;
+    for (var field in [contents, range]) {
+      hash = 0x1fffffff & (hash + field.hashCode);
+      hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
+      hash ^= hash >> 6;
+    }
+    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
+    hash = hash ^ (hash >> 11);
+    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
+  }
+}
+
+class Hover$Builder {
+  String contents;
+  Range range;
+
+  Hover$Builder._();
+}
+
 class InsertTextFormat {
   static const plainText = const InsertTextFormat._(1);
   static const snippet = const InsertTextFormat._(2);

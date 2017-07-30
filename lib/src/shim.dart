@@ -149,6 +149,20 @@ class AnalysisServerAdapter implements LanguageServer {
     return references;
   }
 
+  @override
+  Future<Hover> textDocumentHover(
+      TextDocumentIdentifier documentId, Position position) async {
+    var path = Uri.parse(documentId.uri).path;
+    var offset = offsetFromPosition(_files[path], position);
+    var hovers = await _server.analysisGetHover(path, offset);
+    if (hovers.isEmpty) return null;
+    var hover = hovers.first;
+    var range = rangeFromOffset(_files[path], hover.offset, hover.length);
+    return new Hover((b) => b
+      ..contents = hover.dartdoc
+      ..range = range);
+  }
+
   final _searchResults = <String, Completer<List<Location>>>{};
 
   @override

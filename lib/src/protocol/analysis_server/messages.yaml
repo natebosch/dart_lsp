@@ -181,3 +181,17 @@ SearchResultKind:
     unknown: UNKNOWN
     write: WRITE
   wireType: String
+
+HoverInformation:
+  offset: int
+  length: int
+  containingLibraryPath: String
+  containingLibraryName: String
+  containingClassDescription: String
+  dartdoc: String
+  elementDescription: String
+  elementKind: String
+  isDeprecated: bool
+  parameter: String
+  propagatedType: String
+  staticType: String

@@ -106,4 +106,14 @@ class SubprocessAnalysisServer implements AnalysisServer {
         {'file': file, 'offset': offset, 'includePotential': includePotential});
     return result['id'];
   }
+
+  @override
+  Future<List<HoverInformation>> analysisGetHover(
+      String file, int offset) async {
+    var result = await _client
+        .sendRequest('analysis.getHover', {'file': file, 'offset': offset});
+    return result['hovers']
+        .map((h) => new HoverInformation.fromJson(h))
+        .toList();
+  }
 }

@@ -202,3 +202,7 @@ ServerCapabilities:
 
 ReferenceContext:
   includeDeclaration: bool
+
+Hover:
+  contents: String
+  range: Range

@@ -15,6 +15,7 @@ This server supports:
 - Completion suggestions
 - Jump to definition
 - List references
+- Hover information
 
 ## Installing
 

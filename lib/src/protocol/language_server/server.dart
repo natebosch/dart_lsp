@@ -98,6 +98,16 @@ class StdIOLanguageServer {
         return (await _server.textDocumentDefinition(documentId, position))
             ?.toJson();
       })
+      ..registerMethod('textDocument/hover', (params) async {
+        if (!_isInitialized) {
+          throw new RpcException(_notInitialized, _notInitializedMessage);
+        }
+        var documentId =
+            new TextDocumentIdentifier.fromJson(params['textDocument'].value);
+        var position = new Position.fromJson(params['position'].value);
+        return (await _server.textDocumentHover(documentId, position))
+            ?.toJson();
+      })
       ..registerMethod('textDocument/references', (params) async {
         if (!_isInitialized) {
           throw new RpcException(_notInitialized, _notInitializedMessage);

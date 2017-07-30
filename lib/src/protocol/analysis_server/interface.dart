@@ -13,6 +13,7 @@ abstract class AnalysisServer {
       String file, int offset, int length);
   Future<String> findElementReferences(
       String file, int offset, bool includePotential);
+  Future<List<HoverInformation>> analysisGetHover(String file, int offset);
 
   Stream<AnalysisErrors> get analysisErrors;
   Stream<CompletionResults> get completionResults;

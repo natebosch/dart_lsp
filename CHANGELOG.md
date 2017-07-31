@@ -1,3 +1,7 @@
+# 0.0.13+1
+
+- Bug Fix: Report support for hover during initialization.
+
 # 0.0.13
 
 - Add `textDocument/hover` - finds the `dartdoc` string for an element.

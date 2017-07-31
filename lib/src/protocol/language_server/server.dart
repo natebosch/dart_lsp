@@ -131,7 +131,7 @@ final _serverCapabilities = new ServerCapabilities((b) => b
     ..willSave = false
     ..willSaveWaitUntil = false
     ..save = false)
-  ..hoverProvider = false
+  ..hoverProvider = true
   ..completionProvider = new CompletionOptions((b) => b
     ..resolveProvider = false
     ..triggerCharacters = const ['.'])

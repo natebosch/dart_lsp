@@ -1,3 +1,7 @@
+# 0.0.14
+
+- Add element description to hover message.
+
 # 0.0.13+1
 
 - Bug Fix: Report support for hover during initialization.

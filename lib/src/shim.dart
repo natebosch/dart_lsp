@@ -159,7 +159,7 @@ class AnalysisServerAdapter implements LanguageServer {
     var hover = hovers.first;
     var range = rangeFromOffset(_files[path], hover.offset, hover.length);
     return new Hover((b) => b
-      ..contents = hover.dartdoc
+      ..contents = _hoverMessage(hover)
       ..range = range);
   }
 
@@ -171,6 +171,19 @@ class AnalysisServerAdapter implements LanguageServer {
         var lines = _files[errors.file];
         return _toDiagnostics(lines, errors);
       });
+}
+
+String _hoverMessage(HoverInformation hover) {
+  var message = new StringBuffer();
+  if (hover.elementDescription != null) {
+    message.writeln(hover.elementDescription);
+  }
+  if (hover.isDeprecated) message.writeln('(deprecated)');
+  if (hover.dartdoc != null) {
+    if (message.isNotEmpty) message.writeln();
+    message.writeln(hover.dartdoc);
+  }
+  return '$message';
 }
 
 List<Location> _toLocationList(SearchResults results, FileCache files) =>

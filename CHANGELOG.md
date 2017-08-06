@@ -1,3 +1,7 @@
+# 0.0.15
+
+- Report 'Hint' type analysis as a 'Hint' rather than 'Info' diagnostic.
+
 # 0.0.14
 
 - Add element description to hover message.

@@ -241,16 +241,17 @@ String _completionItemDetail(CompletionSuggestion suggestion) {
 Diagnostic _toDiagnostic(List<String> lines, AnalysisError error) =>
     new Diagnostic((b) => b
       ..range = rangeFromLocation(lines, error.location)
-      ..severity = _severities[error.severity]
+      ..severity = _diagnosticSeverity(error.severity, error.type)
       ..code = error.code
       ..source = 'Dart analysis server'
       ..message = error.message);
 
-const _severities = const <AnalysisErrorSeverity, int>{
-  AnalysisErrorSeverity.info: 3,
-  AnalysisErrorSeverity.warning: 2,
-  AnalysisErrorSeverity.error: 1
-};
+int _diagnosticSeverity(
+    AnalysisErrorSeverity severity, AnalysisErrorType type) {
+  if (severity == AnalysisErrorSeverity.error) return 1;
+  if (severity == AnalysisErrorSeverity.warning) return 2;
+  return (type == AnalysisErrorType.hint) ? 4 : 3;
+}
 
 CompletionItemKind _completionKind(CompletionSuggestion suggestion) {
   if (suggestion.element != null) {

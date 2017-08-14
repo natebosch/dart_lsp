@@ -1,3 +1,7 @@
+# 0.0.16-dev
+
+- Use `package:analysis_server_lib`.
+
 # 0.0.15
 
 - Report 'Hint' type analysis as a 'Hint' rather than 'Info' diagnostic.

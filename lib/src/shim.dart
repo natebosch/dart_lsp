@@ -2,16 +2,16 @@ import 'dart:async';
 
 import 'package:path/path.dart' as p;
 
+import 'package:analysis_server_lib/analysis_server_lib.dart'
+    hide Position, Location;
 import 'position_convert.dart';
-import 'protocol/analysis_server/client.dart';
-import 'protocol/analysis_server/interface.dart';
-import 'protocol/analysis_server/messages.dart' hide Location;
 import 'protocol/language_server/interface.dart';
 import 'protocol/language_server/messages.dart';
 import 'utils/file_cache.dart';
 
 Future<LanguageServer> startShimmedServer() async {
-  var client = await SubprocessAnalysisServer.start();
+  var client = await AnalysisServer.create();
+  await client.server.onConnected.first;
   return new AnalysisServerAdapter(client);
 }
 
@@ -38,7 +38,7 @@ class AnalysisServerAdapter implements LanguageServer {
   @override
   Future<Null> shutdown() async {
     _hasShutdown = true;
-    await _server.shutdown();
+    await _server.dispose();
   }
 
   @override
@@ -46,7 +46,7 @@ class AnalysisServerAdapter implements LanguageServer {
     if (_hasShutdown) {
       _onDone.complete();
     } else {
-      _server.shutdown();
+      _server.dispose();
       _onDone.completeError('Exit called before shutdown');
     }
   }
@@ -59,12 +59,13 @@ class AnalysisServerAdapter implements LanguageServer {
     var directory = p.dirname(path);
     if (!_openDirectories.contains(directory)) {
       _openDirectories.add(directory);
-      await _server.setAnalysisRoots(_openDirectories.toList(), const []);
+      await _server.analysis
+          .setAnalysisRoots(_openDirectories.toList(), const []);
     }
     _openFiles.add(document.uri);
-    await _server.setPriorityFiles(_openFiles.toList());
-    await _server.updateContent(
-        {path: new AddContentOverlay((b) => b..content = document.text)});
+    await _server.analysis.setPriorityFiles(_openFiles.toList());
+    await _server.analysis
+        .updateContent({path: new AddContentOverlay(document.text)});
   }
 
   @override
@@ -76,14 +77,14 @@ class AnalysisServerAdapter implements LanguageServer {
     // TODO: Assumes the entire file is sent
     assert(changes.length == 1);
     _files[path] = changes.single.text.split('\n');
-    await _server.updateContent(
-        {path: new AddContentOverlay((b) => b..content = changes.single.text)});
+    await _server.analysis
+        .updateContent({path: new AddContentOverlay(changes.single.text)});
   }
 
   @override
   Future<Null> textDocumentDidClose(TextDocumentIdentifier documentId) async {
     var path = Uri.parse(documentId.uri).path;
-    await _server.updateContent({path: const RemoveContentOverlay()});
+    await _server.analysis.updateContent({path: new RemoveContentOverlay()});
   }
 
   @override
@@ -91,7 +92,7 @@ class AnalysisServerAdapter implements LanguageServer {
       TextDocumentIdentifier documentId, Position position) async {
     var path = Uri.parse(documentId.uri).path;
     var offset = offsetFromPosition(_files[path], position);
-    var id = await _server.completionGetSuggestions(path, offset);
+    var id = (await _server.completion.getSuggestions(path, offset)).id;
     _completionPaths[id] = path;
     return (_completions[id] = new Completer<CompletionList>()).future;
   }
@@ -99,7 +100,7 @@ class AnalysisServerAdapter implements LanguageServer {
   final _completions = <String, Completer<CompletionList>>{};
   final _completionPaths = <String, String>{};
   void _listeners() {
-    _server.completionResults.listen((results) {
+    _server.completion.onResults.listen((results) {
       var id = results.id;
       if (!_completions.containsKey(id)) throw 'Missing completion $id';
       var path = _completionPaths.remove(id);
@@ -107,7 +108,7 @@ class AnalysisServerAdapter implements LanguageServer {
           .remove(id)
           .complete(_toCompletionList(_files[path], results));
     });
-    _server.searchResults.listen((results) {
+    _server.search.onResults.listen((results) {
       var id = results.id;
       if (!_searchResults.containsKey(id)) throw 'Missing element search $id';
       _searchResults.remove(id).complete(_toLocationList(results, _files));
@@ -119,7 +120,7 @@ class AnalysisServerAdapter implements LanguageServer {
       TextDocumentIdentifier documentId, Position position) async {
     var path = Uri.parse(documentId.uri).path;
     var offset = offsetFromPosition(_files[path], position);
-    var result = await _server.analysisGetNavigation(path, offset, 1);
+    var result = await _server.analysis.getNavigation(path, offset, 1);
     if (result.targets.isEmpty) return null;
     return _navigationLocations(result).first;
   }
@@ -139,11 +140,12 @@ class AnalysisServerAdapter implements LanguageServer {
       ReferenceContext context) async {
     var path = Uri.parse(documentId.uri).path;
     var offset = offsetFromPosition(_files[path], position);
-    var id = await _server.findElementReferences(path, offset, true);
+    var id =
+        (await _server.search.findElementReferences(path, offset, true)).id;
     var references =
         (_searchResults[id] = new Completer<List<Location>>()).future;
     if (context.includeDeclaration) {
-      var definition = await _server.analysisGetNavigation(path, offset, 1);
+      var definition = await _server.analysis.getNavigation(path, offset, 1);
       return (await references)..addAll(_navigationLocations(definition));
     }
     return references;
@@ -154,7 +156,7 @@ class AnalysisServerAdapter implements LanguageServer {
       TextDocumentIdentifier documentId, Position position) async {
     var path = Uri.parse(documentId.uri).path;
     var offset = offsetFromPosition(_files[path], position);
-    var hovers = await _server.analysisGetHover(path, offset);
+    var hovers = (await _server.analysis.getHover(path, offset)).hovers;
     if (hovers.isEmpty) return null;
     var hover = hovers.first;
     var range = rangeFromOffset(_files[path], hover.offset, hover.length);
@@ -167,7 +169,7 @@ class AnalysisServerAdapter implements LanguageServer {
 
   @override
   Stream<Diagnostics> get diagnostics =>
-      _server.analysisErrors.distinct().map((errors) {
+      _server.analysis.onErrors.distinct().map((errors) {
         var lines = _files[errors.file];
         return _toDiagnostics(lines, errors);
       });
@@ -246,57 +248,56 @@ Diagnostic _toDiagnostic(List<String> lines, AnalysisError error) =>
       ..source = 'Dart analysis server'
       ..message = error.message);
 
-int _diagnosticSeverity(
-    AnalysisErrorSeverity severity, AnalysisErrorType type) {
-  if (severity == AnalysisErrorSeverity.error) return 1;
-  if (severity == AnalysisErrorSeverity.warning) return 2;
-  return (type == AnalysisErrorType.hint) ? 4 : 3;
+int _diagnosticSeverity(String severity, String type) {
+  if (severity == 'ERROR') return 1;
+  if (severity == 'WARNING') return 2;
+  return (type == 'INFO') ? 4 : 3;
 }
 
 CompletionItemKind _completionKind(CompletionSuggestion suggestion) {
   if (suggestion.element != null) {
     switch (suggestion.element.kind) {
-      case ElementKind.getter:
-      case ElementKind.setter:
-      case ElementKind.field:
+      case 'GETTER':
+      case 'SETTER':
+      case 'FIELD':
         return CompletionItemKind.field;
-      case ElementKind.function:
+      case 'FUNCTION':
         return CompletionItemKind.function;
-      case ElementKind.method:
+      case 'METHOD':
         return CompletionItemKind.method;
-      case ElementKind.localVariable:
-      case ElementKind.topLevelVariable:
+      case 'LOCAL_VARIABLE':
+      case 'TOP_LEVEL_VARIABLE':
         return CompletionItemKind.variable;
-      case ElementKind.classElement:
-      case ElementKind.classTypeAlias:
+      case 'CLASS_ELEMENT':
+      case 'CLASS_TYPE_ALIAS':
         return CompletionItemKind.classKind;
-      case ElementKind.constructor:
+      case 'CONSTRUCTOR':
         return CompletionItemKind.constructor;
-      case ElementKind.enumConstant:
-      case ElementKind.enumElement:
+      case 'ENUM_CONSTANT':
+      case 'ENUM_ELEMENT':
         return CompletionItemKind.enumKind;
-      case ElementKind.file:
+      case 'FILE':
         return CompletionItemKind.file;
-      case ElementKind.library:
-      case ElementKind.compilationUnit:
+      case 'LIBRARY':
+      case 'COMPILATION_UNIT':
         return CompletionItemKind.module;
     }
   }
   switch (suggestion.kind) {
-    case CompletionSuggestionKind.argumentList:
+    case 'ARGUMENT_LIST':
       return CompletionItemKind.snippet; // ?
-    case CompletionSuggestionKind.import:
+    case 'IMPORT':
       return CompletionItemKind.module; // ?
-    case CompletionSuggestionKind.identifier:
+    case 'IDENTIFIER':
       return CompletionItemKind.reference;
-    case CompletionSuggestionKind.invocation:
+    case 'INVOCATION':
       return CompletionItemKind.method;
-    case CompletionSuggestionKind.keyword:
+    case 'KEYWORD':
       return CompletionItemKind.keyword;
-    case CompletionSuggestionKind.namedArgument:
-    case CompletionSuggestionKind.optionalArgument:
+    case 'NAMED_ARGUMENT':
+    case 'OPTIONAL_ARGUMENT':
       return CompletionItemKind.snippet; // ?
-    case CompletionSuggestionKind.parameter:
+    case 'PARAMETER':
       return CompletionItemKind.value; //?
     default:
       return null;

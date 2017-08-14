@@ -1,4 +1,4 @@
-import 'protocol/analysis_server/messages.dart';
+import 'package:analysis_server_lib/analysis_server_lib.dart' show Location;
 import 'protocol/language_server/messages.dart' hide Location;
 
 int offsetFromPosition(List<String> lines, Position position) =>

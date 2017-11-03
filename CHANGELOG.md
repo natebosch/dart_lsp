@@ -1,6 +1,8 @@
 # 0.0.16-dev
 
 - Reduce memory usage by caching file line lengths instead of complete content.
+- Always reread files that the editor doesn't have open rather than cache their
+  line lengths.
 
 # 0.0.15
 

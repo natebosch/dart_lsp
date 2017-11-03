@@ -11,23 +11,13 @@ class FileCache {
   /// The line lengths of files open in the editor.
   final _activeFiles = <String, List<int>>{};
 
-  /// The line lengths of files read from disk.
-  ///
-  /// As files are opened in the editor they will be removed from this map.
-  /// Note that this will miss files changed on disk from other processes.
-  final _inactiveFiles = <String, List<int>>{};
-
   List<int> operator [](Object filePath) {
     assert(filePath is String);
     if (_activeFiles.containsKey(filePath)) return _activeFiles[filePath];
-    return _inactiveFiles.putIfAbsent(
-        filePath,
-        () =>
-            new File(filePath).readAsLinesSync().map((l) => l.length).toList());
+    return new File(filePath).readAsLinesSync().map((l) => l.length).toList();
   }
 
   void operator []=(String filePath, List<int> lines) {
     _activeFiles[filePath] = lines;
-    _inactiveFiles.remove(filePath);
   }
 }

@@ -8,7 +8,7 @@ void main() {
       'longer line 2\n'
       '\n'
       'line following blank\n';
-  final lines = file.split('\n');
+  final lines = file.split('\n').map((l) => l.length);
   group('offsetFromPosition', () {
     test('start of file', () async {
       var start = new Position((b) => b

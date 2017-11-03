@@ -1,3 +1,7 @@
+# 0.0.16-dev
+
+- Reduce memory usage by caching file line lengths instead of complete content.
+
 # 0.0.15
 
 - Report 'Hint' type analysis as a 'Hint' rather than 'Info' diagnostic.

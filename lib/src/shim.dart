@@ -54,7 +54,7 @@ class AnalysisServerAdapter implements LanguageServer {
   @override
   Future<Null> textDocumentDidOpen(TextDocumentItem document) async {
     var path = Uri.parse(document.uri).path;
-    _files[path] = document.text.split('\n');
+    _files[path] = findLineLengths(document.text);
     _fileVersions[path] = document.version;
     var directory = p.dirname(path);
     if (!_openDirectories.contains(directory)) {
@@ -76,7 +76,7 @@ class AnalysisServerAdapter implements LanguageServer {
     _fileVersions[path] = documentId.version;
     // TODO: Assumes the entire file is sent
     assert(changes.length == 1);
-    _files[path] = changes.single.text.split('\n');
+    _files[path] = findLineLengths(changes.single.text);
     await _server.analysis
         .updateContent({path: new AddContentOverlay(changes.single.text)});
   }
@@ -197,23 +197,24 @@ List<Location> _toLocationList(SearchResults results, FileCache files) =>
           ..range = rangeFromLocation(files[location.file], location)))
         .toList();
 
-Diagnostics _toDiagnostics(List<String> lines, AnalysisErrors errors) =>
+Diagnostics _toDiagnostics(List<int> lineLengths, AnalysisErrors errors) =>
     new Diagnostics((b) => b
       ..uri = _toFileUri(errors.file)
-      ..diagnostics =
-          errors.errors.map((error) => _toDiagnostic(lines, error)).toList());
+      ..diagnostics = errors.errors
+          .map((error) => _toDiagnostic(lineLengths, error))
+          .toList());
 
 String _toFileUri(String path) => '${new Uri.file(path)}';
 
 CompletionList _toCompletionList(
-        List<String> lines, CompletionResults results) =>
+        List<int> lineLengths, CompletionResults results) =>
     new CompletionList((b) => b
       ..isIncomplete = !results.isLast
       ..items = results.results
-          .map((r) => _toCompletionItem(lines, r, results))
+          .map((r) => _toCompletionItem(lineLengths, r, results))
           .toList());
 
-CompletionItem _toCompletionItem(List<String> lines,
+CompletionItem _toCompletionItem(List<int> lineLengths,
         CompletionSuggestion suggestion, CompletionResults results) =>
     new CompletionItem((b) => b
       ..label = suggestion.completion
@@ -221,7 +222,7 @@ CompletionItem _toCompletionItem(List<String> lines,
       ..textEdit = new TextEdit((b) => b
         ..newText = suggestion.completion
         ..range = rangeFromOffset(
-            lines, results.replacementOffset, results.replacementLength))
+            lineLengths, results.replacementOffset, results.replacementLength))
       ..detail = _completionItemDetail(suggestion)
       ..documentation = suggestion.docComplete);
 
@@ -240,9 +241,9 @@ String _completionItemDetail(CompletionSuggestion suggestion) {
   return null;
 }
 
-Diagnostic _toDiagnostic(List<String> lines, AnalysisError error) =>
+Diagnostic _toDiagnostic(List<int> lineLengths, AnalysisError error) =>
     new Diagnostic((b) => b
-      ..range = rangeFromLocation(lines, error.location)
+      ..range = rangeFromLocation(lineLengths, error.location)
       ..severity = _diagnosticSeverity(error.severity, error.type)
       ..code = error.code
       ..source = 'Dart analysis server'

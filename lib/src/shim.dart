@@ -53,7 +53,7 @@ class AnalysisServerAdapter implements LanguageServer {
 
   @override
   Future<Null> textDocumentDidOpen(TextDocumentItem document) async {
-    var path = Uri.parse(document.uri).path;
+    var path = _filePath(document.uri);
     _files[path] = findLineLengths(document.text);
     _fileVersions[path] = document.version;
     var directory = p.dirname(path);
@@ -71,7 +71,7 @@ class AnalysisServerAdapter implements LanguageServer {
   @override
   Future<Null> textDocumentDidChange(VersionedTextDocumentIdentifier documentId,
       List<TextDocumentContentChangeEvent> changes) async {
-    var path = Uri.parse(documentId.uri).path;
+    var path = _filePath(documentId.uri);
     if (_fileVersions[path] > documentId.version) return;
     _fileVersions[path] = documentId.version;
     // TODO: Assumes the entire file is sent
@@ -83,14 +83,14 @@ class AnalysisServerAdapter implements LanguageServer {
 
   @override
   Future<Null> textDocumentDidClose(TextDocumentIdentifier documentId) async {
-    var path = Uri.parse(documentId.uri).path;
+    var path = _filePath(documentId.uri);
     await _server.analysis.updateContent({path: new RemoveContentOverlay()});
   }
 
   @override
   Future<CompletionList> textDocumentCompletion(
       TextDocumentIdentifier documentId, Position position) async {
-    var path = Uri.parse(documentId.uri).path;
+    var path = _filePath(documentId.uri);
     var offset = offsetFromPosition(_files[path], position);
     var id = (await _server.completion.getSuggestions(path, offset)).id;
     _completionPaths[id] = path;
@@ -118,7 +118,7 @@ class AnalysisServerAdapter implements LanguageServer {
   @override
   Future<Location> textDocumentDefinition(
       TextDocumentIdentifier documentId, Position position) async {
-    var path = Uri.parse(documentId.uri).path;
+    var path = _filePath(documentId.uri);
     var offset = offsetFromPosition(_files[path], position);
     var result = await _server.analysis.getNavigation(path, offset, 1);
     if (result.targets.isEmpty) return null;
@@ -138,7 +138,7 @@ class AnalysisServerAdapter implements LanguageServer {
       TextDocumentIdentifier documentId,
       Position position,
       ReferenceContext context) async {
-    var path = Uri.parse(documentId.uri).path;
+    var path = _filePath(documentId.uri);
     var offset = offsetFromPosition(_files[path], position);
     var id =
         (await _server.search.findElementReferences(path, offset, true)).id;
@@ -154,7 +154,7 @@ class AnalysisServerAdapter implements LanguageServer {
   @override
   Future<Hover> textDocumentHover(
       TextDocumentIdentifier documentId, Position position) async {
-    var path = Uri.parse(documentId.uri).path;
+    var path = _filePath(documentId.uri);
     var offset = offsetFromPosition(_files[path], position);
     var hovers = (await _server.analysis.getHover(path, offset)).hovers;
     if (hovers.isEmpty) return null;
@@ -187,6 +187,9 @@ String _hoverMessage(HoverInformation hover) {
   }
   return '$message';
 }
+
+String _filePath(String fileUri) =>
+    Uri.decodeComponent(Uri.parse(fileUri).path);
 
 List<Location> _toLocationList(SearchResults results, FileCache files) =>
     results.results

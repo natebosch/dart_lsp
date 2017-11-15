@@ -1,9 +1,13 @@
+# 0.1.0-dev
+
+- Only send changed diagnostics.
+
 # 0.0.16
 
 - Reduce memory usage by caching file line lengths instead of complete content.
 - Always reread files that the editor doesn't have open rather than cache their
   line lengths.
-- **Bug Fix:** URI decode file paths.
+- Bug Fix: URI decode file paths.
 
 # 0.0.15
 

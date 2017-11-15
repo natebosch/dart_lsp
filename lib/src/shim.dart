@@ -169,10 +169,10 @@ class AnalysisServerAdapter implements LanguageServer {
 
   @override
   Stream<Diagnostics> get diagnostics =>
-      _server.analysis.onErrors.distinct().map((errors) {
+      _server.analysis.onErrors.map((errors) {
         var lines = _files[errors.file];
         return _toDiagnostics(lines, errors);
-      });
+      }).distinct();
 }
 
 String _hoverMessage(HoverInformation hover) {

@@ -127,7 +127,7 @@ class StdIOLanguageServer {
 final _serverCapabilities = new ServerCapabilities((b) => b
   ..textDocumentSync = new TextDocumentSyncOptions((b) => b
     ..openClose = true
-    ..change = TextDocumentSyncKind.full
+    ..change = TextDocumentSyncKind.incremental
     ..willSave = false
     ..willSaveWaitUntil = false
     ..save = false)

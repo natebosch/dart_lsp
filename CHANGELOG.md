@@ -1,5 +1,6 @@
-# 0.1.0-dev
+# 0.1.0
 
+- Add support for `TextDocumentSyncKind.Incremental`.
 - Only send changed diagnostics.
 
 # 0.0.16

@@ -4,6 +4,8 @@ import 'package:path/path.dart' as p;
 
 import 'package:analysis_server_lib/analysis_server_lib.dart'
     hide Position, Location;
+
+import 'apply_change.dart';
 import 'position_convert.dart';
 import 'protocol/language_server/interface.dart';
 import 'protocol/language_server/messages.dart';
@@ -74,11 +76,18 @@ class AnalysisServerAdapter implements LanguageServer {
     var path = _filePath(documentId.uri);
     if (_fileVersions[path] > documentId.version) return;
     _fileVersions[path] = documentId.version;
-    // TODO: Assumes the entire file is sent
-    assert(changes.length == 1);
-    _files[path] = findLineLengths(changes.single.text);
-    await _server.analysis
-        .updateContent({path: new AddContentOverlay(changes.single.text)});
+    if (changes.length == 1 && changes.first.range == null) {
+      _files[path] = findLineLengths(changes.single.text);
+      await _server.analysis
+          .updateContent({path: new AddContentOverlay(changes.single.text)});
+    } else {
+      var overlay = new ChangeContentOverlay(changes.map((change) {
+        var sourceEdit = _toSourceEdit(_files[path], change);
+        _files[path] = applyChange(_files[path], change);
+        return sourceEdit;
+      }).toList());
+      await _server.analysis.updateContent({path: overlay});
+    }
   }
 
   @override
@@ -307,3 +316,8 @@ CompletionItemKind _completionKind(CompletionSuggestion suggestion) {
       return null;
   }
 }
+
+SourceEdit _toSourceEdit(
+        Iterable<int> lineLengths, TextDocumentContentChangeEvent change) =>
+    new SourceEdit(offsetFromPosition(lineLengths, change.range.start),
+        change.rangeLength, change.text);

@@ -210,3 +210,14 @@ Hover:
 CodeActionContext:
   diagnostics:
     listType: Diagnostic
+
+ApplyWorkspaceEditParams:
+  label: String
+  edit: WorkspaceEdit
+
+WorkspaceEdit:
+  # Not using `documentChanges` since there is no reasonable way to support text
+  # document version
+  changes:
+    mapType:
+      listType: TextEdit

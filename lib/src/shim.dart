@@ -13,8 +13,10 @@ import 'logging/logs.dart';
 import 'position_convert.dart';
 import 'protocol/language_server/interface.dart';
 import 'protocol/language_server/messages.dart';
+import 'utils/command_cache.dart';
 import 'utils/file_cache.dart';
 import 'utils/package_dir_detection.dart';
+import 'utils/guid.dart';
 
 Future<LanguageServer> startShimmedServer(StartupArgs args) async {
   var client = await AnalysisServer.create(
@@ -31,7 +33,7 @@ class AnalysisServerAdapter implements LanguageServer {
   final StartupArgs _args;
 
   final _files = new FileCache();
-
+  final _commands = new CommandCache();
   final _fileVersions = <String, int>{};
 
   final _log = new Logger('AnalysisServerAdapter');
@@ -43,9 +45,12 @@ class AnalysisServerAdapter implements LanguageServer {
   final _openDirectories = new Set<String>();
   final _openFiles = new Set<String>();
 
+  ClientCapabilities clientCapabilities;
+
   @override
   Future<ServerCapabilities> initialize(int clientPid, String rootUri,
       ClientCapabilities clientCapabilities, String trace) async {
+    this.clientCapabilities = clientCapabilities;
     final directory = _filePath(rootUri);
     final clientName = '${p.basename(directory)}-$clientPid';
     startLogging(clientName, _args.forceTraceLevel ?? trace);
@@ -221,15 +226,29 @@ class AnalysisServerAdapter implements LanguageServer {
       TextDocumentIdentifier documentId,
       Range range,
       CodeActionContext context) async {
+    // The only actions supported go through workspace/applyEdit
+    if (!(clientCapabilities?.workspace?.applyEdit ?? false)) return const [];
+
     var path = _filePath(documentId.uri);
     List<int> lineLengths = _files[path];
     var offsetLength = offsetLengthFromRange(lineLengths, range);
     var assists = (await _server.edit
             .getAssists(path, offsetLength.offset, offsetLength.length))
         .assists;
-    // TODO - store the edits so they can be accessed later with
-    // `workspace/executeCommand`
-    return assists.map((a) => _toCommand(lineLengths, a)).toList();
+    return assists.map((sourceChange) {
+      var command = _toCommand(sourceChange);
+      _commands.add(command, () => _applyEdit(sourceChange));
+      return command;
+    }).toList();
+  }
+
+  @override
+  Future<Null> workspaceExecuteCommand(String command) async {
+    _commands[command]();
+  }
+
+  void _applyEdit(SourceChange change) {
+    _workspaceEdits.add(_toWorkspaceEdit(_files, change));
   }
 
   final _searchResults = <String, Completer<List<Location>>>{};
@@ -240,6 +259,10 @@ class AnalysisServerAdapter implements LanguageServer {
         var lines = _files[errors.file];
         return _toDiagnostics(lines, errors);
       }).distinct();
+
+  @override
+  Stream<ApplyWorkspaceEditParams> get workspaceEdits => _workspaceEdits.stream;
+  final _workspaceEdits = new StreamController<ApplyWorkspaceEditParams>();
 }
 
 String _hoverMessage(HoverInformation hover) {
@@ -380,8 +403,23 @@ SourceEdit _toSourceEdit(
     new SourceEdit(offsetFromPosition(lineLengths, change.range.start),
         change.rangeLength, change.text);
 
-Command _toCommand(Iterable<int> lineLengths, SourceChange change) =>
-    new Command((b) => b
-      ..title = change.message
-      ..arguments = const []
-      ..command = 'make this unique');
+Command _toCommand(SourceChange change) => new Command((b) => b
+  ..title = change.message
+  ..arguments = const []
+  ..command = makeGuid());
+
+ApplyWorkspaceEditParams _toWorkspaceEdit(
+        FileCache fileCache, SourceChange change) =>
+    new ApplyWorkspaceEditParams((b) => b
+      ..label = change.message
+      ..edit = new WorkspaceEdit((b) => b
+        ..changes = new Map<String, List<TextEdit>>.fromIterable(change.edits,
+            key: (edit) => _toFileUri(edit.file),
+            value: (edit) => edit.edits
+                .map((e) => _toTextEdit(fileCache[edit.file], e))
+                .toList())));
+
+TextEdit _toTextEdit(Iterable<int> lineLengths, SourceEdit edit) =>
+    new TextEdit((b) => b
+      ..newText = edit.replacement
+      ..range = rangeFromOffset(lineLengths, edit.offset, edit.length));

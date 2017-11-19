@@ -28,5 +28,7 @@ abstract class LanguageServer {
       TextDocumentIdentifier documentId,
       Range range,
       CodeActionContext context);
+  Future<Null> workspaceExecuteCommand(String command);
   Stream<Diagnostics> get diagnostics;
+  Stream<ApplyWorkspaceEditParams> get workspaceEdits;
 }

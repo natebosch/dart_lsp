@@ -1,7 +1,8 @@
-# 0.1.2-dev
+# 0.1.2
 
 - Only add `rootUri` as an analysis root when it or a parent seems to be a
   package directory.
+- Add support for code actions.
 
 # 0.1.1
 

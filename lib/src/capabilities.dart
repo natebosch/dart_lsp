@@ -12,11 +12,11 @@ final serverCapabilities = new ServerCapabilities((b) => b
     ..resolveProvider = false
     ..triggerCharacters = const ['.'])
   ..definitionProvider = true
-  ..referencesProvider = false
+  ..referencesProvider = true
+  ..codeActionProvider = true
   ..documentHighlightsProvider = false
   ..documentSymbolProvider = false
   ..workspaceSymbolProvider = false
-  ..codeActionProvider = false
   ..codeLensProvider = false
   ..documentFormattingProvider = false
   ..documentRangeFormattingProvider = false

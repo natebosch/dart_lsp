@@ -1,3 +1,51 @@
+class ApplyWorkspaceEditParams {
+  ApplyWorkspaceEditParams._(this.edit, this.label);
+
+  factory ApplyWorkspaceEditParams(
+      void Function(ApplyWorkspaceEditParams$Builder) init) {
+    final b = new ApplyWorkspaceEditParams$Builder._();
+    init(b);
+    return new ApplyWorkspaceEditParams._(b.edit, b.label);
+  }
+
+  factory ApplyWorkspaceEditParams.fromJson(Map params) =>
+      new ApplyWorkspaceEditParams._(
+          params.containsKey('edit')
+              ? new WorkspaceEdit.fromJson(params['edit'])
+              : null,
+          params.containsKey('label') ? params['label'] : null);
+
+  final WorkspaceEdit edit;
+
+  final String label;
+
+  Map toJson() => {'edit': edit?.toJson(), 'label': label};
+  @override
+  int get hashCode {
+    var hash = 0;
+    hash = _hashCombine(hash, _deepHashCode(edit));
+    hash = _hashCombine(hash, _deepHashCode(label));
+    return _hashComplete(hash);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (other is! ApplyWorkspaceEditParams) return false;
+    var o = other as ApplyWorkspaceEditParams;
+    if (edit != o.edit) return false;
+    if (label != o.label) return false;
+    return true;
+  }
+}
+
+class ApplyWorkspaceEditParams$Builder {
+  ApplyWorkspaceEditParams$Builder._();
+
+  WorkspaceEdit edit;
+
+  String label;
+}
+
 class ClientCapabilities {
   ClientCapabilities._(this.textDocument, this.workspace);
 
@@ -2149,6 +2197,53 @@ class WorkspaceClientCapabilities$Builder {
   DynamicRegistrationCapability executeCommand;
 
   DynamicRegistrationCapability symbol;
+}
+
+class WorkspaceEdit {
+  WorkspaceEdit._(this.changes);
+
+  factory WorkspaceEdit(void Function(WorkspaceEdit$Builder) init) {
+    final b = new WorkspaceEdit$Builder._();
+    init(b);
+    return new WorkspaceEdit._(b.changes);
+  }
+
+  factory WorkspaceEdit.fromJson(Map params) =>
+      new WorkspaceEdit._(params.containsKey('changes')
+          ? new Map.fromIterable(params['changes'].keys,
+              value: (v) => params['changes'][v]
+                  .map((v) => new TextEdit.fromJson(v))
+                  .toList())
+          : null);
+
+  final Map<String, List<TextEdit>> changes;
+
+  Map toJson() => {
+        'changes': changes == null
+            ? null
+            : new Map.fromIterable(changes.keys,
+                value: (v) => changes[v]?.map((v) => v?.toJson())?.toList())
+      };
+  @override
+  int get hashCode {
+    var hash = 0;
+    hash = _hashCombine(hash, _deepHashCode(changes));
+    return _hashComplete(hash);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (other is! WorkspaceEdit) return false;
+    var o = other as WorkspaceEdit;
+    if (!_deepEquals(changes, o.changes)) return false;
+    return true;
+  }
+}
+
+class WorkspaceEdit$Builder {
+  WorkspaceEdit$Builder._();
+
+  Map<String, List<TextEdit>> changes;
 }
 
 int _hashCombine(int hash, int value) {

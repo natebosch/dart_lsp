@@ -18,7 +18,7 @@ class StdIOLanguageServer {
 
     _lifecycleMethods(peer);
     _fileHandlingMethods(peer);
-    _diagnosticNotifications(peer);
+    _notifications(peer);
     _completionMethods(peer);
     _referenceMethods(peer);
     _codeActionMethods(peer);
@@ -75,9 +75,13 @@ class StdIOLanguageServer {
     });
   }
 
-  void _diagnosticNotifications(Peer peer) {
+  void _notifications(Peer peer) {
     _server.diagnostics.map((d) => d.toJson()).listen((diagnostics) {
       peer.sendNotification('textDocument/publishDiagnostics', diagnostics);
+    });
+    _server.workspaceEdits.map((e) => e.toJson()).listen((edit) {
+      // Ignore response?
+      peer.sendRequest('workspace/applyEdit', edit);
     });
   }
 
@@ -120,6 +124,8 @@ class StdIOLanguageServer {
             .textDocumentCodeAction(
                 _document(params), _range(params), _codeActionContext(params))
             .then((r) => r?.map((e) => e.toJson())?.toList()));
+    _registerRequest(peer, 'workspace/executeCommand',
+        (params) => _server.workspaceExecuteCommand(params['command'].value));
   }
 }
 

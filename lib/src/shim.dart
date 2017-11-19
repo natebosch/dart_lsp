@@ -6,13 +6,16 @@ import 'package:analysis_server_lib/analysis_server_lib.dart'
     hide Position, Location;
 
 import 'apply_change.dart';
+import 'logging/logs.dart';
 import 'position_convert.dart';
 import 'protocol/language_server/interface.dart';
 import 'protocol/language_server/messages.dart';
 import 'utils/file_cache.dart';
 
 Future<LanguageServer> startShimmedServer() async {
-  var client = await AnalysisServer.create();
+  var client = await AnalysisServer.create(
+      onRead: (m) => analyzerSink.add('OUT: $m\n'),
+      onWrite: (m) => analyzerSink.add('IN: $m\n'));
   await client.server.onConnected.first;
   return new AnalysisServerAdapter(client);
 }

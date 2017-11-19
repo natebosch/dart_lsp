@@ -1,3 +1,7 @@
+# 0.1.1-dev
+
+- Bug Fix: Restore analyzer wire log.
+
 # 0.1.0
 
 - Add support for `TextDocumentSyncKind.Incremental`.

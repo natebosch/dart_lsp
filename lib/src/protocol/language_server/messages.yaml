@@ -206,3 +206,7 @@ ReferenceContext:
 Hover:
   contents: String
   range: Range
+
+CodeActionContext:
+  diagnostics:
+    listType: Diagnostic

@@ -120,6 +120,19 @@ class StdIOLanguageServer {
                 documentId, position, context))
             ?.map((r) => r.toJson())
             ?.toList();
+      })
+      ..registerMethod('textDocument/codeAction', (params) async {
+        if (!_isInitialized) {
+          throw new RpcException(_notInitialized, _notInitializedMessage);
+        }
+        var documentId =
+            new TextDocumentIdentifier.fromJson(params['textDocument'].value);
+        var range = new Range.fromJson(params['range'].value);
+        var context = new CodeActionContext.fromJson(params['context'].value);
+        return (await _server.textDocumentCodeAction(
+                documentId, range, context))
+            .map((r) => r.toJson())
+            ?.toList();
       });
   }
 }

@@ -22,5 +22,7 @@ abstract class LanguageServer {
       ReferenceContext context);
   Future<Hover> textDocumentHover(
       TextDocumentIdentifier documentId, Position position);
+  Future<List<Command>> textDocumentCodeAction(TextDocumentIdentifier documentId,
+      Range range, CodeActionContext context);
   Stream<Diagnostics> get diagnostics;
 }

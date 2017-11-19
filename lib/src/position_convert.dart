@@ -35,5 +35,17 @@ Position positionFromOffset(Iterable<int> lineLengths, int offset) {
     ..character = offset - consumedCharacters);
 }
 
+OffsetLength offsetLengthFromRange(Iterable<int> lineLengths, Range range) {
+  var offset = offsetFromPosition(lineLengths, range.start);
+  var endOffset = offsetFromPosition(lineLengths, range.end);
+  return new OffsetLength(offset, endOffset - offset);
+}
+
 List<int> findLineLengths(String file) =>
     file.split('\n').map((l) => l.length).toList();
+
+class OffsetLength {
+  final int offset;
+  final int length;
+  const OffsetLength(this.offset, this.length);
+}

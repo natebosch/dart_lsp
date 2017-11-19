@@ -52,6 +52,54 @@ class ClientCapabilities$Builder {
   ClientCapabilities$Builder._();
 }
 
+class CodeActionContext {
+  final List<Diagnostic> diagnostics;
+
+  CodeActionContext._(this.diagnostics);
+  factory CodeActionContext(void init(CodeActionContext$Builder b)) {
+    var b = new CodeActionContext$Builder._();
+    init(b);
+    return new CodeActionContext._(b.diagnostics);
+  }
+
+  factory CodeActionContext.fromJson(Map params) =>
+      new CodeActionContext._(params.containsKey("diagnostics")
+          ? params["diagnostics"]
+              .map((v) => new Diagnostic.fromJson(v))
+              .toList()
+          : null);
+
+  Map toJson() =>
+      {"diagnostics": diagnostics?.map((v) => v?.toJson())?.toList()};
+
+  @override
+  bool operator ==(Object other) {
+    if (other is! CodeActionContext) return false;
+    var o = other as CodeActionContext;
+    if (!_deepEquals(diagnostics, o.diagnostics)) return false;
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    int hash = 0;
+    for (var field in [diagnostics]) {
+      hash = 0x1fffffff & (hash + field.hashCode);
+      hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
+      hash ^= hash >> 6;
+    }
+    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
+    hash = hash ^ (hash >> 11);
+    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
+  }
+}
+
+class CodeActionContext$Builder {
+  List<Diagnostic> diagnostics;
+
+  CodeActionContext$Builder._();
+}
+
 class CodeLensOptions {
   final bool resolveProvider;
 

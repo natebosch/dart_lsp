@@ -177,6 +177,22 @@ class AnalysisServerAdapter implements LanguageServer {
       ..range = range);
   }
 
+  @override
+  Future<List<Command>> textDocumentCodeAction(
+      TextDocumentIdentifier documentId,
+      Range range,
+      CodeActionContext context) async {
+    var path = _filePath(documentId.uri);
+    List<int> lineLengths = _files[path];
+    var offsetLength = offsetLengthFromRange(lineLengths, range);
+    var assists = (await _server.edit
+            .getAssists(path, offsetLength.offset, offsetLength.length))
+        .assists;
+    // TODO - store the edits so they can be accessed later with
+    // `workspace/executeCommand`
+    return assists.map((a) => _toCommand(lineLengths, a)).toList();
+  }
+
   final _searchResults = <String, Completer<List<Location>>>{};
 
   @override
@@ -324,3 +340,9 @@ SourceEdit _toSourceEdit(
         Iterable<int> lineLengths, TextDocumentContentChangeEvent change) =>
     new SourceEdit(offsetFromPosition(lineLengths, change.range.start),
         change.rangeLength, change.text);
+
+Command _toCommand(Iterable<int> lineLengths, SourceChange change) =>
+    new Command((b) => b
+      ..title = change.message
+      ..arguments = const []
+      ..command = 'make this unique');

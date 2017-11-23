@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:json_rpc_2/json_rpc_2.dart';
-import 'package:path/path.dart' as p;
 
 import '../../logging/logs.dart';
 import 'interface.dart';
@@ -33,13 +32,14 @@ class StdIOLanguageServer {
 
   void _lifecycleMethods(Peer peer) {
     peer
-      ..registerMethod('initialize', (params) {
+      ..registerMethod('initialize', (params) async {
+        var serverCapabilities = await _server.initialize(
+            params['processId'].valueOr(0),
+            params['rootUri'].valueOr(''),
+            new ClientCapabilities.fromJson(params['capabilities'].value),
+            params['trace'].valueOr('off'));
         _isInitialized = true;
-        var clientDir = p.basename(params['rootUri'].valueOr(''));
-        var clientPid = params['processId'].valueOr(0);
-        var clientName = '$clientDir-$clientPid';
-        startLogging(clientName, params['trace'].valueOr('off'));
-        return {'capabilities': _serverCapabilities.toJson()};
+        return {'capabilities': serverCapabilities.toJson()};
       })
       ..registerMethod('shutdown', _server.shutdown)
       ..registerMethod('exit', _server.exit);
@@ -136,26 +136,3 @@ class StdIOLanguageServer {
       });
   }
 }
-
-final _serverCapabilities = new ServerCapabilities((b) => b
-  ..textDocumentSync = new TextDocumentSyncOptions((b) => b
-    ..openClose = true
-    ..change = TextDocumentSyncKind.incremental
-    ..willSave = false
-    ..willSaveWaitUntil = false
-    ..save = false)
-  ..hoverProvider = true
-  ..completionProvider = new CompletionOptions((b) => b
-    ..resolveProvider = false
-    ..triggerCharacters = const ['.'])
-  ..definitionProvider = true
-  ..referencesProvider = false
-  ..documentHighlightsProvider = false
-  ..documentSymbolProvider = false
-  ..workspaceSymbolProvider = false
-  ..codeActionProvider = false
-  ..codeLensProvider = false
-  ..documentFormattingProvider = false
-  ..documentRangeFormattingProvider = false
-  ..documentOnTypeFormattingProvider = false
-  ..renameProvider = false);

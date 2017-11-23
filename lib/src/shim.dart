@@ -6,6 +6,7 @@ import 'package:analysis_server_lib/analysis_server_lib.dart'
     hide Position, Location;
 
 import 'apply_change.dart';
+import 'capabilities.dart';
 import 'logging/logs.dart';
 import 'position_convert.dart';
 import 'protocol/language_server/interface.dart';
@@ -36,6 +37,18 @@ class AnalysisServerAdapter implements LanguageServer {
   final _openFiles = new Set<String>();
 
   @override
+  Future<ServerCapabilities> initialize(int clientPid, String rootUri,
+      ClientCapabilities clientCapabilities, String trace) async {
+    final directory = _filePath(rootUri);
+    _openDirectories.add(directory);
+    var clientName = '${p.basename(directory)}-$clientPid';
+    startLogging(clientName, trace);
+    await _server.analysis
+        .setAnalysisRoots(_openDirectories.toList(), const []);
+    return serverCapabilities;
+  }
+
+  @override
   Future<Null> get onDone => _onDone.future;
   final _onDone = new Completer<Null>();
   bool _hasShutdown = false;
@@ -62,7 +75,8 @@ class AnalysisServerAdapter implements LanguageServer {
     _files[path] = findLineLengths(document.text);
     _fileVersions[path] = document.version;
     var directory = p.dirname(path);
-    if (!_openDirectories.contains(directory)) {
+    if (!_openDirectories.contains(directory) &&
+        !_openDirectories.any((d) => p.isWithin(d, directory))) {
       _openDirectories.add(directory);
       await _server.analysis
           .setAnalysisRoots(_openDirectories.toList(), const []);

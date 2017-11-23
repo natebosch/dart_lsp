@@ -1,6 +1,9 @@
 # 0.1.1-dev
 
 - Bug Fix: Restore analyzer wire log.
+- Set the client `rootUri` as an analysis root. Resolves some cases where
+  opening a file in a subdirectory can fail to find symbols from directories
+  higher up.
 
 # 0.1.0
 

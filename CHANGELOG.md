@@ -4,6 +4,7 @@
 - Set the client `rootUri` as an analysis root. Resolves some cases where
   opening a file in a subdirectory can fail to find symbols from directories
   higher up.
+- Bug Fix: Set priority files by path rather than URI.
 
 # 0.1.0
 

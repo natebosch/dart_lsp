@@ -81,7 +81,7 @@ class AnalysisServerAdapter implements LanguageServer {
       await _server.analysis
           .setAnalysisRoots(_openDirectories.toList(), const []);
     }
-    _openFiles.add(document.uri);
+    _openFiles.add(path);
     await _server.analysis.setPriorityFiles(_openFiles.toList());
     await _server.analysis
         .updateContent({path: new AddContentOverlay(document.text)});

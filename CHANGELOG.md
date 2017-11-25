@@ -1,4 +1,4 @@
-# 0.1.1-dev
+# 0.1.1
 
 - Bug Fix: Restore analyzer wire log.
 - Set the client `rootUri` as an analysis root. Resolves some cases where

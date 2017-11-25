@@ -5,6 +5,7 @@
   opening a file in a subdirectory can fail to find symbols from directories
   higher up.
 - Bug Fix: Set priority files by path rather than URI.
+- Add ability to pass arguments to the analysis server.
 
 # 0.1.0
 

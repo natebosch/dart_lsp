@@ -11,9 +11,11 @@ environment:
 
 dependencies:
   analysis_server_lib: ^0.1.2+1
+  args: ^1.0.0
   async: ^1.11.3
   json_rpc_2: ^2.0.3
   logging: ^0.11.3
+  meta: ^1.1.0
   path: ^1.4.1
   stream_channel: ^1.5.0
   stream_transform: ^0.0.3

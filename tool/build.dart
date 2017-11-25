@@ -5,6 +5,8 @@ import 'package:build_runner/build_runner.dart';
 import 'message_builder.dart';
 
 Future main() async {
-  await build(new PhaseGroup.singleAction(new MessageBuilder(),
-      new InputSet('dart_language_server', ['lib/**/*.yaml'])));
+  await build([
+    new BuildAction(new MessageBuilder(), 'dart_language_server',
+        inputs: ['lib/**/*.yaml'])
+  ]);
 }

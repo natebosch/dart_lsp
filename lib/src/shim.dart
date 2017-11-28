@@ -13,6 +13,7 @@ import 'position_convert.dart';
 import 'protocol/language_server/interface.dart';
 import 'protocol/language_server/messages.dart';
 import 'utils/file_cache.dart';
+import 'utils/package_dir_detection.dart';
 
 Future<LanguageServer> startShimmedServer(StartupArgs args) async {
   var client = await AnalysisServer.create(
@@ -43,12 +44,31 @@ class AnalysisServerAdapter implements LanguageServer {
   Future<ServerCapabilities> initialize(int clientPid, String rootUri,
       ClientCapabilities clientCapabilities, String trace) async {
     final directory = _filePath(rootUri);
-    _openDirectories.add(directory);
     final clientName = '${p.basename(directory)}-$clientPid';
     startLogging(clientName, _args.forceTraceLevel ?? trace);
-    await _server.analysis
-        .setAnalysisRoots(_openDirectories.toList(), const []);
+    await _addAnalysisRoot(directory);
     return serverCapabilities;
+  }
+
+  /// If [directory] is not already present in or underneath [_openDirectories]
+  /// look for a parent that might be a package and add it.
+  ///
+  /// If [force] is true and this directory is not present, but also doesn't
+  /// look like it's in a package, add the directory anyway.
+  Future<Null> _addAnalysisRoot(String directory, {bool force = false}) async {
+    if (!_openDirectories.contains(directory) &&
+        !_openDirectories.any((d) => p.isWithin(d, directory))) {
+      var packageDir = findParentPackageDir(directory);
+      if (packageDir != null) {
+        _openDirectories.add(packageDir);
+        await _server.analysis
+            .setAnalysisRoots(_openDirectories.toList(), const []);
+      } else if (force) {
+        _openDirectories.add(directory);
+        await _server.analysis
+            .setAnalysisRoots(_openDirectories.toList(), const []);
+      }
+    }
   }
 
   @override
@@ -78,12 +98,7 @@ class AnalysisServerAdapter implements LanguageServer {
     _files[path] = findLineLengths(document.text);
     _fileVersions[path] = document.version;
     var directory = p.dirname(path);
-    if (!_openDirectories.contains(directory) &&
-        !_openDirectories.any((d) => p.isWithin(d, directory))) {
-      _openDirectories.add(directory);
-      await _server.analysis
-          .setAnalysisRoots(_openDirectories.toList(), const []);
-    }
+    await _addAnalysisRoot(directory, force: true);
     _openFiles.add(path);
     await _server.analysis.setPriorityFiles(_openFiles.toList());
     await _server.analysis

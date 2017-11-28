@@ -1,3 +1,8 @@
+# 0.1.2-dev
+
+- Only add `rootUri` as an analysis root when it or a parent seems to be a
+  package directory.
+
 # 0.1.1
 
 - Bug Fix: Restore analyzer wire log.

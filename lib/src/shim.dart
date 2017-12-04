@@ -4,6 +4,7 @@ import 'package:path/path.dart' as p;
 
 import 'package:analysis_server_lib/analysis_server_lib.dart'
     hide Position, Location;
+import 'package:logging/logging.dart';
 
 import 'apply_change.dart';
 import 'args.dart';
@@ -32,6 +33,8 @@ class AnalysisServerAdapter implements LanguageServer {
   final _files = new FileCache();
 
   final _fileVersions = <String, int>{};
+
+  final _log = new Logger('AnalysisServerAdapter');
 
   AnalysisServerAdapter(this._server, this._args) {
     _listeners();
@@ -109,7 +112,11 @@ class AnalysisServerAdapter implements LanguageServer {
   Future<Null> textDocumentDidChange(VersionedTextDocumentIdentifier documentId,
       List<TextDocumentContentChangeEvent> changes) async {
     var path = _filePath(documentId.uri);
-    if (_fileVersions[path] > documentId.version) return;
+    if (_fileVersions[path] > documentId.version) {
+      _log.warning('Ignoring file change for $path at version '
+          '${documentId.version} since last seen in ${_fileVersions[path]}');
+      return;
+    }
     _fileVersions[path] = documentId.version;
     if (changes.length == 1 && changes.first.range == null) {
       _files[path] = findLineLengths(changes.single.text);

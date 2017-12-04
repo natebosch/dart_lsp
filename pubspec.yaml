@@ -21,11 +21,9 @@ dependencies:
   stream_transform: ^0.0.3
 
 dev_dependencies:
-  build: ^0.11.0
+  message_builder: ^0.1.0
   build_runner: ^0.6.0
-  dart_style: ^1.0.7
   test: ^0.12.18
-  yaml: ^2.1.12
 
 executables:
   dart_language_server: dart_language_server

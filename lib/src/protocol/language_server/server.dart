@@ -20,6 +20,8 @@ class StdIOLanguageServer {
     _fileHandlingMethods(peer);
     _diagnosticNotifications(peer);
     _completionMethods(peer);
+    _referenceMethods(peer);
+    _codeActionMethods(peer);
 
     peer.listen();
 
@@ -27,8 +29,6 @@ class StdIOLanguageServer {
   }
 
   bool _isInitialized = false;
-  static const _notInitialized = -32002;
-  static const _notInitializedMessage = 'The server has not been initialized';
 
   void _lifecycleMethods(Peer peer) {
     peer
@@ -45,94 +45,103 @@ class StdIOLanguageServer {
       ..registerMethod('exit', _server.exit);
   }
 
+  /// Requests throw if they are made before initialization.
+  void _registerRequest(Peer peer, String methodName, Function callback) {
+    peer.registerMethod(methodName, (params) {
+      if (!_isInitialized) {
+        throw new RpcException(-32003, 'The server has not been initialized');
+      }
+      return callback(params);
+    });
+  }
+
+  /// Notifications are ignored until after initialization.
+  void _registerNotification(Peer peer, String methodName, Function callback) {
+    peer.registerMethod(methodName, (params) {
+      if (_isInitialized) return callback(params);
+    });
+  }
+
   void _fileHandlingMethods(Peer peer) {
-    peer
-      ..registerMethod('textDocument/didOpen', (params) async {
-        if (!_isInitialized) return;
-        var document =
-            new TextDocumentItem.fromJson(params['textDocument'].value);
-        await _server.textDocumentDidOpen(document);
-      })
-      ..registerMethod('textDocument/didChange', (params) async {
-        if (!_isInitialized) return;
-        var documentId = new VersionedTextDocumentIdentifier.fromJson(
-            params['textDocument'].value);
-        var changes = params['contentChanges'].value.map(
-            (change) => new TextDocumentContentChangeEvent.fromJson(change));
-        await _server.textDocumentDidChange(documentId, changes);
-      })
-      ..registerMethod('textDocument/didClose', (params) async {
-        if (!_isInitialized) return;
-        var documentId =
-            new TextDocumentIdentifier(params['textDocument'].value);
-        await _server.textDocumentDidClose(documentId);
-      });
+    _registerNotification(peer, 'textDocument/didOpen', (params) async {
+      await _server.textDocumentDidOpen(_documentItem(params));
+    });
+    _registerNotification(peer, 'textDocument/didChange', (params) async {
+      await _server.textDocumentDidChange(
+          _versionedDocument(params), _contentChanges(params));
+    });
+    _registerNotification(peer, 'textDocument/didClose', (params) async {
+      await _server.textDocumentDidClose(_document(params));
+    });
   }
 
   void _diagnosticNotifications(Peer peer) {
-    _server.diagnostics.listen((diagnostics) {
-      peer.sendNotification(
-          'textDocument/publishDiagnostics', diagnostics.toJson());
+    _server.diagnostics.map((d) => d.toJson()).listen((diagnostics) {
+      peer.sendNotification('textDocument/publishDiagnostics', diagnostics);
     });
   }
 
   void _completionMethods(Peer peer) {
-    peer
-      ..registerMethod('textDocument/completion', (params) async {
-        if (!_isInitialized) {
-          throw new RpcException(_notInitialized, _notInitializedMessage);
-        }
-        var documentId =
-            new TextDocumentIdentifier.fromJson(params['textDocument'].value);
-        var position = new Position.fromJson(params['position'].value);
-        return (await _server.textDocumentCompletion(documentId, position))
-            .toJson();
-      })
-      ..registerMethod('textDocument/definition', (params) async {
-        if (!_isInitialized) {
-          throw new RpcException(_notInitialized, _notInitializedMessage);
-        }
-        var documentId =
-            new TextDocumentIdentifier.fromJson(params['textDocument'].value);
-        var position = new Position.fromJson(params['position'].value);
-        return (await _server.textDocumentDefinition(documentId, position))
-            ?.toJson();
-      })
-      ..registerMethod('textDocument/hover', (params) async {
-        if (!_isInitialized) {
-          throw new RpcException(_notInitialized, _notInitializedMessage);
-        }
-        var documentId =
-            new TextDocumentIdentifier.fromJson(params['textDocument'].value);
-        var position = new Position.fromJson(params['position'].value);
-        return (await _server.textDocumentHover(documentId, position))
-            ?.toJson();
-      })
-      ..registerMethod('textDocument/references', (params) async {
-        if (!_isInitialized) {
-          throw new RpcException(_notInitialized, _notInitializedMessage);
-        }
-        var documentId =
-            new TextDocumentIdentifier.fromJson(params['textDocument'].value);
-        var position = new Position.fromJson(params['position'].value);
-        var context = new ReferenceContext.fromJson(params['context'].value);
-        return (await _server.textDocumentReferences(
-                documentId, position, context))
-            ?.map((r) => r.toJson())
-            ?.toList();
-      })
-      ..registerMethod('textDocument/codeAction', (params) async {
-        if (!_isInitialized) {
-          throw new RpcException(_notInitialized, _notInitializedMessage);
-        }
-        var documentId =
-            new TextDocumentIdentifier.fromJson(params['textDocument'].value);
-        var range = new Range.fromJson(params['range'].value);
-        var context = new CodeActionContext.fromJson(params['context'].value);
-        return (await _server.textDocumentCodeAction(
-                documentId, range, context))
-            .map((r) => r.toJson())
-            ?.toList();
-      });
+    _registerRequest(
+        peer,
+        'textDocument/completion',
+        (params) => _server
+            .textDocumentCompletion(_document(params), _position(params))
+            .then((r) => r.toJson()));
+  }
+
+  void _referenceMethods(Peer peer) {
+    _registerRequest(
+        peer,
+        'textDocument/definition',
+        (params) => _server
+            .textDocumentDefinition(_document(params), _position(params))
+            .then((r) => r?.toJson()));
+    _registerRequest(
+        peer,
+        'textDocument/hover',
+        (params) => _server
+            .textDocumentHover(_document(params), _position(params))
+            .then((r) => r?.toJson()));
+    _registerRequest(
+        peer,
+        'textDocument/references',
+        (params) => _server
+            .textDocumentReferences(
+                _document(params), _position(params), _referenceCOntext(params))
+            .then((r) => r?.map((e) => e.toJson())?.toList()));
+  }
+
+  void _codeActionMethods(Peer peer) {
+    _registerRequest(
+        peer,
+        'textDocument/codeAction',
+        (params) => _server
+            .textDocumentCodeAction(
+                _document(params), _range(params), _codeActionContext(params))
+            .then((r) => r?.map((e) => e.toJson())?.toList()));
   }
 }
+
+_documentItem(params) =>
+    new TextDocumentItem.fromJson(params['textDocument'].value);
+
+_versionedDocument(params) =>
+    new VersionedTextDocumentIdentifier.fromJson(params['textDocument'].value);
+
+_document(params) =>
+    new TextDocumentIdentifier.fromJson(params['textDocument'].value);
+
+_range(params) => new Range.fromJson(params['range'].value);
+
+_position(params) => new Range.fromJson(params['position'].value);
+
+_codeActionContext(params) =>
+    new CodeActionContext.fromJson(params['context'].value);
+
+_referenceCOntext(params) =>
+    new ReferenceContext.fromJson(params['context'].pvalue);
+
+_contentChanges(params) => params['contentChanges']
+    .value
+    .map((change) => new TextDocumentContentChangeEvent.fromJson(change));

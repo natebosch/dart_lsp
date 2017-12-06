@@ -108,7 +108,7 @@ class StdIOLanguageServer {
         'textDocument/references',
         (params) => _server
             .textDocumentReferences(
-                _document(params), _position(params), _referenceCOntext(params))
+                _document(params), _position(params), _referenceContext(params))
             .then((r) => r?.map((e) => e.toJson())?.toList()));
   }
 
@@ -123,25 +123,26 @@ class StdIOLanguageServer {
   }
 }
 
-_documentItem(params) =>
+TextDocumentItem _documentItem(params) =>
     new TextDocumentItem.fromJson(params['textDocument'].value);
 
-_versionedDocument(params) =>
+VersionedTextDocumentIdentifier _versionedDocument(params) =>
     new VersionedTextDocumentIdentifier.fromJson(params['textDocument'].value);
 
-_document(params) =>
+TextDocumentIdentifier _document(params) =>
     new TextDocumentIdentifier.fromJson(params['textDocument'].value);
 
-_range(params) => new Range.fromJson(params['range'].value);
+Range _range(params) => new Range.fromJson(params['range'].value);
 
-_position(params) => new Range.fromJson(params['position'].value);
+Position _position(params) => new Position.fromJson(params['position'].value);
 
-_codeActionContext(params) =>
+CodeActionContext _codeActionContext(params) =>
     new CodeActionContext.fromJson(params['context'].value);
 
-_referenceCOntext(params) =>
+ReferenceContext _referenceContext(params) =>
     new ReferenceContext.fromJson(params['context'].pvalue);
 
-_contentChanges(params) => params['contentChanges']
-    .value
-    .map((change) => new TextDocumentContentChangeEvent.fromJson(change));
+TextDocumentContentChangeEvent _contentChanges(params) =>
+    params['contentChanges']
+        .value
+        .map((change) => new TextDocumentContentChangeEvent.fromJson(change));

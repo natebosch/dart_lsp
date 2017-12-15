@@ -140,7 +140,7 @@ CodeActionContext _codeActionContext(params) =>
     new CodeActionContext.fromJson(params['context'].value);
 
 ReferenceContext _referenceContext(params) =>
-    new ReferenceContext.fromJson(params['context'].pvalue);
+    new ReferenceContext.fromJson(params['context'].value);
 
 TextDocumentContentChangeEvent _contentChanges(params) =>
     params['contentChanges']

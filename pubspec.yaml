@@ -21,8 +21,8 @@ dependencies:
   stream_transform: ^0.0.3
 
 dev_dependencies:
-  message_builder: ^0.1.0
-  build_runner: ^0.6.0
+  message_builder: ^0.1.1
+  build_runner: ^0.7.0
   test: ^0.12.18
 
 executables:

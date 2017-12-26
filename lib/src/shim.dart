@@ -15,8 +15,9 @@ import 'protocol/language_server/interface.dart';
 import 'protocol/language_server/messages.dart';
 import 'utils/command_cache.dart';
 import 'utils/file_cache.dart';
-import 'utils/package_dir_detection.dart';
 import 'utils/guid.dart';
+import 'utils/package_dir_detection.dart';
+import 'utils/per_file_pool.dart';
 
 Future<LanguageServer> startShimmedServer(StartupArgs args) async {
   var client = await AnalysisServer.create(
@@ -33,6 +34,7 @@ class AnalysisServerAdapter implements LanguageServer {
   final StartupArgs _args;
 
   final _files = new FileCache();
+  final _pools = new PerFilePool();
   final _commands = new CommandCache();
   final _fileVersions = <String, int>{};
 
@@ -102,55 +104,63 @@ class AnalysisServerAdapter implements LanguageServer {
 
   @override
   Future<Null> textDocumentDidOpen(TextDocumentItem document) async {
-    var path = _filePath(document.uri);
-    _files[path] = findLineLengths(document.text);
-    _fileVersions[path] = document.version;
-    var directory = p.dirname(path);
-    await _addAnalysisRoot(directory, force: true);
-    _openFiles.add(path);
-    await _server.analysis.setPriorityFiles(_openFiles.toList());
-    await _server.analysis
-        .updateContent({path: new AddContentOverlay(document.text)});
+    final path = _filePath(document.uri);
+    await _pools.lock(path, () async {
+      _files[path] = findLineLengths(document.text);
+      _fileVersions[path] = document.version;
+      var directory = p.dirname(path);
+      await _addAnalysisRoot(directory, force: true);
+      _openFiles.add(path);
+      await _server.analysis.setPriorityFiles(_openFiles.toList());
+      await _server.analysis
+          .updateContent({path: new AddContentOverlay(document.text)});
+    });
   }
 
   @override
   Future<Null> textDocumentDidChange(VersionedTextDocumentIdentifier documentId,
       List<TextDocumentContentChangeEvent> changes) async {
-    var path = _filePath(documentId.uri);
-    if (_fileVersions[path] > documentId.version) {
-      _log.warning('Ignoring file change for $path at version '
-          '${documentId.version} since last seen in ${_fileVersions[path]}');
-      return;
-    }
-    _fileVersions[path] = documentId.version;
-    if (changes.length == 1 && changes.first.range == null) {
-      _files[path] = findLineLengths(changes.single.text);
-      await _server.analysis
-          .updateContent({path: new AddContentOverlay(changes.single.text)});
-    } else {
-      var overlay = new ChangeContentOverlay(changes.map((change) {
-        var sourceEdit = _toSourceEdit(_files[path], change);
-        _files[path] = applyChange(_files[path], change);
-        return sourceEdit;
-      }).toList());
-      await _server.analysis.updateContent({path: overlay});
-    }
+    final path = _filePath(documentId.uri);
+    await _pools.lock(path, () async {
+      if (_fileVersions[path] > documentId.version) {
+        _log.warning('Ignoring file change for $path at version '
+            '${documentId.version} since last seen in ${_fileVersions[path]}');
+        return;
+      }
+      _fileVersions[path] = documentId.version;
+      if (changes.length == 1 && changes.first.range == null) {
+        _files[path] = findLineLengths(changes.single.text);
+        await _server.analysis
+            .updateContent({path: new AddContentOverlay(changes.single.text)});
+      } else {
+        var overlay = new ChangeContentOverlay(changes.map((change) {
+          var sourceEdit = _toSourceEdit(_files[path], change);
+          _files[path] = applyChange(_files[path], change);
+          return sourceEdit;
+        }).toList());
+        await _server.analysis.updateContent({path: overlay});
+      }
+    });
   }
 
   @override
   Future<Null> textDocumentDidClose(TextDocumentIdentifier documentId) async {
-    var path = _filePath(documentId.uri);
-    await _server.analysis.updateContent({path: new RemoveContentOverlay()});
+    final path = _filePath(documentId.uri);
+    await _pools.lock(path, () async {
+      await _server.analysis.updateContent({path: new RemoveContentOverlay()});
+    });
   }
 
   @override
   Future<CompletionList> textDocumentCompletion(
       TextDocumentIdentifier documentId, Position position) async {
-    var path = _filePath(documentId.uri);
-    var offset = offsetFromPosition(_files[path], position);
-    var id = (await _server.completion.getSuggestions(path, offset)).id;
-    _completionPaths[id] = path;
-    return (_completions[id] = new Completer<CompletionList>()).future;
+    final path = _filePath(documentId.uri);
+    return _pools.lock(path, () async {
+      var offset = offsetFromPosition(_files[path], position);
+      var id = (await _server.completion.getSuggestions(path, offset)).id;
+      _completionPaths[id] = path;
+      return (_completions[id] = new Completer<CompletionList>()).future;
+    });
   }
 
   final _completions = <String, Completer<CompletionList>>{};
@@ -174,11 +184,13 @@ class AnalysisServerAdapter implements LanguageServer {
   @override
   Future<Location> textDocumentDefinition(
       TextDocumentIdentifier documentId, Position position) async {
-    var path = _filePath(documentId.uri);
-    var offset = offsetFromPosition(_files[path], position);
-    var result = await _server.analysis.getNavigation(path, offset, 1);
-    if (result.targets.isEmpty) return null;
-    return _navigationLocations(result).first;
+    final path = _filePath(documentId.uri);
+    return _pools.lock(path, () async {
+      var offset = offsetFromPosition(_files[path], position);
+      var result = await _server.analysis.getNavigation(path, offset, 1);
+      if (result.targets.isEmpty) return null;
+      return _navigationLocations(result).first;
+    });
   }
 
   Iterable<Location> _navigationLocations(NavigationResult result) =>
@@ -194,31 +206,35 @@ class AnalysisServerAdapter implements LanguageServer {
       TextDocumentIdentifier documentId,
       Position position,
       ReferenceContext context) async {
-    var path = _filePath(documentId.uri);
-    var offset = offsetFromPosition(_files[path], position);
-    var id =
-        (await _server.search.findElementReferences(path, offset, true)).id;
-    var references =
-        (_searchResults[id] = new Completer<List<Location>>()).future;
-    if (context.includeDeclaration) {
-      var definition = await _server.analysis.getNavigation(path, offset, 1);
-      return (await references)..addAll(_navigationLocations(definition));
-    }
-    return references;
+    final path = _filePath(documentId.uri);
+    return _pools.lock(path, () async {
+      var offset = offsetFromPosition(_files[path], position);
+      var id =
+          (await _server.search.findElementReferences(path, offset, true)).id;
+      var references =
+          (_searchResults[id] = new Completer<List<Location>>()).future;
+      if (context.includeDeclaration) {
+        var definition = await _server.analysis.getNavigation(path, offset, 1);
+        return (await references)..addAll(_navigationLocations(definition));
+      }
+      return references;
+    });
   }
 
   @override
   Future<Hover> textDocumentHover(
       TextDocumentIdentifier documentId, Position position) async {
-    var path = _filePath(documentId.uri);
-    var offset = offsetFromPosition(_files[path], position);
-    var hovers = (await _server.analysis.getHover(path, offset)).hovers;
-    if (hovers.isEmpty) return null;
-    var hover = hovers.first;
-    var range = rangeFromOffset(_files[path], hover.offset, hover.length);
-    return new Hover((b) => b
-      ..contents = _hoverMessage(hover)
-      ..range = range);
+    final path = _filePath(documentId.uri);
+    return _pools.lock(path, () async {
+      var offset = offsetFromPosition(_files[path], position);
+      var hovers = (await _server.analysis.getHover(path, offset)).hovers;
+      if (hovers.isEmpty) return null;
+      var hover = hovers.first;
+      var range = rangeFromOffset(_files[path], hover.offset, hover.length);
+      return new Hover((b) => b
+        ..contents = _hoverMessage(hover)
+        ..range = range);
+    });
   }
 
   @override
@@ -229,25 +245,27 @@ class AnalysisServerAdapter implements LanguageServer {
     // The only actions supported go through workspace/applyEdit
     if (!(clientCapabilities?.workspace?.applyEdit ?? false)) return const [];
 
-    final results = <Command>[];
-    var path = _filePath(documentId.uri);
-    List<int> lineLengths = _files[path];
-    var offsetLength = offsetLengthFromRange(lineLengths, range);
-    var assists = (await _server.edit
-            .getAssists(path, offsetLength.offset, offsetLength.length))
-        .assists;
-    results.addAll(
-        assists.map((a) => _commands.add(_toCommand(a), () => _applyEdit(a))));
+    final path = _filePath(documentId.uri);
+    return _pools.lock(path, () async {
+      final results = <Command>[];
+      List<int> lineLengths = _files[path];
+      var offsetLength = offsetLengthFromRange(lineLengths, range);
+      var assists = (await _server.edit
+              .getAssists(path, offsetLength.offset, offsetLength.length))
+          .assists;
+      results.addAll(assists
+          .map((a) => _commands.add(_toCommand(a), () => _applyEdit(a))));
 
-    final fixes =
-        (await _server.edit.getFixes(path, offsetLength.offset)).fixes;
-    results.addAll(fixes.expand((fix) {
-      final prefix = 'Fix [${fix.error.code}]: ';
-      return fix.fixes.map(
-          (f) => _commands.add(_toCommand(f, prefix), () => _applyEdit(f)));
-    }));
+      final fixes =
+          (await _server.edit.getFixes(path, offsetLength.offset)).fixes;
+      results.addAll(fixes.expand((fix) {
+        final prefix = 'Fix [${fix.error.code}]: ';
+        return fix.fixes.map(
+            (f) => _commands.add(_toCommand(f, prefix), () => _applyEdit(f)));
+      }));
 
-    return results;
+      return results;
+    });
   }
 
   @override

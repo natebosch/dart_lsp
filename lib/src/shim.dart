@@ -229,17 +229,25 @@ class AnalysisServerAdapter implements LanguageServer {
     // The only actions supported go through workspace/applyEdit
     if (!(clientCapabilities?.workspace?.applyEdit ?? false)) return const [];
 
+    final results = <Command>[];
     var path = _filePath(documentId.uri);
     List<int> lineLengths = _files[path];
     var offsetLength = offsetLengthFromRange(lineLengths, range);
     var assists = (await _server.edit
             .getAssists(path, offsetLength.offset, offsetLength.length))
         .assists;
-    return assists.map((sourceChange) {
-      var command = _toCommand(sourceChange);
-      _commands.add(command, () => _applyEdit(sourceChange));
-      return command;
-    }).toList();
+    results.addAll(
+        assists.map((a) => _commands.add(_toCommand(a), () => _applyEdit(a))));
+
+    final fixes =
+        (await _server.edit.getFixes(path, offsetLength.offset)).fixes;
+    results.addAll(fixes.expand((fix) {
+      final prefix = 'Fix [${fix.error.code}]: ';
+      return fix.fixes.map(
+          (f) => _commands.add(_toCommand(f, prefix), () => _applyEdit(f)));
+    }));
+
+    return results;
   }
 
   @override
@@ -403,10 +411,13 @@ SourceEdit _toSourceEdit(
     new SourceEdit(offsetFromPosition(lineLengths, change.range.start),
         change.rangeLength, change.text);
 
-Command _toCommand(SourceChange change) => new Command((b) => b
-  ..title = change.message
-  ..arguments = const []
-  ..command = makeGuid());
+Command _toCommand(SourceChange change, [String messagePrefix]) =>
+    new Command((b) => b
+      ..title = messagePrefix != null
+          ? '$messagePrefix${change.message}'
+          : change.message
+      ..arguments = const []
+      ..command = makeGuid());
 
 ApplyWorkspaceEditParams _toWorkspaceEdit(
         FileCache fileCache, SourceChange change) =>

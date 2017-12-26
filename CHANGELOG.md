@@ -1,4 +1,4 @@
-# 0.1.3
+# 0.1.3-dev
 
 - Add fixes to available code actions.
 - Add support for `textDocument/rename`.

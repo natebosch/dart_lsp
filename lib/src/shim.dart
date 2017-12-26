@@ -256,7 +256,10 @@ class AnalysisServerAdapter implements LanguageServer {
   }
 
   void _applyEdit(SourceChange change) {
-    _workspaceEdits.add(_toWorkspaceEdit(_files, change));
+    final params = new ApplyWorkspaceEditParams((b) => b
+      ..label = change.message
+      ..edit = _toWorkspaceEdit(_files, change));
+    _workspaceEdits.add(params);
   }
 
   final _searchResults = <String, Completer<List<Location>>>{};
@@ -271,6 +274,17 @@ class AnalysisServerAdapter implements LanguageServer {
   @override
   Stream<ApplyWorkspaceEditParams> get workspaceEdits => _workspaceEdits.stream;
   final _workspaceEdits = new StreamController<ApplyWorkspaceEditParams>();
+
+  @override
+  Future<WorkspaceEdit> textDocumentRename(TextDocumentIdentifier documentId,
+      Position position, String newName) async {
+    final path = _filePath(documentId.uri);
+    final offset = offsetFromPosition(_files[path], position);
+    final result = await _server.edit.getRefactoring(
+        'RENAME', path, offset, 0, false,
+        options: new RenameRefactoringOptions(newName: newName));
+    return _toWorkspaceEdit(_files, result.change);
+  }
 }
 
 String _hoverMessage(HoverInformation hover) {
@@ -419,16 +433,13 @@ Command _toCommand(SourceChange change, [String messagePrefix]) =>
       ..arguments = const []
       ..command = makeGuid());
 
-ApplyWorkspaceEditParams _toWorkspaceEdit(
-        FileCache fileCache, SourceChange change) =>
-    new ApplyWorkspaceEditParams((b) => b
-      ..label = change.message
-      ..edit = new WorkspaceEdit((b) => b
-        ..changes = new Map<String, List<TextEdit>>.fromIterable(change.edits,
-            key: (edit) => _toFileUri(edit.file),
-            value: (edit) => edit.edits
-                .map((e) => _toTextEdit(fileCache[edit.file], e))
-                .toList())));
+WorkspaceEdit _toWorkspaceEdit(FileCache fileCache, SourceChange change) =>
+    new WorkspaceEdit((b) => b
+      ..changes = new Map<String, List<TextEdit>>.fromIterable(change.edits,
+          key: (edit) => _toFileUri(edit.file),
+          value: (edit) => edit.edits
+              .map((e) => _toTextEdit(fileCache[edit.file], e))
+              .toList()));
 
 TextEdit _toTextEdit(Iterable<int> lineLengths, SourceEdit edit) =>
     new TextEdit((b) => b

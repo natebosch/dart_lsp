@@ -29,6 +29,8 @@ abstract class LanguageServer {
       Range range,
       CodeActionContext context);
   Future<Null> workspaceExecuteCommand(String command);
+  Future<WorkspaceEdit> textDocumentRename(
+      TextDocumentIdentifier documentId, Position position, String newName);
   Stream<Diagnostics> get diagnostics;
   Stream<ApplyWorkspaceEditParams> get workspaceEdits;
 }

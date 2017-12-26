@@ -126,6 +126,12 @@ class StdIOLanguageServer {
             .then((r) => r?.map((e) => e.toJson())?.toList()));
     _registerRequest(peer, 'workspace/executeCommand',
         (params) => _server.workspaceExecuteCommand(params['command'].value));
+    _registerRequest(
+        peer,
+        'textDocument/rename',
+        (params) async => (await _server.textDocumentRename(_document(params),
+                _position(params), params['newName'].value as String))
+            .toJson());
   }
 }
 

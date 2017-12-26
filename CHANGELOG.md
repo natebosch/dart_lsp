@@ -1,6 +1,7 @@
 # 0.1.3
 
 - Add fixes to available code actions.
+- Add support for `textDocument/rename`.
 
 # 0.1.2
 

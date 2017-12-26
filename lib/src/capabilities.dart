@@ -11,14 +11,14 @@ final serverCapabilities = new ServerCapabilities((b) => b
   ..completionProvider = new CompletionOptions((b) => b
     ..resolveProvider = false
     ..triggerCharacters = const ['.'])
+  ..codeActionProvider = true
   ..definitionProvider = true
   ..referencesProvider = true
-  ..codeActionProvider = true
+  ..renameProvider = true
   ..documentHighlightsProvider = false
   ..documentSymbolProvider = false
   ..workspaceSymbolProvider = false
   ..codeLensProvider = false
   ..documentFormattingProvider = false
   ..documentRangeFormattingProvider = false
-  ..documentOnTypeFormattingProvider = false
-  ..renameProvider = false);
+  ..documentOnTypeFormattingProvider = false);

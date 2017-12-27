@@ -5,6 +5,7 @@
 - Run requests for the same file serially rather than allowing them to
   interleave. Fixes some cases where bad overlays can stick around.
 - Add 'Organize imports' to every code actions list.
+- Never offer "Convert into block documentation comment"
 
 # 0.1.2
 

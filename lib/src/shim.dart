@@ -251,7 +251,9 @@ class AnalysisServerAdapter implements LanguageServer {
       var offsetLength = offsetLengthFromRange(lineLengths, range);
       var assists = (await _server.edit
               .getAssists(path, offsetLength.offset, offsetLength.length))
-          .assists;
+          .assists
+          .where(
+              (a) => a.message != 'Convert into block documentation comment');
       results.addAll(assists
           .map((a) => _commands.add(_toCommand(a), () => _applyEdit(a))));
 

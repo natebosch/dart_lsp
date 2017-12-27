@@ -4,6 +4,7 @@
 - Add support for `textDocument/rename`.
 - Run requests for the same file serially rather than allowing them to
   interleave. Fixes some cases where bad overlays can stick around.
+- Add 'Organize imports' to every code actions list.
 
 # 0.1.2
 

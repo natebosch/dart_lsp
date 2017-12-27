@@ -1,10 +1,9 @@
 import 'dart:async';
 
-import 'package:path/path.dart' as p;
-
 import 'package:analysis_server_lib/analysis_server_lib.dart'
     hide Position, Location;
 import 'package:logging/logging.dart';
+import 'package:path/path.dart' as p;
 
 import 'apply_change.dart';
 import 'args.dart';
@@ -264,8 +263,27 @@ class AnalysisServerAdapter implements LanguageServer {
             (f) => _commands.add(_toCommand(f, prefix), () => _applyEdit(f)));
       }));
 
+      results.add(_commands.add(
+          new Command((b) => b
+            ..title = 'Organize imports'
+            ..command = makeGuid()),
+          () => _organizeDirectives(_files[path], path)));
+
       return results;
     });
+  }
+
+  Future<Null> _organizeDirectives(List<int> fileLengths, String path) async {
+    final sourceFileEdit = (await _server.edit.organizeDirectives(path)).edit;
+    final workspaceEdit = new WorkspaceEdit((b) => b
+      ..changes = {
+        _toFileUri(sourceFileEdit.file): sourceFileEdit.edits
+            .map((e) => _toTextEdit(fileLengths, e))
+            .toList()
+      });
+    _workspaceEdits.add(new ApplyWorkspaceEditParams((b) => b
+      ..label = 'Organize Imports'
+      ..edit = workspaceEdit));
   }
 
   @override

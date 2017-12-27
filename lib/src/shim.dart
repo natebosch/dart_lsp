@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:analysis_server_lib/analysis_server_lib.dart'
     hide Position, Location;
+import 'package:json_rpc_2/json_rpc_2.dart';
 import 'package:logging/logging.dart';
 import 'package:path/path.dart' as p;
 
@@ -28,7 +29,7 @@ Future<LanguageServer> startShimmedServer(StartupArgs args) async {
 }
 
 /// Wraps an [AnalysisServer] and exposes it as a [LanguageServer].
-class AnalysisServerAdapter implements LanguageServer {
+class AnalysisServerAdapter extends LanguageServer {
   final AnalysisServer _server;
   final StartupArgs _args;
 
@@ -322,6 +323,15 @@ class AnalysisServerAdapter implements LanguageServer {
         'RENAME', path, offset, 0, false,
         options: new RenameRefactoringOptions(newName: newName));
     return _toWorkspaceEdit(_files, result.change);
+  }
+
+  @override
+  void setupExtraMethods(Peer peer) {
+    peer
+      ..registerMethod('dart/getServerPort', () async {
+        final result = await _server.diagnostic.getServerPort();
+        return result.port;
+      });
   }
 }
 

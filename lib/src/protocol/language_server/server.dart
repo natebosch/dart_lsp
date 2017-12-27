@@ -23,6 +23,8 @@ class StdIOLanguageServer {
     _referenceMethods(peer);
     _codeActionMethods(peer);
 
+    _server.setupExtraMethods(peer);
+
     peer.listen();
 
     onDone = _server.onDone.then((_) => peer.close()).then((_) => null);

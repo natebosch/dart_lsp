@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:json_rpc_2/json_rpc_2.dart';
+
 import 'messages.dart';
 
 abstract class LanguageServer {
@@ -33,4 +35,6 @@ abstract class LanguageServer {
       TextDocumentIdentifier documentId, Position position, String newName);
   Stream<Diagnostics> get diagnostics;
   Stream<ApplyWorkspaceEditParams> get workspaceEdits;
+
+  void setupExtraMethods(Peer peer) {}
 }

@@ -6,6 +6,7 @@
   interleave. Fixes some cases where bad overlays can stick around.
 - Add 'Organize imports' to every code actions list.
 - Never offer "Convert into block documentation comment"
+- Add `dart/getServerPort` extension method.
 
 # 0.1.2
 

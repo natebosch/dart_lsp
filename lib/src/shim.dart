@@ -378,16 +378,30 @@ CompletionList _toCompletionList(
           .toList());
 
 CompletionItem _toCompletionItem(List<int> lineLengths,
-        CompletionSuggestion suggestion, CompletionResults results) =>
-    new CompletionItem((b) => b
-      ..label = suggestion.completion
-      ..kind = _completionKind(suggestion)
-      ..textEdit = new TextEdit((b) => b
-        ..newText = suggestion.completion
-        ..range = rangeFromOffset(
-            lineLengths, results.replacementOffset, results.replacementLength))
-      ..detail = _completionItemDetail(suggestion)
-      ..documentation = suggestion.docComplete);
+    CompletionSuggestion suggestion, CompletionResults results) {
+  final symbol = _completionSymbol(suggestion);
+  return new CompletionItem((b) => b
+    ..label = symbol
+    ..kind = _completionKind(suggestion)
+    ..textEdit = new TextEdit((b) => b
+      ..newText = symbol
+      ..range = rangeFromOffset(
+          lineLengths, results.replacementOffset, results.replacementLength))
+    ..detail = _completionItemDetail(suggestion)
+    ..documentation = suggestion.docComplete);
+}
+
+/// Normalize completions since snippets aren't supported.
+///
+/// Analysis Server expects to be able to send `selectionOffset` and
+/// `selectionLength` to move the cursor and give a better UX. Normalize the
+/// cases that depend on this that are particularly annoying.
+String _completionSymbol(CompletionSuggestion suggestion) {
+  if (suggestion.completion.endsWith(',')) {
+    return suggestion.completion.substring(0, suggestion.completion.length - 1);
+  }
+  return suggestion.completion;
+}
 
 String _completionItemDetail(CompletionSuggestion suggestion) {
   if (suggestion.returnType != null && suggestion.docSummary != null) {

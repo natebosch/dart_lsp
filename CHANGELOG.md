@@ -1,4 +1,4 @@
-# 0.1.3-dev
+# 0.1.3
 
 - Add fixes to available code actions.
 - Add support for `textDocument/rename`.
@@ -7,6 +7,7 @@
 - Add 'Organize imports' to every code actions list.
 - Never offer "Convert into block documentation comment"
 - Add `dart/getServerPort` extension method.
+- Strip trailing comma from completions since there is no cursor moving support.
 
 # 0.1.2
 

@@ -1,3 +1,10 @@
+# 0.1.4
+
+- Stop adding `rootUri` as an analysis root. When there are nested directories
+  that 'look like' a package this can be very large (like with the SDK repo) and
+  given the other tweaks to how `didOpen` analysis roots are handled this
+  shouldn't be as useful anymore.
+
 # 0.1.3
 
 - Add fixes to available code actions.

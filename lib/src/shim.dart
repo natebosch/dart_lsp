@@ -56,7 +56,6 @@ class AnalysisServerAdapter extends LanguageServer {
     final directory = _filePath(rootUri);
     final clientName = '${p.basename(directory)}-$clientPid';
     startLogging(clientName, _args.forceTraceLevel ?? trace);
-    await _addAnalysisRoot(directory);
     return serverCapabilities;
   }
 

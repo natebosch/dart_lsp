@@ -1,6 +1,7 @@
-# 0.1.5-dev
+# 0.1.5
 
 - Only treat `pubspec.yaml` and `BUILD` files as indications of a package root.
+- Only send empty diagnostics for a file if it is clearing previous diagnostics.
 
 # 0.1.4
 

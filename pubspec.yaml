@@ -1,5 +1,5 @@
 name: dart_language_server
-version: 0.1.5-dev
+version: 0.1.5
 description: >-
   A shim on the analysis server following the language server protocol
 homepage: https://github.com/natebosch/dart_language_server

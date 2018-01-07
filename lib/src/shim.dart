@@ -299,12 +299,26 @@ class AnalysisServerAdapter extends LanguageServer {
 
   final _searchResults = <String, Completer<List<Location>>>{};
 
+  final _filesWithDiagnostics = new Set<String>();
   @override
-  Stream<Diagnostics> get diagnostics =>
-      _server.analysis.onErrors.map((errors) {
+  Stream<Diagnostics> get diagnostics => _server.analysis.onErrors
+      .map((errors) {
         var lines = _files[errors.file];
         return _toDiagnostics(lines, errors);
-      }).distinct();
+      })
+      .distinct()
+      .where((diagnostics) {
+        if (diagnostics.diagnostics.isEmpty) {
+          if (!_filesWithDiagnostics.contains(diagnostics.uri)) {
+            return false;
+          } else {
+            _filesWithDiagnostics.remove(diagnostics.uri);
+          }
+        } else {
+          _filesWithDiagnostics.add(diagnostics.uri);
+        }
+        return true;
+      });
 
   @override
   Stream<ApplyWorkspaceEditParams> get workspaceEdits => _workspaceEdits.stream;

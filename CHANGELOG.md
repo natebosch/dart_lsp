@@ -1,3 +1,7 @@
+# 0.1.5-dev
+
+- Only treat `pubspec.yaml` and `BUILD` files as indications of a package root.
+
 # 0.1.4
 
 - Stop adding `rootUri` as an analysis root. When there are nested directories

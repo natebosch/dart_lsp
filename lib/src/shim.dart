@@ -61,10 +61,7 @@ class AnalysisServerAdapter extends LanguageServer {
 
   /// If [directory] is not already present in or underneath [_openDirectories]
   /// look for a parent that might be a package and add it.
-  ///
-  /// If [force] is true and this directory is not present, but also doesn't
-  /// look like it's in a package, add the directory anyway.
-  Future<Null> _addAnalysisRoot(String directory, {bool force = false}) async {
+  Future<Null> _addAnalysisRoot(String directory) async {
     if (!_openDirectories.contains(directory) &&
         !_openDirectories.any((d) => p.isWithin(d, directory))) {
       var packageDir = findParentPackageDir(directory);
@@ -72,7 +69,7 @@ class AnalysisServerAdapter extends LanguageServer {
         _openDirectories.add(packageDir);
         await _server.analysis
             .setAnalysisRoots(_openDirectories.toList(), const []);
-      } else if (force) {
+      } else {
         _openDirectories.add(directory);
         await _server.analysis
             .setAnalysisRoots(_openDirectories.toList(), const []);
@@ -108,7 +105,7 @@ class AnalysisServerAdapter extends LanguageServer {
       _files[path] = findLineLengths(document.text);
       _fileVersions[path] = document.version;
       var directory = p.dirname(path);
-      await _addAnalysisRoot(directory, force: true);
+      await _addAnalysisRoot(directory);
       _openFiles.add(path);
       await _server.analysis.setPriorityFiles(_openFiles.toList());
       await _server.analysis

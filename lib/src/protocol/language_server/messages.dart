@@ -2,7 +2,7 @@ class ApplyWorkspaceEditParams {
   ApplyWorkspaceEditParams._(this.edit, this.label);
 
   factory ApplyWorkspaceEditParams(
-      void init(ApplyWorkspaceEditParams$Builder)) {
+      void Function(ApplyWorkspaceEditParams$Builder) init) {
     final b = new ApplyWorkspaceEditParams$Builder._();
     init(b);
     return new ApplyWorkspaceEditParams._(b.edit, b.label);
@@ -49,7 +49,7 @@ class ApplyWorkspaceEditParams$Builder {
 class ClientCapabilities {
   ClientCapabilities._(this.textDocument, this.workspace);
 
-  factory ClientCapabilities(void init(ClientCapabilities$Builder)) {
+  factory ClientCapabilities(void Function(ClientCapabilities$Builder) init) {
     final b = new ClientCapabilities$Builder._();
     init(b);
     return new ClientCapabilities._(b.textDocument, b.workspace);
@@ -100,7 +100,7 @@ class ClientCapabilities$Builder {
 class CodeActionContext {
   CodeActionContext._(this.diagnostics);
 
-  factory CodeActionContext(void init(CodeActionContext$Builder)) {
+  factory CodeActionContext(void Function(CodeActionContext$Builder) init) {
     final b = new CodeActionContext$Builder._();
     init(b);
     return new CodeActionContext._(b.diagnostics);
@@ -142,7 +142,7 @@ class CodeActionContext$Builder {
 class CodeLensOptions {
   CodeLensOptions._(this.resolveProvider);
 
-  factory CodeLensOptions(void init(CodeLensOptions$Builder)) {
+  factory CodeLensOptions(void Function(CodeLensOptions$Builder) init) {
     final b = new CodeLensOptions$Builder._();
     init(b);
     return new CodeLensOptions._(b.resolveProvider);
@@ -179,7 +179,7 @@ class CodeLensOptions$Builder {
 class Command {
   Command._(this.arguments, this.command, this.title);
 
-  factory Command(void init(Command$Builder)) {
+  factory Command(void Function(Command$Builder) init) {
     final b = new Command$Builder._();
     init(b);
     return new Command._(b.arguments, b.command, b.title);
@@ -230,7 +230,8 @@ class Command$Builder {
 class CompletionCapabilities {
   CompletionCapabilities._(this.completionItem, this.dynamicRegistration);
 
-  factory CompletionCapabilities(void init(CompletionCapabilities$Builder)) {
+  factory CompletionCapabilities(
+      void Function(CompletionCapabilities$Builder) init) {
     final b = new CompletionCapabilities$Builder._();
     init(b);
     return new CompletionCapabilities._(
@@ -296,7 +297,7 @@ class CompletionItem {
       this.sortText,
       this.textEdit);
 
-  factory CompletionItem(void init(CompletionItem$Builder)) {
+  factory CompletionItem(void Function(CompletionItem$Builder) init) {
     final b = new CompletionItem$Builder._();
     init(b);
     return new CompletionItem._(
@@ -449,7 +450,7 @@ class CompletionItemCapabilities {
   CompletionItemCapabilities._(this.snippetSupport);
 
   factory CompletionItemCapabilities(
-      void init(CompletionItemCapabilities$Builder)) {
+      void Function(CompletionItemCapabilities$Builder) init) {
     final b = new CompletionItemCapabilities$Builder._();
     init(b);
     return new CompletionItemCapabilities._(b.snippetSupport);
@@ -556,7 +557,7 @@ class CompletionItemKind {
 class CompletionList {
   CompletionList._(this.isIncomplete, this.items);
 
-  factory CompletionList(void init(CompletionList$Builder)) {
+  factory CompletionList(void Function(CompletionList$Builder) init) {
     final b = new CompletionList$Builder._();
     init(b);
     return new CompletionList._(b.isIncomplete, b.items);
@@ -605,7 +606,7 @@ class CompletionList$Builder {
 class CompletionOptions {
   CompletionOptions._(this.resolveProvider, this.triggerCharacters);
 
-  factory CompletionOptions(void init(CompletionOptions$Builder)) {
+  factory CompletionOptions(void Function(CompletionOptions$Builder) init) {
     final b = new CompletionOptions$Builder._();
     init(b);
     return new CompletionOptions._(b.resolveProvider, b.triggerCharacters);
@@ -654,7 +655,7 @@ class CompletionOptions$Builder {
 class Diagnostic {
   Diagnostic._(this.code, this.message, this.range, this.severity, this.source);
 
-  factory Diagnostic(void init(Diagnostic$Builder)) {
+  factory Diagnostic(void Function(Diagnostic$Builder) init) {
     final b = new Diagnostic$Builder._();
     init(b);
     return new Diagnostic._(b.code, b.message, b.range, b.severity, b.source);
@@ -725,7 +726,7 @@ class Diagnostic$Builder {
 class Diagnostics {
   Diagnostics._(this.diagnostics, this.uri);
 
-  factory Diagnostics(void init(Diagnostics$Builder)) {
+  factory Diagnostics(void Function(Diagnostics$Builder) init) {
     final b = new Diagnostics$Builder._();
     init(b);
     return new Diagnostics._(b.diagnostics, b.uri);
@@ -776,7 +777,7 @@ class Diagnostics$Builder {
 class DocumentLinkOptions {
   DocumentLinkOptions._(this.resolveProvider);
 
-  factory DocumentLinkOptions(void init(DocumentLinkOptions$Builder)) {
+  factory DocumentLinkOptions(void Function(DocumentLinkOptions$Builder) init) {
     final b = new DocumentLinkOptions$Builder._();
     init(b);
     return new DocumentLinkOptions._(b.resolveProvider);
@@ -815,7 +816,7 @@ class DocumentOnTypeFormattingOptions {
       this.firstTriggerCharacter, this.moreTriggerCharacter);
 
   factory DocumentOnTypeFormattingOptions(
-      void init(DocumentOnTypeFormattingOptions$Builder)) {
+      void Function(DocumentOnTypeFormattingOptions$Builder) init) {
     final b = new DocumentOnTypeFormattingOptions$Builder._();
     init(b);
     return new DocumentOnTypeFormattingOptions._(
@@ -870,7 +871,7 @@ class DynamicRegistrationCapability {
   DynamicRegistrationCapability._(this.dynamicRegistration);
 
   factory DynamicRegistrationCapability(
-      void init(DynamicRegistrationCapability$Builder)) {
+      void Function(DynamicRegistrationCapability$Builder) init) {
     final b = new DynamicRegistrationCapability$Builder._();
     init(b);
     return new DynamicRegistrationCapability._(b.dynamicRegistration);
@@ -910,7 +911,8 @@ class DynamicRegistrationCapability$Builder {
 class ExecuteCommandOptions {
   ExecuteCommandOptions._(this.commands);
 
-  factory ExecuteCommandOptions(void init(ExecuteCommandOptions$Builder)) {
+  factory ExecuteCommandOptions(
+      void Function(ExecuteCommandOptions$Builder) init) {
     final b = new ExecuteCommandOptions$Builder._();
     init(b);
     return new ExecuteCommandOptions._(b.commands);
@@ -948,7 +950,7 @@ class ExecuteCommandOptions$Builder {
 class Hover {
   Hover._(this.contents, this.range);
 
-  factory Hover(void init(Hover$Builder)) {
+  factory Hover(void Function(Hover$Builder) init) {
     final b = new Hover$Builder._();
     init(b);
     return new Hover._(b.contents, b.range);
@@ -1012,7 +1014,7 @@ class InsertTextFormat {
 class Location {
   Location._(this.range, this.uri);
 
-  factory Location(void init(Location$Builder)) {
+  factory Location(void Function(Location$Builder) init) {
     final b = new Location$Builder._();
     init(b);
     return new Location._(b.range, b.uri);
@@ -1056,7 +1058,7 @@ class Location$Builder {
 class Position {
   Position._(this.character, this.line);
 
-  factory Position(void init(Position$Builder)) {
+  factory Position(void Function(Position$Builder) init) {
     final b = new Position$Builder._();
     init(b);
     return new Position._(b.character, b.line);
@@ -1100,7 +1102,7 @@ class Position$Builder {
 class Range {
   Range._(this.end, this.start);
 
-  factory Range(void init(Range$Builder)) {
+  factory Range(void Function(Range$Builder) init) {
     final b = new Range$Builder._();
     init(b);
     return new Range._(b.end, b.start);
@@ -1146,7 +1148,7 @@ class Range$Builder {
 class ReferenceContext {
   ReferenceContext._(this.includeDeclaration);
 
-  factory ReferenceContext(void init(ReferenceContext$Builder)) {
+  factory ReferenceContext(void Function(ReferenceContext$Builder) init) {
     final b = new ReferenceContext$Builder._();
     init(b);
     return new ReferenceContext._(b.includeDeclaration);
@@ -1185,7 +1187,7 @@ class ReferenceContext$Builder {
 class SaveOptions {
   SaveOptions._(this.includeText);
 
-  factory SaveOptions(void init(SaveOptions$Builder)) {
+  factory SaveOptions(void Function(SaveOptions$Builder) init) {
     final b = new SaveOptions$Builder._();
     init(b);
     return new SaveOptions._(b.includeText);
@@ -1239,7 +1241,7 @@ class ServerCapabilities {
       this.textDocumentSync,
       this.workspaceSymbolProvider);
 
-  factory ServerCapabilities(void init(ServerCapabilities$Builder)) {
+  factory ServerCapabilities(void Function(ServerCapabilities$Builder) init) {
     final b = new ServerCapabilities$Builder._();
     init(b);
     return new ServerCapabilities._(
@@ -1457,7 +1459,8 @@ class ServerCapabilities$Builder {
 class SignatureHelpOptions {
   SignatureHelpOptions._(this.triggerCharacters);
 
-  factory SignatureHelpOptions(void init(SignatureHelpOptions$Builder)) {
+  factory SignatureHelpOptions(
+      void Function(SignatureHelpOptions$Builder) init) {
     final b = new SignatureHelpOptions$Builder._();
     init(b);
     return new SignatureHelpOptions._(b.triggerCharacters);
@@ -1498,7 +1501,7 @@ class SynchronizationCapabilities {
       this.willSave, this.willSaveWaitUntil);
 
   factory SynchronizationCapabilities(
-      void init(SynchronizationCapabilities$Builder)) {
+      void Function(SynchronizationCapabilities$Builder) init) {
     final b = new SynchronizationCapabilities$Builder._();
     init(b);
     return new SynchronizationCapabilities._(
@@ -1581,7 +1584,7 @@ class TextDocumentClientCapabilities {
       this.synchronization);
 
   factory TextDocumentClientCapabilities(
-      void init(TextDocumentClientCapabilities$Builder)) {
+      void Function(TextDocumentClientCapabilities$Builder) init) {
     final b = new TextDocumentClientCapabilities$Builder._();
     init(b);
     return new TextDocumentClientCapabilities._(
@@ -1762,7 +1765,7 @@ class TextDocumentContentChangeEvent {
   TextDocumentContentChangeEvent._(this.range, this.rangeLength, this.text);
 
   factory TextDocumentContentChangeEvent(
-      void init(TextDocumentContentChangeEvent$Builder)) {
+      void Function(TextDocumentContentChangeEvent$Builder) init) {
     final b = new TextDocumentContentChangeEvent$Builder._();
     init(b);
     return new TextDocumentContentChangeEvent._(b.range, b.rangeLength, b.text);
@@ -1817,7 +1820,8 @@ class TextDocumentContentChangeEvent$Builder {
 class TextDocumentIdentifier {
   TextDocumentIdentifier._(this.uri);
 
-  factory TextDocumentIdentifier(void init(TextDocumentIdentifier$Builder)) {
+  factory TextDocumentIdentifier(
+      void Function(TextDocumentIdentifier$Builder) init) {
     final b = new TextDocumentIdentifier$Builder._();
     init(b);
     return new TextDocumentIdentifier._(b.uri);
@@ -1855,7 +1859,7 @@ class TextDocumentIdentifier$Builder {
 class TextDocumentItem {
   TextDocumentItem._(this.languageId, this.text, this.uri, this.version);
 
-  factory TextDocumentItem(void init(TextDocumentItem$Builder)) {
+  factory TextDocumentItem(void Function(TextDocumentItem$Builder) init) {
     final b = new TextDocumentItem$Builder._();
     init(b);
     return new TextDocumentItem._(b.languageId, b.text, b.uri, b.version);
@@ -1938,7 +1942,8 @@ class TextDocumentSyncOptions {
   TextDocumentSyncOptions._(this.change, this.openClose, this.save,
       this.willSave, this.willSaveWaitUntil);
 
-  factory TextDocumentSyncOptions(void init(TextDocumentSyncOptions$Builder)) {
+  factory TextDocumentSyncOptions(
+      void Function(TextDocumentSyncOptions$Builder) init) {
     final b = new TextDocumentSyncOptions$Builder._();
     init(b);
     return new TextDocumentSyncOptions._(
@@ -2016,7 +2021,7 @@ class TextDocumentSyncOptions$Builder {
 class TextEdit {
   TextEdit._(this.newText, this.range);
 
-  factory TextEdit(void init(TextEdit$Builder)) {
+  factory TextEdit(void Function(TextEdit$Builder) init) {
     final b = new TextEdit$Builder._();
     init(b);
     return new TextEdit._(b.newText, b.range);
@@ -2061,7 +2066,7 @@ class VersionedTextDocumentIdentifier {
   VersionedTextDocumentIdentifier._(this.uri, this.version);
 
   factory VersionedTextDocumentIdentifier(
-      void init(VersionedTextDocumentIdentifier$Builder)) {
+      void Function(VersionedTextDocumentIdentifier$Builder) init) {
     final b = new VersionedTextDocumentIdentifier$Builder._();
     init(b);
     return new VersionedTextDocumentIdentifier._(b.uri, b.version);
@@ -2108,7 +2113,7 @@ class WorkspaceClientCapabilities {
       this.didChangeWatchedFiles, this.executeCommand, this.symbol);
 
   factory WorkspaceClientCapabilities(
-      void init(WorkspaceClientCapabilities$Builder)) {
+      void Function(WorkspaceClientCapabilities$Builder) init) {
     final b = new WorkspaceClientCapabilities$Builder._();
     init(b);
     return new WorkspaceClientCapabilities._(
@@ -2197,7 +2202,7 @@ class WorkspaceClientCapabilities$Builder {
 class WorkspaceEdit {
   WorkspaceEdit._(this.changes);
 
-  factory WorkspaceEdit(void init(WorkspaceEdit$Builder)) {
+  factory WorkspaceEdit(void Function(WorkspaceEdit$Builder) init) {
     final b = new WorkspaceEdit$Builder._();
     init(b);
     return new WorkspaceEdit._(b.changes);

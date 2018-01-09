@@ -1,3 +1,8 @@
+# 0.1.5+1
+
+- Bug Fix: Remove usage of new Function type syntax so to restore compatibility
+  with the stable SDK.
+
 # 0.1.5
 
 - Only treat `pubspec.yaml` and `BUILD` files as indications of a package root.

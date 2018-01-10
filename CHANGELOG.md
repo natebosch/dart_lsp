@@ -1,3 +1,7 @@
+# 0.1.5+2
+
+- Tolerate keys explicitly set to `null` instead of omitted.
+
 # 0.1.5+1
 
 - Bug Fix: Remove usage of new Function type syntax so to restore compatibility

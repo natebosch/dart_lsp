@@ -10,10 +10,12 @@ class ApplyWorkspaceEditParams {
 
   factory ApplyWorkspaceEditParams.fromJson(Map params) =>
       new ApplyWorkspaceEditParams._(
-          params.containsKey('edit')
+          params.containsKey('edit') && params['edit'] != null
               ? new WorkspaceEdit.fromJson(params['edit'])
               : null,
-          params.containsKey('label') ? params['label'] : null);
+          params.containsKey('label') && params['label'] != null
+              ? params['label']
+              : null);
 
   final WorkspaceEdit edit;
 
@@ -56,10 +58,10 @@ class ClientCapabilities {
   }
 
   factory ClientCapabilities.fromJson(Map params) => new ClientCapabilities._(
-      params.containsKey('textDocument')
+      params.containsKey('textDocument') && params['textDocument'] != null
           ? new TextDocumentClientCapabilities.fromJson(params['textDocument'])
           : null,
-      params.containsKey('workspace')
+      params.containsKey('workspace') && params['workspace'] != null
           ? new WorkspaceClientCapabilities.fromJson(params['workspace'])
           : null);
 
@@ -106,8 +108,8 @@ class CodeActionContext {
     return new CodeActionContext._(b.diagnostics);
   }
 
-  factory CodeActionContext.fromJson(Map params) =>
-      new CodeActionContext._(params.containsKey('diagnostics')
+  factory CodeActionContext.fromJson(Map params) => new CodeActionContext._(
+      params.containsKey('diagnostics') && params['diagnostics'] != null
           ? params['diagnostics']
               .map((v) => new Diagnostic.fromJson(v))
               .toList()
@@ -149,7 +151,9 @@ class CodeLensOptions {
   }
 
   factory CodeLensOptions.fromJson(Map params) => new CodeLensOptions._(
-      params.containsKey('resolveProvider') ? params['resolveProvider'] : null);
+      params.containsKey('resolveProvider') && params['resolveProvider'] != null
+          ? params['resolveProvider']
+          : null);
 
   final bool resolveProvider;
 
@@ -186,9 +190,15 @@ class Command {
   }
 
   factory Command.fromJson(Map params) => new Command._(
-      params.containsKey('arguments') ? params['arguments'] : null,
-      params.containsKey('command') ? params['command'] : null,
-      params.containsKey('title') ? params['title'] : null);
+      params.containsKey('arguments') && params['arguments'] != null
+          ? params['arguments']
+          : null,
+      params.containsKey('command') && params['command'] != null
+          ? params['command']
+          : null,
+      params.containsKey('title') && params['title'] != null
+          ? params['title']
+          : null);
 
   final List<dynamic> arguments;
 
@@ -240,11 +250,13 @@ class CompletionCapabilities {
 
   factory CompletionCapabilities.fromJson(Map params) =>
       new CompletionCapabilities._(
-          params.containsKey('completionItem')
+          params.containsKey('completionItem') &&
+                  params['completionItem'] != null
               ? new CompletionItemCapabilities.fromJson(
                   params['completionItem'])
               : null,
-          params.containsKey('dynamicRegistration')
+          params.containsKey('dynamicRegistration') &&
+                  params['dynamicRegistration'] != null
               ? params['dynamicRegistration']
               : null);
 
@@ -316,28 +328,44 @@ class CompletionItem {
   }
 
   factory CompletionItem.fromJson(Map params) => new CompletionItem._(
-      params.containsKey('additionalTextEdits')
+      params.containsKey('additionalTextEdits') &&
+              params['additionalTextEdits'] != null
           ? params['additionalTextEdits']
               .map((v) => new TextEdit.fromJson(v))
               .toList()
           : null,
-      params.containsKey('command')
+      params.containsKey('command') && params['command'] != null
           ? new Command.fromJson(params['command'])
           : null,
-      params.containsKey('data') ? params['data'] : null,
-      params.containsKey('detail') ? params['detail'] : null,
-      params.containsKey('documentation') ? params['documentation'] : null,
-      params.containsKey('filterText') ? params['filterText'] : null,
-      params.containsKey('insertText') ? params['insertText'] : null,
-      params.containsKey('insertTextFormat')
+      params.containsKey('data') && params['data'] != null
+          ? params['data']
+          : null,
+      params.containsKey('detail') && params['detail'] != null
+          ? params['detail']
+          : null,
+      params.containsKey('documentation') && params['documentation'] != null
+          ? params['documentation']
+          : null,
+      params.containsKey('filterText') && params['filterText'] != null
+          ? params['filterText']
+          : null,
+      params.containsKey('insertText') && params['insertText'] != null
+          ? params['insertText']
+          : null,
+      params.containsKey('insertTextFormat') &&
+              params['insertTextFormat'] != null
           ? new InsertTextFormat.fromJson(params['insertTextFormat'])
           : null,
-      params.containsKey('kind')
+      params.containsKey('kind') && params['kind'] != null
           ? new CompletionItemKind.fromJson(params['kind'])
           : null,
-      params.containsKey('label') ? params['label'] : null,
-      params.containsKey('sortText') ? params['sortText'] : null,
-      params.containsKey('textEdit')
+      params.containsKey('label') && params['label'] != null
+          ? params['label']
+          : null,
+      params.containsKey('sortText') && params['sortText'] != null
+          ? params['sortText']
+          : null,
+      params.containsKey('textEdit') && params['textEdit'] != null
           ? new TextEdit.fromJson(params['textEdit'])
           : null);
 
@@ -457,7 +485,8 @@ class CompletionItemCapabilities {
   }
 
   factory CompletionItemCapabilities.fromJson(Map params) =>
-      new CompletionItemCapabilities._(params.containsKey('snippetSupport')
+      new CompletionItemCapabilities._(params.containsKey('snippetSupport') &&
+              params['snippetSupport'] != null
           ? params['snippetSupport']
           : null);
 
@@ -564,8 +593,10 @@ class CompletionList {
   }
 
   factory CompletionList.fromJson(Map params) => new CompletionList._(
-      params.containsKey('isIncomplete') ? params['isIncomplete'] : null,
-      params.containsKey('items')
+      params.containsKey('isIncomplete') && params['isIncomplete'] != null
+          ? params['isIncomplete']
+          : null,
+      params.containsKey('items') && params['items'] != null
           ? params['items'].map((v) => new CompletionItem.fromJson(v)).toList()
           : null);
 
@@ -613,8 +644,11 @@ class CompletionOptions {
   }
 
   factory CompletionOptions.fromJson(Map params) => new CompletionOptions._(
-      params.containsKey('resolveProvider') ? params['resolveProvider'] : null,
-      params.containsKey('triggerCharacters')
+      params.containsKey('resolveProvider') && params['resolveProvider'] != null
+          ? params['resolveProvider']
+          : null,
+      params.containsKey('triggerCharacters') &&
+              params['triggerCharacters'] != null
           ? params['triggerCharacters']
           : null);
 
@@ -662,11 +696,21 @@ class Diagnostic {
   }
 
   factory Diagnostic.fromJson(Map params) => new Diagnostic._(
-      params.containsKey('code') ? params['code'] : null,
-      params.containsKey('message') ? params['message'] : null,
-      params.containsKey('range') ? new Range.fromJson(params['range']) : null,
-      params.containsKey('severity') ? params['severity'] : null,
-      params.containsKey('source') ? params['source'] : null);
+      params.containsKey('code') && params['code'] != null
+          ? params['code']
+          : null,
+      params.containsKey('message') && params['message'] != null
+          ? params['message']
+          : null,
+      params.containsKey('range') && params['range'] != null
+          ? new Range.fromJson(params['range'])
+          : null,
+      params.containsKey('severity') && params['severity'] != null
+          ? params['severity']
+          : null,
+      params.containsKey('source') && params['source'] != null
+          ? params['source']
+          : null);
 
   final dynamic code;
 
@@ -733,12 +777,14 @@ class Diagnostics {
   }
 
   factory Diagnostics.fromJson(Map params) => new Diagnostics._(
-      params.containsKey('diagnostics')
+      params.containsKey('diagnostics') && params['diagnostics'] != null
           ? params['diagnostics']
               .map((v) => new Diagnostic.fromJson(v))
               .toList()
           : null,
-      params.containsKey('uri') ? params['uri'] : null);
+      params.containsKey('uri') && params['uri'] != null
+          ? params['uri']
+          : null);
 
   final List<Diagnostic> diagnostics;
 
@@ -784,7 +830,9 @@ class DocumentLinkOptions {
   }
 
   factory DocumentLinkOptions.fromJson(Map params) => new DocumentLinkOptions._(
-      params.containsKey('resolveProvider') ? params['resolveProvider'] : null);
+      params.containsKey('resolveProvider') && params['resolveProvider'] != null
+          ? params['resolveProvider']
+          : null);
 
   final bool resolveProvider;
 
@@ -825,10 +873,12 @@ class DocumentOnTypeFormattingOptions {
 
   factory DocumentOnTypeFormattingOptions.fromJson(Map params) =>
       new DocumentOnTypeFormattingOptions._(
-          params.containsKey('firstTriggerCharacter')
+          params.containsKey('firstTriggerCharacter') &&
+                  params['firstTriggerCharacter'] != null
               ? params['firstTriggerCharacter']
               : null,
-          params.containsKey('moreTriggerCharacter')
+          params.containsKey('moreTriggerCharacter') &&
+                  params['moreTriggerCharacter'] != null
               ? params['moreTriggerCharacter']
               : null);
 
@@ -879,7 +929,8 @@ class DynamicRegistrationCapability {
 
   factory DynamicRegistrationCapability.fromJson(Map params) =>
       new DynamicRegistrationCapability._(
-          params.containsKey('dynamicRegistration')
+          params.containsKey('dynamicRegistration') &&
+                  params['dynamicRegistration'] != null
               ? params['dynamicRegistration']
               : null);
 
@@ -919,8 +970,10 @@ class ExecuteCommandOptions {
   }
 
   factory ExecuteCommandOptions.fromJson(Map params) =>
-      new ExecuteCommandOptions._(
-          params.containsKey('commands') ? params['commands'] : null);
+      new ExecuteCommandOptions._(params.containsKey('commands') &&
+              params['commands'] != null
+          ? params['commands']
+          : null);
 
   final List<String> commands;
 
@@ -957,8 +1010,12 @@ class Hover {
   }
 
   factory Hover.fromJson(Map params) => new Hover._(
-      params.containsKey('contents') ? params['contents'] : null,
-      params.containsKey('range') ? new Range.fromJson(params['range']) : null);
+      params.containsKey('contents') && params['contents'] != null
+          ? params['contents']
+          : null,
+      params.containsKey('range') && params['range'] != null
+          ? new Range.fromJson(params['range'])
+          : null);
 
   final String contents;
 
@@ -1021,8 +1078,12 @@ class Location {
   }
 
   factory Location.fromJson(Map params) => new Location._(
-      params.containsKey('range') ? new Range.fromJson(params['range']) : null,
-      params.containsKey('uri') ? params['uri'] : null);
+      params.containsKey('range') && params['range'] != null
+          ? new Range.fromJson(params['range'])
+          : null,
+      params.containsKey('uri') && params['uri'] != null
+          ? params['uri']
+          : null);
 
   final Range range;
 
@@ -1065,8 +1126,12 @@ class Position {
   }
 
   factory Position.fromJson(Map params) => new Position._(
-      params.containsKey('character') ? params['character'] : null,
-      params.containsKey('line') ? params['line'] : null);
+      params.containsKey('character') && params['character'] != null
+          ? params['character']
+          : null,
+      params.containsKey('line') && params['line'] != null
+          ? params['line']
+          : null);
 
   final int character;
 
@@ -1109,8 +1174,10 @@ class Range {
   }
 
   factory Range.fromJson(Map params) => new Range._(
-      params.containsKey('end') ? new Position.fromJson(params['end']) : null,
-      params.containsKey('start')
+      params.containsKey('end') && params['end'] != null
+          ? new Position.fromJson(params['end'])
+          : null,
+      params.containsKey('start') && params['start'] != null
           ? new Position.fromJson(params['start'])
           : null);
 
@@ -1155,7 +1222,8 @@ class ReferenceContext {
   }
 
   factory ReferenceContext.fromJson(Map params) =>
-      new ReferenceContext._(params.containsKey('includeDeclaration')
+      new ReferenceContext._(params.containsKey('includeDeclaration') &&
+              params['includeDeclaration'] != null
           ? params['includeDeclaration']
           : null);
 
@@ -1194,7 +1262,9 @@ class SaveOptions {
   }
 
   factory SaveOptions.fromJson(Map params) => new SaveOptions._(
-      params.containsKey('includeText') ? params['includeText'] : null);
+      params.containsKey('includeText') && params['includeText'] != null
+          ? params['includeText']
+          : null);
 
   final bool includeText;
 
@@ -1265,53 +1335,50 @@ class ServerCapabilities {
   }
 
   factory ServerCapabilities.fromJson(Map params) => new ServerCapabilities._(
-      params.containsKey('codeActionProvider')
+      params.containsKey('codeActionProvider') && params['codeActionProvider'] != null
           ? params['codeActionProvider']
           : null,
-      params.containsKey('codeLensProvider')
+      params.containsKey('codeLensProvider') && params['codeLensProvider'] != null
           ? params['codeLensProvider']
           : null,
-      params.containsKey('completionProvider')
+      params.containsKey('completionProvider') && params['completionProvider'] != null
           ? new CompletionOptions.fromJson(params['completionProvider'])
           : null,
-      params.containsKey('definitionProvider')
+      params.containsKey('definitionProvider') && params['definitionProvider'] != null
           ? params['definitionProvider']
           : null,
-      params.containsKey('documentFormattingProvider')
+      params.containsKey('documentFormattingProvider') && params['documentFormattingProvider'] != null
           ? params['documentFormattingProvider']
           : null,
-      params.containsKey('documentHighlightsProvider')
+      params.containsKey('documentHighlightsProvider') && params['documentHighlightsProvider'] != null
           ? params['documentHighlightsProvider']
           : null,
-      params.containsKey('documentLinkProvider')
+      params.containsKey('documentLinkProvider') && params['documentLinkProvider'] != null
           ? new DocumentLinkOptions.fromJson(params['documentLinkProvider'])
           : null,
-      params.containsKey('documentOnTypeFormattingProvider')
+      params.containsKey('documentOnTypeFormattingProvider') &&
+              params['documentOnTypeFormattingProvider'] != null
           ? params['documentOnTypeFormattingProvider']
           : null,
-      params.containsKey('documentRangeFormattingProvider')
+      params.containsKey('documentRangeFormattingProvider') && params['documentRangeFormattingProvider'] != null
           ? params['documentRangeFormattingProvider']
           : null,
-      params.containsKey('documentSymbolProvider')
+      params.containsKey('documentSymbolProvider') && params['documentSymbolProvider'] != null
           ? params['documentSymbolProvider']
           : null,
-      params.containsKey('executeCommandProvider')
+      params.containsKey('executeCommandProvider') && params['executeCommandProvider'] != null
           ? new ExecuteCommandOptions.fromJson(params['executeCommandProvider'])
           : null,
-      params.containsKey('hoverProvider') ? params['hoverProvider'] : null,
-      params.containsKey('referencesProvider')
+      params.containsKey('hoverProvider') && params['hoverProvider'] != null
+          ? params['hoverProvider']
+          : null,
+      params.containsKey('referencesProvider') && params['referencesProvider'] != null
           ? params['referencesProvider']
           : null,
-      params.containsKey('renameProvider') ? params['renameProvider'] : null,
-      params.containsKey('signatureHelpProvider')
-          ? new SignatureHelpOptions.fromJson(params['signatureHelpProvider'])
-          : null,
-      params.containsKey('textDocumentSync')
-          ? new TextDocumentSyncOptions.fromJson(params['textDocumentSync'])
-          : null,
-      params.containsKey('workspaceSymbolProvider')
-          ? params['workspaceSymbolProvider']
-          : null);
+      params.containsKey('renameProvider') && params['renameProvider'] != null ? params['renameProvider'] : null,
+      params.containsKey('signatureHelpProvider') && params['signatureHelpProvider'] != null ? new SignatureHelpOptions.fromJson(params['signatureHelpProvider']) : null,
+      params.containsKey('textDocumentSync') && params['textDocumentSync'] != null ? new TextDocumentSyncOptions.fromJson(params['textDocumentSync']) : null,
+      params.containsKey('workspaceSymbolProvider') && params['workspaceSymbolProvider'] != null ? params['workspaceSymbolProvider'] : null);
 
   final bool codeActionProvider;
 
@@ -1467,7 +1534,8 @@ class SignatureHelpOptions {
   }
 
   factory SignatureHelpOptions.fromJson(Map params) =>
-      new SignatureHelpOptions._(params.containsKey('triggerCharacters')
+      new SignatureHelpOptions._(params.containsKey('triggerCharacters') &&
+              params['triggerCharacters'] != null
           ? params['triggerCharacters']
           : null);
 
@@ -1508,14 +1576,21 @@ class SynchronizationCapabilities {
         b.didSave, b.dynamicRegistration, b.willSave, b.willSaveWaitUntil);
   }
 
-  factory SynchronizationCapabilities.fromJson(Map params) =>
+  factory SynchronizationCapabilities.fromJson(
+          Map params) =>
       new SynchronizationCapabilities._(
-          params.containsKey('didSave') ? params['didSave'] : null,
-          params.containsKey('dynamicRegistration')
+          params.containsKey('didSave') && params['didSave'] != null
+              ? params['didSave']
+              : null,
+          params.containsKey('dynamicRegistration') &&
+                  params['dynamicRegistration'] != null
               ? params['dynamicRegistration']
               : null,
-          params.containsKey('willSave') ? params['willSave'] : null,
-          params.containsKey('willSaveWaitUntil')
+          params.containsKey('willSave') && params['willSave'] != null
+              ? params['willSave']
+              : null,
+          params.containsKey('willSaveWaitUntil') &&
+                  params['willSaveWaitUntil'] != null
               ? params['willSaveWaitUntil']
               : null);
 
@@ -1605,49 +1680,52 @@ class TextDocumentClientCapabilities {
 
   factory TextDocumentClientCapabilities.fromJson(Map params) =>
       new TextDocumentClientCapabilities._(
-          params.containsKey('codeAction')
+          params.containsKey('codeAction') && params['codeAction'] != null
               ? new DynamicRegistrationCapability.fromJson(params['codeAction'])
               : null,
-          params.containsKey('codeLens')
+          params.containsKey('codeLens') && params['codeLens'] != null
               ? new DynamicRegistrationCapability.fromJson(params['codeLens'])
               : null,
-          params.containsKey('completion')
+          params.containsKey('completion') && params['completion'] != null
               ? new CompletionCapabilities.fromJson(params['completion'])
               : null,
-          params.containsKey('definition')
+          params.containsKey('definition') && params['definition'] != null
               ? new DynamicRegistrationCapability.fromJson(params['definition'])
               : null,
-          params.containsKey('documentHighlight')
+          params.containsKey('documentHighlight') &&
+                  params['documentHighlight'] != null
               ? new DynamicRegistrationCapability.fromJson(
                   params['documentHighlight'])
               : null,
-          params.containsKey('documentLink')
+          params.containsKey('documentLink') && params['documentLink'] != null
               ? new DynamicRegistrationCapability.fromJson(
                   params['documentLink'])
               : null,
-          params.containsKey('documentSymbol')
+          params.containsKey('documentSymbol') &&
+                  params['documentSymbol'] != null
               ? new DynamicRegistrationCapability.fromJson(
                   params['documentSymbol'])
               : null,
-          params.containsKey('formatting')
+          params.containsKey('formatting') && params['formatting'] != null
               ? new DynamicRegistrationCapability.fromJson(params['formatting'])
               : null,
-          params.containsKey('hover')
+          params.containsKey('hover') && params['hover'] != null
               ? new DynamicRegistrationCapability.fromJson(params['hover'])
               : null,
-          params.containsKey('onTypeFormatting')
+          params.containsKey('onTypeFormatting') &&
+                  params['onTypeFormatting'] != null
               ? new DynamicRegistrationCapability.fromJson(
                   params['onTypeFormatting'])
               : null,
-          params.containsKey('references')
+          params.containsKey('references') && params['references'] != null
               ? new DynamicRegistrationCapability.fromJson(params['references'])
               : null,
-          params.containsKey('rename')
+          params.containsKey('rename') && params['rename'] != null
               ? new DynamicRegistrationCapability.fromJson(params['rename'])
               : null,
-          params.containsKey('synchronization')
-              ? new SynchronizationCapabilities.fromJson(
-                  params['synchronization'])
+          params.containsKey('synchronization') &&
+                  params['synchronization'] != null
+              ? new SynchronizationCapabilities.fromJson(params['synchronization'])
               : null);
 
   final DynamicRegistrationCapability codeAction;
@@ -1773,11 +1851,15 @@ class TextDocumentContentChangeEvent {
 
   factory TextDocumentContentChangeEvent.fromJson(Map params) =>
       new TextDocumentContentChangeEvent._(
-          params.containsKey('range')
+          params.containsKey('range') && params['range'] != null
               ? new Range.fromJson(params['range'])
               : null,
-          params.containsKey('rangeLength') ? params['rangeLength'] : null,
-          params.containsKey('text') ? params['text'] : null);
+          params.containsKey('rangeLength') && params['rangeLength'] != null
+              ? params['rangeLength']
+              : null,
+          params.containsKey('text') && params['text'] != null
+              ? params['text']
+              : null);
 
   final Range range;
 
@@ -1829,7 +1911,9 @@ class TextDocumentIdentifier {
 
   factory TextDocumentIdentifier.fromJson(Map params) =>
       new TextDocumentIdentifier._(
-          params.containsKey('uri') ? params['uri'] : null);
+          params.containsKey('uri') && params['uri'] != null
+              ? params['uri']
+              : null);
 
   final String uri;
 
@@ -1866,10 +1950,16 @@ class TextDocumentItem {
   }
 
   factory TextDocumentItem.fromJson(Map params) => new TextDocumentItem._(
-      params.containsKey('languageId') ? params['languageId'] : null,
-      params.containsKey('text') ? params['text'] : null,
-      params.containsKey('uri') ? params['uri'] : null,
-      params.containsKey('version') ? params['version'] : null);
+      params.containsKey('languageId') && params['languageId'] != null
+          ? params['languageId']
+          : null,
+      params.containsKey('text') && params['text'] != null
+          ? params['text']
+          : null,
+      params.containsKey('uri') && params['uri'] != null ? params['uri'] : null,
+      params.containsKey('version') && params['version'] != null
+          ? params['version']
+          : null);
 
   final String languageId;
 
@@ -1953,13 +2043,20 @@ class TextDocumentSyncOptions {
   factory TextDocumentSyncOptions.fromJson(
           Map params) =>
       new TextDocumentSyncOptions._(
-          params.containsKey('change')
+          params.containsKey('change') && params['change'] != null
               ? new TextDocumentSyncKind.fromJson(params['change'])
               : null,
-          params.containsKey('openClose') ? params['openClose'] : null,
-          params.containsKey('save') ? params['save'] : null,
-          params.containsKey('willSave') ? params['willSave'] : null,
-          params.containsKey('willSaveWaitUntil')
+          params.containsKey('openClose') && params['openClose'] != null
+              ? params['openClose']
+              : null,
+          params.containsKey('save') && params['save'] != null
+              ? params['save']
+              : null,
+          params.containsKey('willSave') && params['willSave'] != null
+              ? params['willSave']
+              : null,
+          params.containsKey('willSaveWaitUntil') &&
+                  params['willSaveWaitUntil'] != null
               ? params['willSaveWaitUntil']
               : null);
 
@@ -2028,8 +2125,12 @@ class TextEdit {
   }
 
   factory TextEdit.fromJson(Map params) => new TextEdit._(
-      params.containsKey('newText') ? params['newText'] : null,
-      params.containsKey('range') ? new Range.fromJson(params['range']) : null);
+      params.containsKey('newText') && params['newText'] != null
+          ? params['newText']
+          : null,
+      params.containsKey('range') && params['range'] != null
+          ? new Range.fromJson(params['range'])
+          : null);
 
   final String newText;
 
@@ -2074,8 +2175,12 @@ class VersionedTextDocumentIdentifier {
 
   factory VersionedTextDocumentIdentifier.fromJson(Map params) =>
       new VersionedTextDocumentIdentifier._(
-          params.containsKey('uri') ? params['uri'] : null,
-          params.containsKey('version') ? params['version'] : null);
+          params.containsKey('uri') && params['uri'] != null
+              ? params['uri']
+              : null,
+          params.containsKey('version') && params['version'] != null
+              ? params['version']
+              : null);
 
   final String uri;
 
@@ -2127,20 +2232,25 @@ class WorkspaceClientCapabilities {
   factory WorkspaceClientCapabilities.fromJson(
           Map params) =>
       new WorkspaceClientCapabilities._(
-          params.containsKey('applyEdit') ? params['applyEdit'] : null,
-          params.containsKey('didChangeConfiguration')
+          params.containsKey('applyEdit') && params['applyEdit'] != null
+              ? params['applyEdit']
+              : null,
+          params.containsKey('didChangeConfiguration') &&
+                  params['didChangeConfiguration'] != null
               ? new DynamicRegistrationCapability.fromJson(
                   params['didChangeConfiguration'])
               : null,
-          params.containsKey('didChangeWatchedFiles')
+          params.containsKey('didChangeWatchedFiles') &&
+                  params['didChangeWatchedFiles'] != null
               ? new DynamicRegistrationCapability.fromJson(
                   params['didChangeWatchedFiles'])
               : null,
-          params.containsKey('executeCommand')
+          params.containsKey('executeCommand') &&
+                  params['executeCommand'] != null
               ? new DynamicRegistrationCapability.fromJson(
                   params['executeCommand'])
               : null,
-          params.containsKey('symbol')
+          params.containsKey('symbol') && params['symbol'] != null
               ? new DynamicRegistrationCapability.fromJson(params['symbol'])
               : null);
 
@@ -2208,8 +2318,8 @@ class WorkspaceEdit {
     return new WorkspaceEdit._(b.changes);
   }
 
-  factory WorkspaceEdit.fromJson(Map params) =>
-      new WorkspaceEdit._(params.containsKey('changes')
+  factory WorkspaceEdit.fromJson(Map params) => new WorkspaceEdit._(
+      params.containsKey('changes') && params['changes'] != null
           ? new Map.fromIterable(params['changes'].keys,
               value: (v) => params['changes'][v]
                   .map((v) => new TextEdit.fromJson(v))

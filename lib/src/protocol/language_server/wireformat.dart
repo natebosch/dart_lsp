@@ -26,7 +26,10 @@ class StdIOStreamChannel extends StreamChannelMixin<String> {
 void _serialize(String data, EventSink<List<int>> sink) {
   var message = UTF8.encode(data);
   var header = 'Content-Length: ${message.length}\r\n\r\n';
-  sink.add([]..addAll(ASCII.encode(header))..addAll(message));
+  sink.add(ASCII.encode(header));
+  for (var chunk in _chunks(message, 1024)) {
+    sink.add(chunk);
+  }
 }
 
 class _Parser {
@@ -82,5 +85,21 @@ class _Parser {
         _buffer[l - 2] == 13 &&
         _buffer[l - 3] == 10 &&
         _buffer[l - 4] == 13;
+  }
+}
+
+Iterable<List<T>> _chunks<T>(List<T> data, int chunkSize) sync* {
+  if (data.length <= chunkSize) {
+    yield data;
+    return;
+  }
+  int low = 0;
+  while (low < data.length) {
+    if (data.length > low + chunkSize) {
+      yield data.sublist(low, low + chunkSize);
+    } else {
+      yield data.sublist(low);
+    }
+    low += chunkSize;
   }
 }

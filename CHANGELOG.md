@@ -1,3 +1,7 @@
+# 0.1.6
+
+- Chunk writes to stdout.
+
 # 0.1.5+2
 
 - Tolerate keys explicitly set to `null` instead of omitted.

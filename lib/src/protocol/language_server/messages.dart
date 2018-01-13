@@ -820,6 +820,77 @@ class Diagnostics$Builder {
   String uri;
 }
 
+class DocumentHighlight {
+  DocumentHighlight._(this.kind, this.range);
+
+  factory DocumentHighlight(void Function(DocumentHighlight$Builder) init) {
+    final b = new DocumentHighlight$Builder._();
+    init(b);
+    return new DocumentHighlight._(b.kind, b.range);
+  }
+
+  factory DocumentHighlight.fromJson(Map params) => new DocumentHighlight._(
+      params.containsKey('kind') && params['kind'] != null
+          ? new DocumentHighlightKind.fromJson(params['kind'])
+          : null,
+      params.containsKey('range') && params['range'] != null
+          ? new Range.fromJson(params['range'])
+          : null);
+
+  final DocumentHighlightKind kind;
+
+  final Range range;
+
+  Map toJson() => {'kind': kind?.toJson(), 'range': range?.toJson()};
+  @override
+  int get hashCode {
+    var hash = 0;
+    hash = _hashCombine(hash, _deepHashCode(kind));
+    hash = _hashCombine(hash, _deepHashCode(range));
+    return _hashComplete(hash);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (other is! DocumentHighlight) return false;
+    var o = other as DocumentHighlight;
+    if (kind != o.kind) return false;
+    if (range != o.range) return false;
+    return true;
+  }
+}
+
+class DocumentHighlight$Builder {
+  DocumentHighlight$Builder._();
+
+  DocumentHighlightKind kind;
+
+  Range range;
+}
+
+class DocumentHighlightKind {
+  factory DocumentHighlightKind.fromJson(int value) {
+    const values = const {
+      2: DocumentHighlightKind.read,
+      1: DocumentHighlightKind.text,
+      3: DocumentHighlightKind.write
+    };
+    return values[value];
+  }
+
+  const DocumentHighlightKind._(this._value);
+
+  static const read = const DocumentHighlightKind._(2);
+
+  static const text = const DocumentHighlightKind._(1);
+
+  static const write = const DocumentHighlightKind._(3);
+
+  final int _value;
+
+  int toJson() => _value;
+}
+
 class DocumentLinkOptions {
   DocumentLinkOptions._(this.resolveProvider);
 

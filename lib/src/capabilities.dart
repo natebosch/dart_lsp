@@ -7,15 +7,15 @@ final serverCapabilities = new ServerCapabilities((b) => b
     ..willSave = false
     ..willSaveWaitUntil = false
     ..save = false)
-  ..hoverProvider = true
   ..completionProvider = new CompletionOptions((b) => b
     ..resolveProvider = false
     ..triggerCharacters = const ['.'])
   ..codeActionProvider = true
   ..definitionProvider = true
+  ..documentHighlightsProvider = true
+  ..hoverProvider = true
   ..referencesProvider = true
   ..renameProvider = true
-  ..documentHighlightsProvider = false
   ..documentSymbolProvider = false
   ..workspaceSymbolProvider = false
   ..codeLensProvider = false

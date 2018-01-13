@@ -221,3 +221,14 @@ WorkspaceEdit:
   changes:
     mapType:
       listType: TextEdit
+
+DocumentHighlight:
+  range: Range
+  kind: DocumentHighlightKind
+
+DocumentHighlightKind:
+  enumValues:
+    text: 1
+    read: 2
+    write: 3
+  wireType: int

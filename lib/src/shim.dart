@@ -172,8 +172,15 @@ class AnalysisServerAdapter extends LanguageServer {
     });
     _server.search.onResults.listen((results) {
       var id = results.id;
-      if (!_searchResults.containsKey(id)) throw 'Missing element search $id';
-      _searchResults.remove(id).complete(_toLocationList(results, _files));
+      if (_searchResults.containsKey(id)) {
+        _searchResults.remove(id).complete(_toLocationList(results, _files));
+        return;
+      }
+      if (_highlightResults.containsKey(id)) {
+        _highlightResults.remove(id)(results);
+        return;
+      }
+      _log.severe('Missing handler for search result $id');
     });
   }
 
@@ -201,7 +208,7 @@ class AnalysisServerAdapter extends LanguageServer {
   Future<List<Location>> textDocumentReferences(
       TextDocumentIdentifier documentId,
       Position position,
-      ReferenceContext context) async {
+      ReferenceContext context) {
     final path = _filePath(documentId.uri);
     return _pools.lock(path, () async {
       var offset = offsetFromPosition(_files[path], position);
@@ -214,6 +221,33 @@ class AnalysisServerAdapter extends LanguageServer {
         return (await references)..addAll(_navigationLocations(definition));
       }
       return references;
+    });
+  }
+
+  @override
+  Future<List<DocumentHighlight>> textDocumentHighlights(
+      TextDocumentIdentifier documentId, Position position) {
+    final path = _filePath(documentId.uri);
+    return _pools.lock(path, () async {
+      var offset = offsetFromPosition(_files[path], position);
+      var id =
+          (await _server.search.findElementReferences(path, offset, false)).id;
+      if (id == null) return const [];
+      var completer = new Completer<List<DocumentHighlight>>();
+      _highlightResults[id] = (searchResults) =>
+          completer.complete(_toHighlightList(searchResults, path, _files));
+      var definition = await _server.analysis.getNavigation(path, offset, 1);
+      var result = await completer.future
+          .timeout(const Duration(milliseconds: 200), onTimeout: () => []);
+      if (definition.targets.length == 1 &&
+          path == definition.files[definition.targets.single.fileIndex]) {
+        // Definitions seem nonsensical when there are more than one
+        var target = definition.targets.single;
+        result.add(new DocumentHighlight((b) => b
+          ..range = rangeFromOffset(_files[path], target.offset, target.length)
+          ..kind = DocumentHighlightKind.text));
+      }
+      return result;
     });
   }
 
@@ -298,6 +332,7 @@ class AnalysisServerAdapter extends LanguageServer {
   }
 
   final _searchResults = <String, Completer<List<Location>>>{};
+  final _highlightResults = <String, void Function(SearchResults)>{};
 
   final _filesWithDiagnostics = new Set<String>();
   @override
@@ -369,6 +404,23 @@ List<Location> _toLocationList(SearchResults results, FileCache files) =>
           ..uri = _toFileUri(location.file)
           ..range = rangeFromLocation(files[location.file], location)))
         .toList();
+
+List<DocumentHighlight> _toHighlightList(
+        SearchResults results, String path, FileCache files) =>
+    results.results
+        .where((result) => result.location.file == path)
+        .map((result) => new DocumentHighlight((b) => b
+          ..range =
+              rangeFromLocation(files[result.location.file], result.location)
+          ..kind = _documentHighlightKind(result)))
+        .toList();
+
+DocumentHighlightKind _documentHighlightKind(SearchResult result) =>
+    result.kind == 'READ'
+        ? DocumentHighlightKind.read
+        : result.kind == 'READ_WRITE' || result.kind == 'WRITE'
+            ? DocumentHighlightKind.write
+            : DocumentHighlightKind.text;
 
 Diagnostics _toDiagnostics(List<int> lineLengths, AnalysisErrors errors) =>
     new Diagnostics((b) => b

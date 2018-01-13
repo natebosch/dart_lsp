@@ -116,6 +116,12 @@ class StdIOLanguageServer {
             .textDocumentReferences(
                 _document(params), _position(params), _referenceContext(params))
             .then((r) => r?.map((e) => e.toJson())?.toList()));
+    _registerRequest(
+        peer,
+        'textDocument/documentHighlight',
+        (params) => _server
+            .textDocumentHighlights(_document(params), _position(params))
+            .then((r) => r?.map((e) => e.toJson())?.toList()));
   }
 
   void _codeActionMethods(Peer peer) {

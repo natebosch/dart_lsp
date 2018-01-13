@@ -1,3 +1,7 @@
+# 0.1.7-dev
+
+- Add `textDocument/documentHighlights`.
+
 # 0.1.6
 
 - Chunk writes to stdout.

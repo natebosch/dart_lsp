@@ -1,6 +1,9 @@
-# 0.1.7-dev
+# 0.1.7
 
 - Add `textDocument/documentHighlights`.
+- Bug Fix: Calling `textDocument/references` on non-identifiers won't freeze up
+  all operations for that document.
+- Add a 500ms time for operations that lock per-file.
 
 # 0.1.6
 

@@ -131,7 +131,11 @@ class AnalysisServerAdapter extends LanguageServer {
       } else {
         var overlay = new ChangeContentOverlay(changes.map((change) {
           var sourceEdit = _toSourceEdit(_files[path], change);
-          _files[path] = applyChange(_files[path], change);
+          try {
+            _files[path] = applyChange(_files[path], change);
+          } catch (e) {
+            _log.severe('Failed to apply change to line lengths', e);
+          }
           return sourceEdit;
         }).toList());
         await _server.analysis.updateContent({path: overlay});

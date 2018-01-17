@@ -1,3 +1,7 @@
+# 0.1.8-dev
+
+- Increase timeouts.
+
 # 0.1.7
 
 - Add `textDocument/documentHighlights`.

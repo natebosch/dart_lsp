@@ -219,7 +219,7 @@ class AnalysisServerAdapter extends LanguageServer {
       var offset = offsetFromPosition(_files[path], position);
       var id =
           (await _server.search.findElementReferences(path, offset, true)).id;
-      if (id == null) return const [];
+      if (id == null) return null;
       var references =
           (_searchResults[id] = new Completer<List<Location>>()).future;
       if (context.includeDeclaration) {
@@ -238,7 +238,7 @@ class AnalysisServerAdapter extends LanguageServer {
       var offset = offsetFromPosition(_files[path], position);
       var id =
           (await _server.search.findElementReferences(path, offset, false)).id;
-      if (id == null) return const [];
+      if (id == null) return null;
       var completer = new Completer<List<DocumentHighlight>>();
       _highlightResults[id] = (searchResults) =>
           completer.complete(_toHighlightList(searchResults, path, _files));

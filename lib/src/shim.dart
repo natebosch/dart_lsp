@@ -154,11 +154,7 @@ class AnalysisServerAdapter extends LanguageServer {
     return _pools.lock(path, () async {
       var offset = offsetFromPosition(_files[path], position);
       var id = (await _server.completion.getSuggestions(path, offset)).id;
-      if (id == null) {
-        return new CompletionList((b) => b
-          ..isIncomplete = false
-          ..items = const []);
-      }
+      if (id == null) return null;
       _completionPaths[id] = path;
       return (_completions[id] = new Completer<CompletionList>()).future;
     });
@@ -219,7 +215,7 @@ class AnalysisServerAdapter extends LanguageServer {
       var offset = offsetFromPosition(_files[path], position);
       var id =
           (await _server.search.findElementReferences(path, offset, true)).id;
-      if (id == null) return null;
+      if (id == null) return const [];
       var references =
           (_searchResults[id] = new Completer<List<Location>>()).future;
       if (context.includeDeclaration) {
@@ -238,7 +234,7 @@ class AnalysisServerAdapter extends LanguageServer {
       var offset = offsetFromPosition(_files[path], position);
       var id =
           (await _server.search.findElementReferences(path, offset, false)).id;
-      if (id == null) return null;
+      if (id == null) return const [];
       var completer = new Completer<List<DocumentHighlight>>();
       _highlightResults[id] = (searchResults) =>
           completer.complete(_toHighlightList(searchResults, path, _files));

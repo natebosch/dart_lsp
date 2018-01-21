@@ -9,7 +9,9 @@ import 'package:path/path.dart' as p;
 import 'apply_change.dart';
 import 'args.dart';
 import 'capabilities.dart';
+import 'convert.dart';
 import 'logging/logs.dart';
+import 'outline_monitor.dart';
 import 'position_convert.dart';
 import 'protocol/language_server/interface.dart';
 import 'protocol/language_server/messages.dart';
@@ -37,10 +39,13 @@ class AnalysisServerAdapter extends LanguageServer {
   final _pools = new PerFilePool();
   final _commands = new CommandCache();
   final _fileVersions = <String, int>{};
+  final OutlineMonitor _outlineMonitor;
 
   final _log = new Logger('AnalysisServerAdapter');
 
-  AnalysisServerAdapter(this._server, this._args) {
+  AnalysisServerAdapter(AnalysisServer server, this._args)
+      : _server = server,
+        _outlineMonitor = new OutlineMonitor(server) {
     _listeners();
   }
 
@@ -85,6 +90,7 @@ class AnalysisServerAdapter extends LanguageServer {
   @override
   Future<Null> shutdown() async {
     _hasShutdown = true;
+    await _outlineMonitor.close();
     await _server.dispose();
   }
 
@@ -146,6 +152,7 @@ class AnalysisServerAdapter extends LanguageServer {
   @override
   Future<Null> textDocumentDidClose(TextDocumentIdentifier documentId) async {
     final path = _filePath(documentId.uri);
+    _outlineMonitor.onFileClose(path);
     await _pools.lock(path, () async {
       await _server.analysis.updateContent({path: new RemoveContentOverlay()});
     });
@@ -205,7 +212,7 @@ class AnalysisServerAdapter extends LanguageServer {
       result.targets.map((t) {
         var file = result.files[t.fileIndex];
         return new Location((b) => b
-          ..uri = _toFileUri(file)
+          ..uri = toFileUri(file)
           ..range = rangeFromOffset(_files[file], t.offset, t.length));
       });
 
@@ -316,7 +323,7 @@ class AnalysisServerAdapter extends LanguageServer {
     final sourceFileEdit = (await _server.edit.organizeDirectives(path)).edit;
     final workspaceEdit = new WorkspaceEdit((b) => b
       ..changes = {
-        _toFileUri(sourceFileEdit.file): sourceFileEdit.edits
+        toFileUri(sourceFileEdit.file): sourceFileEdit.edits
             .map((e) => _toTextEdit(fileLengths, e))
             .toList()
       });
@@ -384,6 +391,17 @@ class AnalysisServerAdapter extends LanguageServer {
         return result.port;
       });
   }
+
+  @override
+  Future<List<SymbolInformation>> textDocumentSymbols(
+      TextDocumentIdentifier documentId) {
+    final path = _filePath(documentId.uri);
+    return _pools.lock(
+        path,
+        () => _outlineMonitor
+            .outlineFor(path)
+            ?.then((o) => toSymbolInformation(_files, o)));
+  }
 }
 
 String _hoverMessage(HoverInformation hover) {
@@ -407,7 +425,7 @@ List<Location> _toLocationList(SearchResults results, FileCache files) =>
         .map((result) => result.location)
         .toSet()
         .map((location) => new Location((b) => b
-          ..uri = _toFileUri(location.file)
+          ..uri = toFileUri(location.file)
           ..range = rangeFromLocation(files[location.file], location)))
         .toList();
 
@@ -430,12 +448,10 @@ DocumentHighlightKind _documentHighlightKind(SearchResult result) =>
 
 Diagnostics _toDiagnostics(List<int> lineLengths, AnalysisErrors errors) =>
     new Diagnostics((b) => b
-      ..uri = _toFileUri(errors.file)
+      ..uri = toFileUri(errors.file)
       ..diagnostics = errors.errors
           .map((error) => _toDiagnostic(lineLengths, error))
           .toList());
-
-String _toFileUri(String path) => '${new Uri.file(path)}';
 
 CompletionList _toCompletionList(
         List<int> lineLengths, CompletionResults results) =>
@@ -566,7 +582,7 @@ Command _toCommand(SourceChange change, [String messagePrefix]) =>
 WorkspaceEdit _toWorkspaceEdit(FileCache fileCache, SourceChange change) =>
     new WorkspaceEdit((b) => b
       ..changes = new Map<String, List<TextEdit>>.fromIterable(change.edits,
-          key: (edit) => _toFileUri(edit.file),
+          key: (edit) => toFileUri(edit.file),
           value: (edit) => edit.edits
               .map((e) => _toTextEdit(fileCache[edit.file], e))
               .toList()));

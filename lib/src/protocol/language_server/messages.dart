@@ -1635,6 +1635,169 @@ class SignatureHelpOptions$Builder {
   List<String> triggerCharacters;
 }
 
+class SymbolInformation {
+  SymbolInformation._(this.containerName, this.kind, this.location, this.name);
+
+  factory SymbolInformation(void Function(SymbolInformation$Builder) init) {
+    final b = new SymbolInformation$Builder._();
+    init(b);
+    return new SymbolInformation._(b.containerName, b.kind, b.location, b.name);
+  }
+
+  factory SymbolInformation.fromJson(Map params) => new SymbolInformation._(
+      params.containsKey('containerName') && params['containerName'] != null
+          ? params['containerName']
+          : null,
+      params.containsKey('kind') && params['kind'] != null
+          ? new SymbolKind.fromJson(params['kind'])
+          : null,
+      params.containsKey('location') && params['location'] != null
+          ? new Location.fromJson(params['location'])
+          : null,
+      params.containsKey('name') && params['name'] != null
+          ? params['name']
+          : null);
+
+  final String containerName;
+
+  final SymbolKind kind;
+
+  final Location location;
+
+  final String name;
+
+  Map toJson() => {
+        'containerName': containerName,
+        'kind': kind?.toJson(),
+        'location': location?.toJson(),
+        'name': name
+      };
+  @override
+  int get hashCode {
+    var hash = 0;
+    hash = _hashCombine(hash, _deepHashCode(containerName));
+    hash = _hashCombine(hash, _deepHashCode(kind));
+    hash = _hashCombine(hash, _deepHashCode(location));
+    hash = _hashCombine(hash, _deepHashCode(name));
+    return _hashComplete(hash);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (other is! SymbolInformation) return false;
+    var o = other as SymbolInformation;
+    if (containerName != o.containerName) return false;
+    if (kind != o.kind) return false;
+    if (location != o.location) return false;
+    if (name != o.name) return false;
+    return true;
+  }
+}
+
+class SymbolInformation$Builder {
+  SymbolInformation$Builder._();
+
+  String containerName;
+
+  SymbolKind kind;
+
+  Location location;
+
+  String name;
+}
+
+class SymbolKind {
+  factory SymbolKind.fromJson(int value) {
+    const values = const {
+      18: SymbolKind.array,
+      17: SymbolKind.boolean,
+      5: SymbolKind.classSymbol,
+      14: SymbolKind.constant,
+      9: SymbolKind.constructor,
+      22: SymbolKind.enumMember,
+      10: SymbolKind.enumSymbol,
+      24: SymbolKind.event,
+      8: SymbolKind.field,
+      1: SymbolKind.file,
+      12: SymbolKind.function,
+      11: SymbolKind.interface,
+      20: SymbolKind.key,
+      6: SymbolKind.method,
+      2: SymbolKind.module,
+      3: SymbolKind.namespace,
+      21: SymbolKind.nullSymbol,
+      16: SymbolKind.number,
+      19: SymbolKind.object,
+      25: SymbolKind.operator,
+      4: SymbolKind.package,
+      7: SymbolKind.property,
+      15: SymbolKind.string,
+      23: SymbolKind.struct,
+      26: SymbolKind.typeParameter,
+      13: SymbolKind.variable
+    };
+    return values[value];
+  }
+
+  const SymbolKind._(this._value);
+
+  static const array = const SymbolKind._(18);
+
+  static const boolean = const SymbolKind._(17);
+
+  static const classSymbol = const SymbolKind._(5);
+
+  static const constant = const SymbolKind._(14);
+
+  static const constructor = const SymbolKind._(9);
+
+  static const enumMember = const SymbolKind._(22);
+
+  static const enumSymbol = const SymbolKind._(10);
+
+  static const event = const SymbolKind._(24);
+
+  static const field = const SymbolKind._(8);
+
+  static const file = const SymbolKind._(1);
+
+  static const function = const SymbolKind._(12);
+
+  static const interface = const SymbolKind._(11);
+
+  static const key = const SymbolKind._(20);
+
+  static const method = const SymbolKind._(6);
+
+  static const module = const SymbolKind._(2);
+
+  static const namespace = const SymbolKind._(3);
+
+  static const nullSymbol = const SymbolKind._(21);
+
+  static const number = const SymbolKind._(16);
+
+  static const object = const SymbolKind._(19);
+
+  static const operator = const SymbolKind._(25);
+
+  static const package = const SymbolKind._(4);
+
+  static const property = const SymbolKind._(7);
+
+  static const string = const SymbolKind._(15);
+
+  static const struct = const SymbolKind._(23);
+
+  static const typeParameter = const SymbolKind._(26);
+
+  static const variable = const SymbolKind._(13);
+
+  final int _value;
+
+  int toJson() => _value;
+}
+
 class SynchronizationCapabilities {
   SynchronizationCapabilities._(this.didSave, this.dynamicRegistration,
       this.willSave, this.willSaveWaitUntil);

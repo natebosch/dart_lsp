@@ -122,6 +122,12 @@ class StdIOLanguageServer {
         (params) => _server
             .textDocumentHighlights(_document(params), _position(params))
             .then((r) => r?.map((e) => e.toJson())?.toList()));
+    _registerRequest(
+        peer,
+        'textDocument/documentSymbol',
+        (params) => _server
+            .textDocumentSymbols(_document(params))
+            .then((r) => r?.map((e) => e.toJson())?.toList()));
   }
 
   void _codeActionMethods(Peer peer) {

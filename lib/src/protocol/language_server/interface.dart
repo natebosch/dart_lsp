@@ -26,6 +26,8 @@ abstract class LanguageServer {
       ReferenceContext context);
   Future<List<DocumentHighlight>> textDocumentHighlights(
       TextDocumentIdentifier documentId, Position position);
+  Future<List<SymbolInformation>> textDocumentSymbols(
+      TextDocumentIdentifier documentId);
   Future<Hover> textDocumentHover(
       TextDocumentIdentifier documentId, Position position);
   Future<List<Command>> textDocumentCodeAction(

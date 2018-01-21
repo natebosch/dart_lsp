@@ -1,6 +1,6 @@
 # 0.1.8-dev
 
-- Increase timeouts.
+- Add support for `textDocument/documentSymbol`.
 
 # 0.1.7
 

@@ -13,10 +13,10 @@ final serverCapabilities = new ServerCapabilities((b) => b
   ..codeActionProvider = true
   ..definitionProvider = true
   ..documentHighlightsProvider = true
+  ..documentSymbolProvider = true
   ..hoverProvider = true
   ..referencesProvider = true
   ..renameProvider = true
-  ..documentSymbolProvider = false
   ..workspaceSymbolProvider = false
   ..codeLensProvider = false
   ..documentFormattingProvider = false

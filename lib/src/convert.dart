@@ -12,17 +12,23 @@ List<SymbolInformation> toSymbolInformation(
 
 Iterable<SymbolInformation> _toSymbolInformations(
     String fileUri, List<int> lineLengths, Outline outline,
-    [String parent]) sync* {
-  yield new SymbolInformation((b) => b
-    ..containerName = parent
-    ..kind = _toSymbolKind(outline.element)
-    ..name = outline.element.name
-    ..location = new Location((b) => b
-      ..uri = fileUri
-      ..range = rangeFromOffset(lineLengths, outline.offset, outline.length)));
+    [String containerName]) sync* {
+  String name;
+  // Omit the top "<unit>"
+  if (outline.element.kind != 'COMPILATION_UNIT') {
+    name = outline.element.name;
+    yield new SymbolInformation((b) => b
+      ..containerName = containerName
+      ..kind = _toSymbolKind(outline.element)
+      ..name = name
+      ..location = new Location((b) => b
+        ..uri = fileUri
+        ..range = rangeFromOffset(lineLengths, outline.element.location.offset,
+            outline.element.location.length)));
+  }
   if (outline.children != null) {
-    yield* outline.children.expand((o) =>
-        _toSymbolInformations(fileUri, lineLengths, o, outline.element.name));
+    yield* outline.children
+        .expand((o) => _toSymbolInformations(fileUri, lineLengths, o, name));
   }
 }
 

@@ -1,4 +1,4 @@
-# 0.1.8-dev
+# 0.1.8
 
 - Add support for `textDocument/documentSymbol`.
 

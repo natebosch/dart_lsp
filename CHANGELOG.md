@@ -1,3 +1,7 @@
+# 0.1.9
+
+- Add 'Sort Members' to available code actions.
+
 # 0.1.8
 
 - Add support for `textDocument/documentSymbol`.

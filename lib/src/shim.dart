@@ -314,6 +314,11 @@ class AnalysisServerAdapter extends LanguageServer {
             ..title = 'Organize imports'
             ..command = makeGuid()),
           () => _organizeDirectives(_files[path], path)));
+      results.add(_commands.add(
+          new Command((b) => b
+            ..title = 'Sort Members'
+            ..command = makeGuid()),
+          () => _sortMembers(_files[path], path)));
 
       return results;
     });
@@ -329,6 +334,19 @@ class AnalysisServerAdapter extends LanguageServer {
       });
     _workspaceEdits.add(new ApplyWorkspaceEditParams((b) => b
       ..label = 'Organize Imports'
+      ..edit = workspaceEdit));
+  }
+
+  Future<Null> _sortMembers(List<int> lineLengths, String path) async {
+    final sourceFileEdit = (await _server.edit.sortMembers(path)).edit;
+    final workspaceEdit = new WorkspaceEdit((b) => b
+      ..changes = {
+        toFileUri(sourceFileEdit.file): sourceFileEdit.edits
+            .map((e) => _toTextEdit(lineLengths, e))
+            .toList()
+      });
+    _workspaceEdits.add(new ApplyWorkspaceEditParams((b) => b
+      ..label = 'Sort Members'
       ..edit = workspaceEdit));
   }
 

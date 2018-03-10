@@ -4,6 +4,7 @@
   - Reduce the possibilities for Overlays to get out of sync - start requests in
     order and don't put a timeout on the operations that impact file overlays.
   - Increase timeouts for other operations.
+  - Flush logs on each message.
 
 # 0.1.9+1
 

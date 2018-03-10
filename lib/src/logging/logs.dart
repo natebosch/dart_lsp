@@ -16,6 +16,7 @@ final _logs = <IOSink>[];
 void startLogging(String clientName, String traceLevel) {
   if (traceLevel == 'verbose') {
     var logSink = new File('/tmp/dart-lang-server-$clientName.log').openWrite();
+    _logs.add(logSink);
     Logger.root.level = Level.ALL;
     Logger.root.onRecord.listen((record) {
       logSink
@@ -23,6 +24,7 @@ void startLogging(String clientName, String traceLevel) {
       if (record.error != null) {
         logSink.writeln('[Exception]: ${record.error}');
       }
+      logSink.flush();
     });
   }
   if (traceLevel == 'verbose' || traceLevel == 'messages') {

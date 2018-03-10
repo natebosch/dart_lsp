@@ -7,17 +7,14 @@ class PerFilePool {
   final _pools = <String, Pool>{};
   final _log = new Logger('OperationPool');
 
-  Future<T> lock<T>(String path, FutureOr<T> Function() operation) => _pools
-      .putIfAbsent(path, () => new Pool(1))
-      .withResource(_timeout(operation));
+  Future<T> lock<T>(String path, Future<T> Function() operation,
+          {bool withTimeout: true}) =>
+      _pools
+          .putIfAbsent(path, () => new Pool(1))
+          .withResource(withTimeout ? _timeout(operation) : operation);
 
-  FutureOr<T> Function() _timeout<T>(FutureOr<T> Function() operation) => () {
-        var result = operation();
-        if (result is Future<T>)
-          return result.timeout(const Duration(milliseconds: 500),
-              onTimeout: () {
-            _log.warning('Operation times out!');
+  Future<T> Function() _timeout<T>(Future<T> Function() operation) =>
+      () => operation().timeout(const Duration(seconds: 2), onTimeout: () {
+            _log.warning('Operation timed out!');
           });
-        return result;
-      };
 }

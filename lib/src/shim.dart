@@ -105,9 +105,9 @@ class AnalysisServerAdapter extends LanguageServer {
   }
 
   @override
-  Future<Null> textDocumentDidOpen(TextDocumentItem document) async {
+  Future<Null> textDocumentDidOpen(TextDocumentItem document) {
     final path = _filePath(document.uri);
-    await _pools.lock(path, () async {
+    return _pools.lock(path, () async {
       _files[path] = findLineLengths(document.text);
       _fileVersions[path] = document.version;
       var directory = p.dirname(path);
@@ -116,14 +116,14 @@ class AnalysisServerAdapter extends LanguageServer {
       await _server.analysis.setPriorityFiles(_openFiles.toList());
       await _server.analysis
           .updateContent({path: new AddContentOverlay(document.text)});
-    });
+    }, withTimeout: false);
   }
 
   @override
   Future<Null> textDocumentDidChange(VersionedTextDocumentIdentifier documentId,
-      List<TextDocumentContentChangeEvent> changes) async {
+      List<TextDocumentContentChangeEvent> changes) {
     final path = _filePath(documentId.uri);
-    await _pools.lock(path, () async {
+    return _pools.lock(path, () async {
       if (_fileVersions[path] > documentId.version) {
         _log.warning('Ignoring file change for $path at version '
             '${documentId.version} since last seen in ${_fileVersions[path]}');
@@ -146,21 +146,21 @@ class AnalysisServerAdapter extends LanguageServer {
         }).toList());
         await _server.analysis.updateContent({path: overlay});
       }
-    });
+    }, withTimeout: false);
   }
 
   @override
-  Future<Null> textDocumentDidClose(TextDocumentIdentifier documentId) async {
+  Future<Null> textDocumentDidClose(TextDocumentIdentifier documentId) {
     final path = _filePath(documentId.uri);
     _outlineMonitor.onFileClose(path);
-    await _pools.lock(path, () async {
+    return _pools.lock(path, () async {
       await _server.analysis.updateContent({path: new RemoveContentOverlay()});
-    });
+    }, withTimeout: false);
   }
 
   @override
   Future<CompletionList> textDocumentCompletion(
-      TextDocumentIdentifier documentId, Position position) async {
+      TextDocumentIdentifier documentId, Position position) {
     final path = _filePath(documentId.uri);
     return _pools.lock(path, () async {
       var offset = offsetFromPosition(_files[path], position);
@@ -198,7 +198,7 @@ class AnalysisServerAdapter extends LanguageServer {
 
   @override
   Future<Location> textDocumentDefinition(
-      TextDocumentIdentifier documentId, Position position) async {
+      TextDocumentIdentifier documentId, Position position) {
     final path = _filePath(documentId.uri);
     return _pools.lock(path, () async {
       var offset = offsetFromPosition(_files[path], position);
@@ -266,7 +266,7 @@ class AnalysisServerAdapter extends LanguageServer {
 
   @override
   Future<Hover> textDocumentHover(
-      TextDocumentIdentifier documentId, Position position) async {
+      TextDocumentIdentifier documentId, Position position) {
     final path = _filePath(documentId.uri);
     return _pools.lock(path, () async {
       var offset = offsetFromPosition(_files[path], position);
@@ -284,9 +284,11 @@ class AnalysisServerAdapter extends LanguageServer {
   Future<List<Command>> textDocumentCodeAction(
       TextDocumentIdentifier documentId,
       Range range,
-      CodeActionContext context) async {
+      CodeActionContext context) {
     // The only actions supported go through workspace/applyEdit
-    if (!(clientCapabilities?.workspace?.applyEdit ?? false)) return const [];
+    if (!(clientCapabilities?.workspace?.applyEdit ?? false)) {
+      return new Future.value(const []);
+    }
 
     final path = _filePath(documentId.uri);
     return _pools.lock(path, () async {
@@ -351,8 +353,9 @@ class AnalysisServerAdapter extends LanguageServer {
   }
 
   @override
-  Future<Null> workspaceExecuteCommand(String command) async {
+  Future<Null> workspaceExecuteCommand(String command) {
     _commands[command]();
+    return new Future.value();
   }
 
   void _applyEdit(SourceChange change) {
@@ -391,23 +394,21 @@ class AnalysisServerAdapter extends LanguageServer {
   final _workspaceEdits = new StreamController<ApplyWorkspaceEditParams>();
 
   @override
-  Future<WorkspaceEdit> textDocumentRename(TextDocumentIdentifier documentId,
-      Position position, String newName) async {
+  Future<WorkspaceEdit> textDocumentRename(
+      TextDocumentIdentifier documentId, Position position, String newName) {
     final path = _filePath(documentId.uri);
     final offset = offsetFromPosition(_files[path], position);
-    final result = await _server.edit.getRefactoring(
-        'RENAME', path, offset, 0, false,
-        options: new RenameRefactoringOptions(newName: newName));
-    return _toWorkspaceEdit(_files, result.change);
+    return _server.edit
+        .getRefactoring('RENAME', path, offset, 0, false,
+            options: new RenameRefactoringOptions(newName: newName))
+        .then((result) => _toWorkspaceEdit(_files, result.change));
   }
 
   @override
   void setupExtraMethods(Peer peer) {
     peer
-      ..registerMethod('dart/getServerPort', () async {
-        final result = await _server.diagnostic.getServerPort();
-        return result.port;
-      });
+      ..registerMethod('dart/getServerPort',
+          () => _server.diagnostic.getServerPort().then((r) => r.port));
   }
 
   @override

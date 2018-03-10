@@ -11,7 +11,7 @@ import 'args.dart';
 import 'capabilities.dart';
 import 'convert.dart';
 import 'logging/logs.dart';
-import 'outline_monitor.dart';
+import 'subscriptions.dart';
 import 'position_convert.dart';
 import 'protocol/language_server/interface.dart';
 import 'protocol/language_server/messages.dart';
@@ -39,14 +39,17 @@ class AnalysisServerAdapter extends LanguageServer {
   final _pools = new PerFilePool();
   final _commands = new CommandCache();
   final _fileVersions = <String, int>{};
-  final OutlineMonitor _outlineMonitor;
+  final Subscriptions _subscriptions;
 
   final _log = new Logger('AnalysisServerAdapter');
 
-  AnalysisServerAdapter(AnalysisServer server, this._args)
-      : _server = server,
-        _outlineMonitor = new OutlineMonitor(server) {
+  AnalysisServerAdapter._(this._server, this._subscriptions, this._args) {
     _listeners();
+  }
+
+  factory AnalysisServerAdapter(AnalysisServer server, StartupArgs args) {
+    final subscriptions = new Subscriptions(server);
+    return new AnalysisServerAdapter._(server, subscriptions, args);
   }
 
   final _openDirectories = new Set<String>();
@@ -90,7 +93,7 @@ class AnalysisServerAdapter extends LanguageServer {
   @override
   Future<Null> shutdown() async {
     _hasShutdown = true;
-    await _outlineMonitor.close();
+    await _subscriptions.close();
     await _server.dispose();
   }
 
@@ -123,6 +126,7 @@ class AnalysisServerAdapter extends LanguageServer {
   Future<Null> textDocumentDidChange(VersionedTextDocumentIdentifier documentId,
       List<TextDocumentContentChangeEvent> changes) {
     final path = _filePath(documentId.uri);
+    _subscriptions.invalidate(path);
     return _pools.lock(path, () async {
       if (_fileVersions[path] > documentId.version) {
         _log.warning('Ignoring file change for $path at version '
@@ -152,7 +156,7 @@ class AnalysisServerAdapter extends LanguageServer {
   @override
   Future<Null> textDocumentDidClose(TextDocumentIdentifier documentId) {
     final path = _filePath(documentId.uri);
-    _outlineMonitor.onFileClose(path);
+    _subscriptions.onFileClose(path);
     return _pools.lock(path, () async {
       await _server.analysis.updateContent({path: new RemoveContentOverlay()});
     }, withTimeout: false);
@@ -186,10 +190,6 @@ class AnalysisServerAdapter extends LanguageServer {
       var id = results.id;
       if (_searchResults.containsKey(id)) {
         _searchResults.remove(id).complete(_toLocationList(results, _files));
-        return;
-      }
-      if (_highlightResults.containsKey(id)) {
-        _highlightResults.remove(id)(results);
         return;
       }
       _log.severe('Missing handler for search result $id');
@@ -242,25 +242,24 @@ class AnalysisServerAdapter extends LanguageServer {
       TextDocumentIdentifier documentId, Position position) {
     final path = _filePath(documentId.uri);
     return _pools.lock(path, () async {
+      var occurrences =
+          (await _subscriptions.occurrences.requestFor(path)).occurrences;
       var offset = offsetFromPosition(_files[path], position);
-      var id =
-          (await _server.search.findElementReferences(path, offset, false)).id;
-      if (id == null) return const [];
-      var completer = new Completer<List<DocumentHighlight>>();
-      _highlightResults[id] = (searchResults) =>
-          completer.complete(_toHighlightList(searchResults, path, _files));
-      var definition = await _server.analysis.getNavigation(path, offset, 1);
-      var result = await completer.future
-          .timeout(const Duration(milliseconds: 200), onTimeout: () => []);
-      if (definition.targets.length == 1 &&
-          path == definition.files[definition.targets.single.fileIndex]) {
-        // Definitions seem nonsensical when there are more than one
-        var target = definition.targets.single;
-        result.add(new DocumentHighlight((b) => b
-          ..range = rangeFromOffset(_files[path], target.offset, target.length)
-          ..kind = DocumentHighlightKind.text));
-      }
-      return result;
+      final matchingOccurrence = occurrences.firstWhere((occurrence) {
+        for (final occurrenceOffset in occurrence.offsets) {
+          if (offset >= occurrenceOffset &&
+              offset <= occurrenceOffset + occurrence.length) {
+            return true;
+          }
+        }
+        return false;
+      }, orElse: () => null);
+      if (matchingOccurrence == null) return const [];
+      return matchingOccurrence.offsets
+          .map((o) => new DocumentHighlight((b) => b
+            ..range =
+                rangeFromOffset(_files[path], o, matchingOccurrence.length)))
+          .toList();
     });
   }
 
@@ -366,7 +365,6 @@ class AnalysisServerAdapter extends LanguageServer {
   }
 
   final _searchResults = <String, Completer<List<Location>>>{};
-  final _highlightResults = <String, void Function(SearchResults)>{};
 
   final _filesWithDiagnostics = new Set<String>();
   @override
@@ -417,8 +415,8 @@ class AnalysisServerAdapter extends LanguageServer {
     final path = _filePath(documentId.uri);
     return _pools.lock(
         path,
-        () => _outlineMonitor
-            .outlineFor(path)
+        () => _subscriptions.outlines
+            .requestFor(path)
             ?.then((o) => toSymbolInformation(_files, o)));
   }
 }
@@ -447,23 +445,6 @@ List<Location> _toLocationList(SearchResults results, FileCache files) =>
           ..uri = toFileUri(location.file)
           ..range = rangeFromLocation(files[location.file], location)))
         .toList();
-
-List<DocumentHighlight> _toHighlightList(
-        SearchResults results, String path, FileCache files) =>
-    results.results
-        .where((result) => result.location.file == path)
-        .map((result) => new DocumentHighlight((b) => b
-          ..range =
-              rangeFromLocation(files[result.location.file], result.location)
-          ..kind = _documentHighlightKind(result)))
-        .toList();
-
-DocumentHighlightKind _documentHighlightKind(SearchResult result) =>
-    result.kind == 'READ'
-        ? DocumentHighlightKind.read
-        : result.kind == 'READ_WRITE' || result.kind == 'WRITE'
-            ? DocumentHighlightKind.write
-            : DocumentHighlightKind.text;
 
 Diagnostics _toDiagnostics(List<int> lineLengths, AnalysisErrors errors) =>
     new Diagnostics((b) => b

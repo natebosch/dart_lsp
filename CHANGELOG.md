@@ -5,6 +5,9 @@
     order and don't put a timeout on the operations that impact file overlays.
   - Increase timeouts for other operations.
   - Flush logs on each message.
+  - Improve performance of `textDocument/documentHighlight`. Use `Occurrences`
+    subscription which is per-file rather than references request which is
+    across the entire workspace.
 
 # 0.1.9+1
 

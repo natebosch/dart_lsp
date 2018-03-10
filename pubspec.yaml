@@ -1,5 +1,5 @@
 name: dart_language_server
-version: 0.1.9
+version: 0.1.9+1
 description: >-
   A shim on the analysis server following the language server protocol
 homepage: https://github.com/natebosch/dart_language_server
@@ -12,7 +12,7 @@ environment:
 dependencies:
   analysis_server_lib: ^0.1.2+1
   args: ^1.0.0
-  async: ^1.11.3
+  async: ^2.0.0
   json_rpc_2: ^2.0.3
   logging: ^0.11.3
   meta: ^1.1.0

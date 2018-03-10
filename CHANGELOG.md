@@ -1,3 +1,7 @@
+# 0.1.9+1
+
+- Use the latest `package:async`.
+
 # 0.1.9
 
 - Add 'Sort Members' to available code actions.

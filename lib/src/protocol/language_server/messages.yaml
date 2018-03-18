@@ -179,7 +179,7 @@ TextDocumentSyncOptions:
   change: TextDocumentSyncKind
   willSave: bool
   willSaveWaitUntil: bool
-  save: bool
+  save: SaveOptions
 
 ServerCapabilities:
   textDocumentSync: TextDocumentSyncOptions

@@ -6,7 +6,7 @@ final serverCapabilities = new ServerCapabilities((b) => b
     ..change = TextDocumentSyncKind.incremental
     ..willSave = false
     ..willSaveWaitUntil = false
-    ..save = false)
+    ..save = new SaveOptions((b) => b..includeText = false))
   ..completionProvider = new CompletionOptions((b) => b
     ..resolveProvider = false
     ..triggerCharacters = const ['.'])

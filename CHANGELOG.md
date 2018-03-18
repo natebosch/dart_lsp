@@ -1,3 +1,8 @@
+# 0.1.9+3
+
+- Bug Fix: Send a `SaveOptions` rather than a `boolean` for
+  `ServerCapabilities.textDocumentSync.save`
+
 # 0.1.9+2
 
 - Bug fixes:

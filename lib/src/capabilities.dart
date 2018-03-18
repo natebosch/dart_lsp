@@ -6,7 +6,7 @@ final serverCapabilities = new ServerCapabilities((b) => b
     ..change = TextDocumentSyncKind.incremental
     ..willSave = false
     ..willSaveWaitUntil = false
-    ..save = false)
+    ..save = new SaveOptions((b) => b..includeText = false))
   ..hoverProvider = true
   ..completionProvider = new CompletionOptions((b) => b
     ..resolveProvider = false

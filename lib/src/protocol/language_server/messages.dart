@@ -2013,7 +2013,9 @@ class TextDocumentSyncOptions {
           params != null && params.containsKey('openClose')
               ? params['openClose']
               : null,
-          params != null && params.containsKey('save') ? params['save'] : null,
+          params != null && params.containsKey('save')
+              ? new SaveOptions.fromJson(params('save'))
+              : null,
           params != null && params.containsKey('willSave')
               ? params['willSave']
               : null,
@@ -2025,7 +2027,7 @@ class TextDocumentSyncOptions {
 
   final bool openClose;
 
-  final bool save;
+  final SaveOptions save;
 
   final bool willSave;
 
@@ -2034,7 +2036,7 @@ class TextDocumentSyncOptions {
   Map toJson() => {
         'change': change?.toJson(),
         'openClose': openClose,
-        'save': save,
+        'save': save?.toJson(),
         'willSave': willSave,
         'willSaveWaitUntil': willSaveWaitUntil
       };
@@ -2069,7 +2071,7 @@ class TextDocumentSyncOptions$Builder {
 
   bool openClose;
 
-  bool save;
+  SaveOptions save;
 
   bool willSave;
 

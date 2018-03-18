@@ -1,3 +1,8 @@
+# 0.1.5+3
+
+- Backported Bug Fix: Send a `SaveOptions` rather than a `boolean` for
+  `ServerCapabilities.textDocumentSync.save`
+
 # 0.1.5+2
 
 - Tolerate keys explicitly set to `null` instead of omitted.

@@ -1,3 +1,8 @@
+# 0.1.9+4
+
+- Bug Fix: Send `null` rather than `false` for `codeLensProvider` and
+  `documentOnTypeFormattingProvider`.
+
 # 0.1.9+3
 
 - Bug Fix: Send a `SaveOptions` rather than a `boolean` for

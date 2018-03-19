@@ -18,7 +18,7 @@ final serverCapabilities = new ServerCapabilities((b) => b
   ..referencesProvider = true
   ..renameProvider = true
   ..workspaceSymbolProvider = false
-  ..codeLensProvider = false
+  ..codeLensProvider = null
   ..documentFormattingProvider = false
   ..documentRangeFormattingProvider = false
-  ..documentOnTypeFormattingProvider = false);
+  ..documentOnTypeFormattingProvider = null);

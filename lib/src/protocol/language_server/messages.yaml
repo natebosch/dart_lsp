@@ -192,10 +192,10 @@ ServerCapabilities:
   documentSymbolProvider: bool
   workspaceSymbolProvider: bool
   codeActionProvider: bool
-  codeLensProvider: bool
+  codeLensProvider: CodeLensOptions
   documentFormattingProvider: bool
   documentRangeFormattingProvider: bool
-  documentOnTypeFormattingProvider: bool
+  documentOnTypeFormattingProvider: DocumentOnTypeFormattingOptions
   renameProvider: bool
   documentLinkProvider: DocumentLinkOptions
   executeCommandProvider: ExecuteCommandOptions

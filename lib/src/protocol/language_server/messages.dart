@@ -1410,7 +1410,7 @@ class ServerCapabilities {
           ? params['codeActionProvider']
           : null,
       params.containsKey('codeLensProvider') && params['codeLensProvider'] != null
-          ? params['codeLensProvider']
+          ? new CodeLensOptions.fromJson(params['codeLensProvider'])
           : null,
       params.containsKey('completionProvider') && params['completionProvider'] != null
           ? new CompletionOptions.fromJson(params['completionProvider'])
@@ -1427,9 +1427,9 @@ class ServerCapabilities {
       params.containsKey('documentLinkProvider') && params['documentLinkProvider'] != null
           ? new DocumentLinkOptions.fromJson(params['documentLinkProvider'])
           : null,
-      params.containsKey('documentOnTypeFormattingProvider') &&
-              params['documentOnTypeFormattingProvider'] != null
-          ? params['documentOnTypeFormattingProvider']
+      params.containsKey('documentOnTypeFormattingProvider') && params['documentOnTypeFormattingProvider'] != null
+          ? new DocumentOnTypeFormattingOptions.fromJson(
+              params['documentOnTypeFormattingProvider'])
           : null,
       params.containsKey('documentRangeFormattingProvider') && params['documentRangeFormattingProvider'] != null
           ? params['documentRangeFormattingProvider']
@@ -1453,7 +1453,7 @@ class ServerCapabilities {
 
   final bool codeActionProvider;
 
-  final bool codeLensProvider;
+  final CodeLensOptions codeLensProvider;
 
   final CompletionOptions completionProvider;
 
@@ -1465,7 +1465,7 @@ class ServerCapabilities {
 
   final DocumentLinkOptions documentLinkProvider;
 
-  final bool documentOnTypeFormattingProvider;
+  final DocumentOnTypeFormattingOptions documentOnTypeFormattingProvider;
 
   final bool documentRangeFormattingProvider;
 
@@ -1487,13 +1487,14 @@ class ServerCapabilities {
 
   Map toJson() => {
         'codeActionProvider': codeActionProvider,
-        'codeLensProvider': codeLensProvider,
+        'codeLensProvider': codeLensProvider?.toJson(),
         'completionProvider': completionProvider?.toJson(),
         'definitionProvider': definitionProvider,
         'documentFormattingProvider': documentFormattingProvider,
         'documentHighlightsProvider': documentHighlightsProvider,
         'documentLinkProvider': documentLinkProvider?.toJson(),
-        'documentOnTypeFormattingProvider': documentOnTypeFormattingProvider,
+        'documentOnTypeFormattingProvider':
+            documentOnTypeFormattingProvider?.toJson(),
         'documentRangeFormattingProvider': documentRangeFormattingProvider,
         'documentSymbolProvider': documentSymbolProvider,
         'executeCommandProvider': executeCommandProvider?.toJson(),
@@ -1561,7 +1562,7 @@ class ServerCapabilities$Builder {
 
   bool codeActionProvider;
 
-  bool codeLensProvider;
+  CodeLensOptions codeLensProvider;
 
   CompletionOptions completionProvider;
 
@@ -1573,7 +1574,7 @@ class ServerCapabilities$Builder {
 
   DocumentLinkOptions documentLinkProvider;
 
-  bool documentOnTypeFormattingProvider;
+  DocumentOnTypeFormattingOptions documentOnTypeFormattingProvider;
 
   bool documentRangeFormattingProvider;
 

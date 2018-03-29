@@ -128,6 +128,12 @@ class StdIOLanguageServer {
         (params) => _server
             .textDocumentSymbols(_document(params))
             .then((r) => r?.map((e) => e.toJson())?.toList()));
+    _registerRequest(
+        peer,
+        'workspace/symbol',
+        (params) => _server
+            .workspaceSymbol(_query(params))
+            .then((r) => r?.map((e) => e.toJson())?.toList()));
   }
 
   void _codeActionMethods(Peer peer) {
@@ -172,3 +178,5 @@ List<TextDocumentContentChangeEvent> _contentChanges(params) =>
     params['contentChanges']
         .value
         .map((change) => new TextDocumentContentChangeEvent.fromJson(change));
+
+String _query(params) => params['query'].value;

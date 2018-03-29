@@ -1,3 +1,7 @@
+# 0.1.10
+
+- Add support for `workspace/symbol`.
+
 # 0.1.9+4
 
 - Bug Fix: Send `null` rather than `false` for `codeLensProvider` and

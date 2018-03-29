@@ -192,6 +192,12 @@ class AnalysisServerAdapter extends LanguageServer {
         _searchResults.remove(id).complete(_toLocationList(results, _files));
         return;
       }
+      if (_symbolSearchResults.containsKey(id)) {
+        _symbolSearchResults
+            .remove(id)
+            .complete(_toSymbolInformation(results, _files));
+        return;
+      }
       _log.severe('Missing handler for search result $id');
     });
   }
@@ -419,6 +425,26 @@ class AnalysisServerAdapter extends LanguageServer {
             .requestFor(path)
             ?.then((o) => toSymbolInformation(_files, o)));
   }
+
+  @override
+  Future<List<SymbolInformation>> workspaceSymbol(String query) async {
+    return (await Future.wait([_memberSearch(query), _topLevelSearch(query)]))
+        .expand((r) => r)
+        .toList();
+  }
+
+  final _symbolSearchResults = <String, Completer<List<SymbolInformation>>>{};
+  Future<List<SymbolInformation>> _topLevelSearch(String query) async {
+    final id = (await _server.search.findTopLevelDeclarations(query)).id;
+    return (_symbolSearchResults[id] = new Completer<List<SymbolInformation>>())
+        .future;
+  }
+
+  Future<List<SymbolInformation>> _memberSearch(String query) async {
+    final id = (await _server.search.findMemberDeclarations(query)).id;
+    return (_symbolSearchResults[id] = new Completer<List<SymbolInformation>>())
+        .future;
+  }
 }
 
 String _hoverMessage(HoverInformation hover) {
@@ -445,6 +471,68 @@ List<Location> _toLocationList(SearchResults results, FileCache files) =>
           ..uri = toFileUri(location.file)
           ..range = rangeFromLocation(files[location.file], location)))
         .toList();
+
+List<SymbolInformation> _toSymbolInformation(
+        SearchResults results, FileCache files) =>
+    results.results
+        .map((result) => new SymbolInformation((b) => b
+          ..containerName = result.path.length > 1 ? result.path[1].name : ''
+          ..name = result.path.first.name
+          ..kind = _toSymbolKind(result.path.first)
+          ..location = new Location((b) => b
+            ..uri = toFileUri(result.location.file)
+            ..range = rangeFromLocation(
+                files[result.location.file], result.location))))
+        .toList();
+
+SymbolKind _toSymbolKind(Element element) {
+  switch (element.kind) {
+    case "CLASS":
+    case "CLASS_TYPE_ALIAS":
+      return SymbolKind.classSymbol;
+    case "COMPILATION_UNIT":
+      return SymbolKind.module;
+    case "CONSTRUCTOR":
+    case "CONSTRUCTOR_INVOCATION":
+      return SymbolKind.constructor;
+    case "ENUM":
+      return SymbolKind.enumSymbol;
+    case "ENUM_CONSTANT":
+      return SymbolKind.enumMember;
+    case "FIELD":
+      return SymbolKind.field;
+    case "FILE":
+      return SymbolKind.file;
+    case "FUNCTION":
+    case "FUNCTION_INVOCATION":
+    case "FUNCTION_TYPE_ALIAS":
+      return SymbolKind.function;
+    case "GETTER":
+      return SymbolKind.field;
+    case "LABEL":
+      return null; //???
+    case "LIBRARY":
+      return SymbolKind.module;
+    case "LOCAL_VARIABLE":
+      return SymbolKind.variable;
+    case "METHOD":
+      return SymbolKind.method;
+    case "PARAMETER":
+    case "PREFIX":
+      return null; //???
+    case "SETTER":
+      return SymbolKind.field;
+    case "TOP_LEVEL_VARIABLE":
+      return SymbolKind.variable;
+    case "TYPE_PARAMETER":
+      return SymbolKind.typeParameter;
+    case "UNIT_TEST_GROUP":
+    case "UNIT_TEST_TEST":
+    case "UNKNOWN":
+    default:
+      return null; //???
+  }
+}
 
 Diagnostics _toDiagnostics(List<int> lineLengths, AnalysisErrors errors) =>
     new Diagnostics((b) => b

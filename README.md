@@ -16,6 +16,11 @@ This server supports:
 - Jump to definition
 - List references
 - Hover information
+- Document reference highlights
+- Document outlines
+- Workspace symbol search
+- Quick Fixes / Code Actions
+- Symbol Rename
 
 ## Installing
 

@@ -15,6 +15,7 @@ This server supports:
 - Completion suggestions
 - Jump to definition
 - List references
+- List implementations
 - Hover information
 - Document reference highlights
 - Document outlines

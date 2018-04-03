@@ -1,3 +1,7 @@
+# 0.1.11
+
+- Add support for `textDocument/implementation`.
+
 # 0.1.10
 
 - Add support for `workspace/symbol`.

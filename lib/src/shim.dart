@@ -244,6 +244,28 @@ class AnalysisServerAdapter extends LanguageServer {
   }
 
   @override
+  Future<List<Location>> textDocumentImplementation(
+      TextDocumentIdentifier documentId, Position position) {
+    final path = _filePath(documentId.uri);
+    return _pools.lock(path, () async {
+      var offset = offsetFromPosition(_files[path], position);
+      var items = (await _server.search.getTypeHierarchy(path, offset))
+          .hierarchyItems
+          .where((i) => i.classElement.name != 'Object');
+      var lookingForClass = items.every((i) => i.memberElement == null);
+      return items
+          .map((item) => lookingForClass
+              ? item.classElement?.location
+              : item.memberElement?.location)
+          .where((location) => location != null)
+          .map((location) => new Location((b) => b
+            ..uri = toFileUri(location.file)
+            ..range = rangeFromLocation(_files[location.file], location)))
+          .toList();
+    });
+  }
+
+  @override
   Future<List<DocumentHighlight>> textDocumentHighlights(
       TextDocumentIdentifier documentId, Position position) {
     final path = _filePath(documentId.uri);

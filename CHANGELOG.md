@@ -1,3 +1,8 @@
+# 0.1.11+2
+
+- Bug Fix: Set `implementationProvider` and `workspaceSymbolProvider` to `true`
+  in server capabilities since these requests are now supported.
+
 # 0.1.11+1
 
 - Bug Fix: Don't error when `textDocument/implementation` is called with a

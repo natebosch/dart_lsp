@@ -15,9 +15,10 @@ final serverCapabilities = new ServerCapabilities((b) => b
   ..documentHighlightsProvider = true
   ..documentSymbolProvider = true
   ..hoverProvider = true
+  ..implementationProvider = true
   ..referencesProvider = true
   ..renameProvider = true
-  ..workspaceSymbolProvider = false
+  ..workspaceSymbolProvider = true
   ..codeLensProvider = null
   ..documentFormattingProvider = false
   ..documentRangeFormattingProvider = false

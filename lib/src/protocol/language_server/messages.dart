@@ -1376,6 +1376,7 @@ class ServerCapabilities {
       this.documentSymbolProvider,
       this.executeCommandProvider,
       this.hoverProvider,
+      this.implementationProvider,
       this.referencesProvider,
       this.renameProvider,
       this.signatureHelpProvider,
@@ -1398,6 +1399,7 @@ class ServerCapabilities {
         b.documentSymbolProvider,
         b.executeCommandProvider,
         b.hoverProvider,
+        b.implementationProvider,
         b.referencesProvider,
         b.renameProvider,
         b.signatureHelpProvider,
@@ -1443,9 +1445,10 @@ class ServerCapabilities {
       params.containsKey('hoverProvider') && params['hoverProvider'] != null
           ? params['hoverProvider']
           : null,
-      params.containsKey('referencesProvider') && params['referencesProvider'] != null
-          ? params['referencesProvider']
+      params.containsKey('implementationProvider') && params['implementationProvider'] != null
+          ? params['implementationProvider']
           : null,
+      params.containsKey('referencesProvider') && params['referencesProvider'] != null ? params['referencesProvider'] : null,
       params.containsKey('renameProvider') && params['renameProvider'] != null ? params['renameProvider'] : null,
       params.containsKey('signatureHelpProvider') && params['signatureHelpProvider'] != null ? new SignatureHelpOptions.fromJson(params['signatureHelpProvider']) : null,
       params.containsKey('textDocumentSync') && params['textDocumentSync'] != null ? new TextDocumentSyncOptions.fromJson(params['textDocumentSync']) : null,
@@ -1475,6 +1478,8 @@ class ServerCapabilities {
 
   final bool hoverProvider;
 
+  final bool implementationProvider;
+
   final bool referencesProvider;
 
   final bool renameProvider;
@@ -1499,6 +1504,7 @@ class ServerCapabilities {
         'documentSymbolProvider': documentSymbolProvider,
         'executeCommandProvider': executeCommandProvider?.toJson(),
         'hoverProvider': hoverProvider,
+        'implementationProvider': implementationProvider,
         'referencesProvider': referencesProvider,
         'renameProvider': renameProvider,
         'signatureHelpProvider': signatureHelpProvider?.toJson(),
@@ -1520,6 +1526,7 @@ class ServerCapabilities {
     hash = _hashCombine(hash, _deepHashCode(documentSymbolProvider));
     hash = _hashCombine(hash, _deepHashCode(executeCommandProvider));
     hash = _hashCombine(hash, _deepHashCode(hoverProvider));
+    hash = _hashCombine(hash, _deepHashCode(implementationProvider));
     hash = _hashCombine(hash, _deepHashCode(referencesProvider));
     hash = _hashCombine(hash, _deepHashCode(renameProvider));
     hash = _hashCombine(hash, _deepHashCode(signatureHelpProvider));
@@ -1548,6 +1555,7 @@ class ServerCapabilities {
     if (documentSymbolProvider != o.documentSymbolProvider) return false;
     if (executeCommandProvider != o.executeCommandProvider) return false;
     if (hoverProvider != o.hoverProvider) return false;
+    if (implementationProvider != o.implementationProvider) return false;
     if (referencesProvider != o.referencesProvider) return false;
     if (renameProvider != o.renameProvider) return false;
     if (signatureHelpProvider != o.signatureHelpProvider) return false;
@@ -1583,6 +1591,8 @@ class ServerCapabilities$Builder {
   ExecuteCommandOptions executeCommandProvider;
 
   bool hoverProvider;
+
+  bool implementationProvider;
 
   bool referencesProvider;
 

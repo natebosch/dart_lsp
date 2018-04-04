@@ -182,23 +182,24 @@ TextDocumentSyncOptions:
   save: SaveOptions
 
 ServerCapabilities:
-  textDocumentSync: TextDocumentSyncOptions
-  hoverProvider: bool
-  completionProvider: CompletionOptions
-  signatureHelpProvider: SignatureHelpOptions
-  definitionProvider: bool
-  referencesProvider: bool
-  documentHighlightsProvider: bool
-  documentSymbolProvider: bool
-  workspaceSymbolProvider: bool
   codeActionProvider: bool
   codeLensProvider: CodeLensOptions
+  completionProvider: CompletionOptions
+  definitionProvider: bool
   documentFormattingProvider: bool
-  documentRangeFormattingProvider: bool
-  documentOnTypeFormattingProvider: DocumentOnTypeFormattingOptions
-  renameProvider: bool
+  documentHighlightsProvider: bool
   documentLinkProvider: DocumentLinkOptions
+  documentOnTypeFormattingProvider: DocumentOnTypeFormattingOptions
+  documentRangeFormattingProvider: bool
+  documentSymbolProvider: bool
   executeCommandProvider: ExecuteCommandOptions
+  hoverProvider: bool
+  implementationProvider: bool
+  referencesProvider: bool
+  renameProvider: bool
+  signatureHelpProvider: SignatureHelpOptions
+  textDocumentSync: TextDocumentSyncOptions
+  workspaceSymbolProvider: bool
 
 ReferenceContext:
   includeDeclaration: bool

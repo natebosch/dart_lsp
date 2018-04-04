@@ -1,3 +1,8 @@
+# 0.1.11+1
+
+- Bug Fix: Don't error when `textDocument/implementation` is called with a
+  position that is not a symbol that can be implemented.
+
 # 0.1.11
 
 - Add support for `textDocument/implementation`.

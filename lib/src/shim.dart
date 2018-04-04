@@ -251,7 +251,8 @@ class AnalysisServerAdapter extends LanguageServer {
       var offset = offsetFromPosition(_files[path], position);
       var items = (await _server.search.getTypeHierarchy(path, offset))
           .hierarchyItems
-          .where((i) => i.classElement.name != 'Object');
+          ?.where((i) => i.classElement.name != 'Object');
+      if (items == null) return const [];
       var lookingForClass = items.every((i) => i.memberElement == null);
       return items
           .map((item) => lookingForClass

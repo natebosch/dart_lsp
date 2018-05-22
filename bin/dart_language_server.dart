@@ -3,6 +3,7 @@ import 'dart:async';
 
 import 'package:dart_language_server/dart_language_server.dart';
 import 'package:dart_language_server/src/args.dart';
+import 'package:path/path.dart' as path;
 
 Future main(List<String> args) async {
   StartupArgs startupArgs;
@@ -17,11 +18,13 @@ Future main(List<String> args) async {
       var shim = await startShimmedServer(startupArgs);
       await new StdIOLanguageServer.start(shim).onDone;
     } catch (e, st) {
-      await new File('/tmp/lsp-error.log').writeAsString('Caught $e\n$st');
+      await new File(path.join(Directory.systemTemp.path, 'lsp-error.txt'))
+          .writeAsString('Caught $e\n$st');
     } finally {
       await closeLogs();
     }
   }, onError: (e, st) {
-    new File('/tmp/lsp-error.log').writeAsString('UnCaught $e\n$st');
+    new File(path.join(Directory.systemTemp.path, 'lsp-error.txt'))
+        .writeAsString('UnCaught $e\n$st');
   });
 }

@@ -483,8 +483,7 @@ String _hoverMessage(HoverInformation hover) {
   return '$message';
 }
 
-String _filePath(String fileUri) =>
-    Uri.decodeComponent(Uri.parse(fileUri).path);
+String _filePath(String fileUri) => Uri.parse(fileUri).toFilePath();
 
 List<Location> _toLocationList(SearchResults results, FileCache files) =>
     results.results

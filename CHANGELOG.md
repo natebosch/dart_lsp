@@ -1,3 +1,10 @@
+# 0.1.11+3
+
+- Bug fixes for windows file paths:
+  - Use `toFilePath()` to convert from URI which uses correct separators.
+  - Use `Directory.systemTemp` to use a correct temp directory.
+  - Use platform path separators when checking for apparent workspace roots.
+
 # 0.1.11+2
 
 - Bug Fix: Set `implementationProvider` and `workspaceSymbolProvider` to `true`

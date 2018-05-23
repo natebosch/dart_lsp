@@ -5,8 +5,7 @@ int offsetFromPosition(Iterable<int> lineLengths, Position position) =>
     _offset(lineLengths, position.line, position.character);
 
 int _offset(Iterable<int> lineLengths, int line, int character) {
-  var fullLines =
-      lineLengths.take(line).fold(0, (sum, length) => sum + length + 1);
+  var fullLines = lineLengths.take(line).fold(0, (sum, length) => sum + length);
   return fullLines + character;
 }
 
@@ -26,9 +25,9 @@ Position positionFromOffset(Iterable<int> lineLengths, int offset) {
   var consumedCharacters = 0;
   var consumedLines = 0;
   for (var length in lineLengths) {
-    if (consumedCharacters + length + 1 > offset) break;
+    if (consumedCharacters + length > offset) break;
     consumedLines += 1;
-    consumedCharacters += length + 1;
+    consumedCharacters += length;
   }
   return new Position((b) => b
     ..line = consumedLines

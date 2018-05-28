@@ -40,8 +40,15 @@ OffsetLength offsetLengthFromRange(Iterable<int> lineLengths, Range range) {
   return new OffsetLength(offset, endOffset - offset);
 }
 
-List<int> findLineLengths(String file) =>
-    file.split('\n').map((l) => l.length).toList();
+List<int> findLineLengths(String contents) {
+  // To avoid confusion, we add the \n back on to the length, so the lengths
+  // include line endings.
+  final lineLengths = contents.split("\n").map((l) => l.length + 1).toList();
+  // Remove the +1 we added on to the last one that didn't really exist.
+  lineLengths[lineLengths.length - 1]--;
+
+  return lineLengths;
+}
 
 class OffsetLength {
   final int offset;

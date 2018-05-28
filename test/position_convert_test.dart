@@ -1,6 +1,5 @@
 import 'package:dart_language_server/src/position_convert.dart';
 import 'package:dart_language_server/src/protocol/language_server/messages.dart';
-import 'package:dart_language_server/src/utils/file_cache.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -12,7 +11,7 @@ void main() {
     if (windowsFile)
       group('${windowsFile ? "Windows" : "macOS"} line endings', () {
         final lines =
-            splitIntoLines(windowsFile ? file.replaceAll("\n", "\r\n") : file);
+            findLineLengths(windowsFile ? file.replaceAll("\n", "\r\n") : file);
         group('offsetFromPosition', () {
           test('start of file', () async {
             var start = new Position((b) => b

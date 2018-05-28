@@ -1,0 +1,12 @@
+language: dart
+branches:
+  only: [master]
+dart:
+  - dev
+cache:
+  directories:
+    - $HOME/.pub-cache
+dart_task:
+  - test
+  - dartfmt
+  - dartanalyzer

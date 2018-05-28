@@ -26,8 +26,7 @@ class StartupArgs {
   StartupArgs._({
     @required String forceTraceLevel,
     @required List<String> analysisServerArgs,
-  })
-      : forceTraceLevel = forceTraceLevel,
+  })  : forceTraceLevel = forceTraceLevel,
         analysisServerArgs = analysisServerArgs;
 }
 

@@ -120,8 +120,7 @@ class StdIOLanguageServer {
         peer,
         'textDocument/implementation',
         (params) => _server
-            .textDocumentImplementation(
-                _document(params), _position(params))
+            .textDocumentImplementation(_document(params), _position(params))
             .then((r) => r?.map((e) => e.toJson())?.toList()));
     _registerRequest(
         peer,

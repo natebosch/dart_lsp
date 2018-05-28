@@ -1,3 +1,7 @@
+# 0.1.11+4
+
+- Bug fix for converting positions in files with windows line endings.
+
 # 0.1.11+3
 
 - Bug fixes for windows file paths:

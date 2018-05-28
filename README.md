@@ -1,5 +1,7 @@
 [![Pub Package](https://img.shields.io/pub/v/dart_language_server.svg)](https://pub.dartlang.org/packages/dart_language_server)
 [![Build Status](https://travis-ci.org/natebosch/dart_language_server.svg?branch=master)](https://travis-ci.org/natebosch/dart_language_server)
+[![Build status](https://ci.appveyor.com/api/projects/status/ydol1ue3oql4g6hw/branch/master?svg=true)](https://ci.appveyor.com/project/natebosch/dart-language-server/branch/master)
+
 
 # Dart Language Server
 

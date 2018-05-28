@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:dart_language_server/src/position_convert.dart';
+
 /// Caches file line lengths by file path, useful for translating between
 /// differing representations of location.
 ///
@@ -14,7 +16,8 @@ class FileCache {
   List<int> operator [](Object filePath) {
     assert(filePath is String);
     if (_activeFiles.containsKey(filePath)) return _activeFiles[filePath];
-    return new File(filePath).readAsLinesSync().map((l) => l.length).toList();
+    // Don't use readAsLines() or we'll lose track of the different line endings (\r\n).
+    return findLineLengths(new File(filePath).readAsStringSync());
   }
 
   void operator []=(String filePath, List<int> lines) {

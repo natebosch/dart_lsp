@@ -5,8 +5,7 @@ int offsetFromPosition(Iterable<int> lineLengths, Position position) =>
     _offset(lineLengths, position.line, position.character);
 
 int _offset(Iterable<int> lineLengths, int line, int character) {
-  var fullLines =
-      lineLengths.take(line).fold(0, (sum, length) => sum + length + 1);
+  var fullLines = lineLengths.take(line).fold(0, (sum, length) => sum + length);
   return fullLines + character;
 }
 
@@ -26,9 +25,9 @@ Position positionFromOffset(Iterable<int> lineLengths, int offset) {
   var consumedCharacters = 0;
   var consumedLines = 0;
   for (var length in lineLengths) {
-    if (consumedCharacters + length + 1 > offset) break;
+    if (consumedCharacters + length > offset) break;
     consumedLines += 1;
-    consumedCharacters += length + 1;
+    consumedCharacters += length;
   }
   return new Position((b) => b
     ..line = consumedLines
@@ -41,8 +40,15 @@ OffsetLength offsetLengthFromRange(Iterable<int> lineLengths, Range range) {
   return new OffsetLength(offset, endOffset - offset);
 }
 
-List<int> findLineLengths(String file) =>
-    file.split('\n').map((l) => l.length).toList();
+List<int> findLineLengths(String contents) {
+  // To avoid confusion, we add the \n back on to the length, so the lengths
+  // include line endings.
+  final lineLengths = contents.split("\n").map((l) => l.length + 1).toList();
+  // Remove the +1 we added on to the last one that didn't really exist.
+  lineLengths[lineLengths.length - 1]--;
+
+  return lineLengths;
+}
 
 class OffsetLength {
   final int offset;

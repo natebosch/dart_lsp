@@ -1,3 +1,6 @@
+[![Pub Package](https://img.shields.io/pub/v/dart_language_server.svg)](https://pub.dartlang.org/packages/dart_language_server)
+[![Build Status](https://travis-ci.org/natebosch/dart_language_server.svg?branch=master)](https://travis-ci.org/natebosch/dart_language_server)
+
 # Dart Language Server
 
 Wraps the [dart analysis server] and adapts its [default protocol] to the

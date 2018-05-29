@@ -1,3 +1,8 @@
+# 0.1.11+5
+
+- Bug fix for mishandled edits which could cause offset calculations to become
+  inaccurate.
+
 # 0.1.11+4
 
 - Bug fix for converting positions in files with windows line endings.

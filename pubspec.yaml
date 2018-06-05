@@ -28,3 +28,7 @@ dev_dependencies:
 
 executables:
   dart_language_server: dart_language_server
+
+dependency_overrides:
+  message_builder:
+    path: ../message_builder

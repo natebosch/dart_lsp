@@ -21,7 +21,19 @@ class ApplyWorkspaceEditParams {
 
   final String label;
 
-  Map toJson() => {'edit': edit?.toJson(), 'label': label};
+  Map toJson() {
+    final $$result = {};
+    final $edit = edit?.toJson();
+    if ($edit != null) {
+      $$result['edit'] = $edit;
+    }
+    final $label = label;
+    if ($label != null) {
+      $$result['label'] = $label;
+    }
+    return $$result;
+  }
+
   @override
   int get hashCode {
     var hash = 0;
@@ -69,10 +81,19 @@ class ClientCapabilities {
 
   final WorkspaceClientCapabilities workspace;
 
-  Map toJson() => {
-        'textDocument': textDocument?.toJson(),
-        'workspace': workspace?.toJson()
-      };
+  Map toJson() {
+    final $$result = {};
+    final $textDocument = textDocument?.toJson();
+    if ($textDocument != null) {
+      $$result['textDocument'] = $textDocument;
+    }
+    final $workspace = workspace?.toJson();
+    if ($workspace != null) {
+      $$result['workspace'] = $workspace;
+    }
+    return $$result;
+  }
+
   @override
   int get hashCode {
     var hash = 0;
@@ -117,8 +138,15 @@ class CodeActionContext {
 
   final List<Diagnostic> diagnostics;
 
-  Map toJson() =>
-      {'diagnostics': diagnostics?.map((v) => v?.toJson())?.toList()};
+  Map toJson() {
+    final $$result = {};
+    final $diagnostics = diagnostics?.map((v) => v?.toJson())?.toList();
+    if ($diagnostics != null) {
+      $$result['diagnostics'] = $diagnostics;
+    }
+    return $$result;
+  }
+
   @override
   int get hashCode {
     var hash = 0;
@@ -157,7 +185,15 @@ class CodeLensOptions {
 
   final bool resolveProvider;
 
-  Map toJson() => {'resolveProvider': resolveProvider};
+  Map toJson() {
+    final $$result = {};
+    final $resolveProvider = resolveProvider;
+    if ($resolveProvider != null) {
+      $$result['resolveProvider'] = $resolveProvider;
+    }
+    return $$result;
+  }
+
   @override
   int get hashCode {
     var hash = 0;
@@ -206,7 +242,23 @@ class Command {
 
   final String title;
 
-  Map toJson() => {'arguments': arguments, 'command': command, 'title': title};
+  Map toJson() {
+    final $$result = {};
+    final $arguments = arguments;
+    if ($arguments != null) {
+      $$result['arguments'] = $arguments;
+    }
+    final $command = command;
+    if ($command != null) {
+      $$result['command'] = $command;
+    }
+    final $title = title;
+    if ($title != null) {
+      $$result['title'] = $title;
+    }
+    return $$result;
+  }
+
   @override
   int get hashCode {
     var hash = 0;
@@ -264,10 +316,19 @@ class CompletionCapabilities {
 
   final bool dynamicRegistration;
 
-  Map toJson() => {
-        'completionItem': completionItem?.toJson(),
-        'dynamicRegistration': dynamicRegistration
-      };
+  Map toJson() {
+    final $$result = {};
+    final $completionItem = completionItem?.toJson();
+    if ($completionItem != null) {
+      $$result['completionItem'] = $completionItem;
+    }
+    final $dynamicRegistration = dynamicRegistration;
+    if ($dynamicRegistration != null) {
+      $$result['dynamicRegistration'] = $dynamicRegistration;
+    }
+    return $$result;
+  }
+
   @override
   int get hashCode {
     var hash = 0;
@@ -393,21 +454,60 @@ class CompletionItem {
 
   final TextEdit textEdit;
 
-  Map toJson() => {
-        'additionalTextEdits':
-            additionalTextEdits?.map((v) => v?.toJson())?.toList(),
-        'command': command?.toJson(),
-        'data': data,
-        'detail': detail,
-        'documentation': documentation,
-        'filterText': filterText,
-        'insertText': insertText,
-        'insertTextFormat': insertTextFormat?.toJson(),
-        'kind': kind?.toJson(),
-        'label': label,
-        'sortText': sortText,
-        'textEdit': textEdit?.toJson()
-      };
+  Map toJson() {
+    final $$result = {};
+    final $additionalTextEdits =
+        additionalTextEdits?.map((v) => v?.toJson())?.toList();
+    if ($additionalTextEdits != null) {
+      $$result['additionalTextEdits'] = $additionalTextEdits;
+    }
+    final $command = command?.toJson();
+    if ($command != null) {
+      $$result['command'] = $command;
+    }
+    final $data = data;
+    if ($data != null) {
+      $$result['data'] = $data;
+    }
+    final $detail = detail;
+    if ($detail != null) {
+      $$result['detail'] = $detail;
+    }
+    final $documentation = documentation;
+    if ($documentation != null) {
+      $$result['documentation'] = $documentation;
+    }
+    final $filterText = filterText;
+    if ($filterText != null) {
+      $$result['filterText'] = $filterText;
+    }
+    final $insertText = insertText;
+    if ($insertText != null) {
+      $$result['insertText'] = $insertText;
+    }
+    final $insertTextFormat = insertTextFormat?.toJson();
+    if ($insertTextFormat != null) {
+      $$result['insertTextFormat'] = $insertTextFormat;
+    }
+    final $kind = kind?.toJson();
+    if ($kind != null) {
+      $$result['kind'] = $kind;
+    }
+    final $label = label;
+    if ($label != null) {
+      $$result['label'] = $label;
+    }
+    final $sortText = sortText;
+    if ($sortText != null) {
+      $$result['sortText'] = $sortText;
+    }
+    final $textEdit = textEdit?.toJson();
+    if ($textEdit != null) {
+      $$result['textEdit'] = $textEdit;
+    }
+    return $$result;
+  }
+
   @override
   int get hashCode {
     var hash = 0;
@@ -492,7 +592,15 @@ class CompletionItemCapabilities {
 
   final bool snippetSupport;
 
-  Map toJson() => {'snippetSupport': snippetSupport};
+  Map toJson() {
+    final $$result = {};
+    final $snippetSupport = snippetSupport;
+    if ($snippetSupport != null) {
+      $$result['snippetSupport'] = $snippetSupport;
+    }
+    return $$result;
+  }
+
   @override
   int get hashCode {
     var hash = 0;
@@ -604,10 +712,19 @@ class CompletionList {
 
   final List<CompletionItem> items;
 
-  Map toJson() => {
-        'isIncomplete': isIncomplete,
-        'items': items?.map((v) => v?.toJson())?.toList()
-      };
+  Map toJson() {
+    final $$result = {};
+    final $isIncomplete = isIncomplete;
+    if ($isIncomplete != null) {
+      $$result['isIncomplete'] = $isIncomplete;
+    }
+    final $items = items?.map((v) => v?.toJson())?.toList();
+    if ($items != null) {
+      $$result['items'] = $items;
+    }
+    return $$result;
+  }
+
   @override
   int get hashCode {
     var hash = 0;
@@ -656,10 +773,19 @@ class CompletionOptions {
 
   final List<String> triggerCharacters;
 
-  Map toJson() => {
-        'resolveProvider': resolveProvider,
-        'triggerCharacters': triggerCharacters
-      };
+  Map toJson() {
+    final $$result = {};
+    final $resolveProvider = resolveProvider;
+    if ($resolveProvider != null) {
+      $$result['resolveProvider'] = $resolveProvider;
+    }
+    final $triggerCharacters = triggerCharacters;
+    if ($triggerCharacters != null) {
+      $$result['triggerCharacters'] = $triggerCharacters;
+    }
+    return $$result;
+  }
+
   @override
   int get hashCode {
     var hash = 0;
@@ -722,13 +848,31 @@ class Diagnostic {
 
   final String source;
 
-  Map toJson() => {
-        'code': code,
-        'message': message,
-        'range': range?.toJson(),
-        'severity': severity,
-        'source': source
-      };
+  Map toJson() {
+    final $$result = {};
+    final $code = code;
+    if ($code != null) {
+      $$result['code'] = $code;
+    }
+    final $message = message;
+    if ($message != null) {
+      $$result['message'] = $message;
+    }
+    final $range = range?.toJson();
+    if ($range != null) {
+      $$result['range'] = $range;
+    }
+    final $severity = severity;
+    if ($severity != null) {
+      $$result['severity'] = $severity;
+    }
+    final $source = source;
+    if ($source != null) {
+      $$result['source'] = $source;
+    }
+    return $$result;
+  }
+
   @override
   int get hashCode {
     var hash = 0;
@@ -790,10 +934,19 @@ class Diagnostics {
 
   final String uri;
 
-  Map toJson() => {
-        'diagnostics': diagnostics?.map((v) => v?.toJson())?.toList(),
-        'uri': uri
-      };
+  Map toJson() {
+    final $$result = {};
+    final $diagnostics = diagnostics?.map((v) => v?.toJson())?.toList();
+    if ($diagnostics != null) {
+      $$result['diagnostics'] = $diagnostics;
+    }
+    final $uri = uri;
+    if ($uri != null) {
+      $$result['uri'] = $uri;
+    }
+    return $$result;
+  }
+
   @override
   int get hashCode {
     var hash = 0;
@@ -841,7 +994,19 @@ class DocumentHighlight {
 
   final Range range;
 
-  Map toJson() => {'kind': kind?.toJson(), 'range': range?.toJson()};
+  Map toJson() {
+    final $$result = {};
+    final $kind = kind?.toJson();
+    if ($kind != null) {
+      $$result['kind'] = $kind;
+    }
+    final $range = range?.toJson();
+    if ($range != null) {
+      $$result['range'] = $range;
+    }
+    return $$result;
+  }
+
   @override
   int get hashCode {
     var hash = 0;
@@ -907,7 +1072,15 @@ class DocumentLinkOptions {
 
   final bool resolveProvider;
 
-  Map toJson() => {'resolveProvider': resolveProvider};
+  Map toJson() {
+    final $$result = {};
+    final $resolveProvider = resolveProvider;
+    if ($resolveProvider != null) {
+      $$result['resolveProvider'] = $resolveProvider;
+    }
+    return $$result;
+  }
+
   @override
   int get hashCode {
     var hash = 0;
@@ -957,10 +1130,19 @@ class DocumentOnTypeFormattingOptions {
 
   final List<String> moreTriggerCharacter;
 
-  Map toJson() => {
-        'firstTriggerCharacter': firstTriggerCharacter,
-        'moreTriggerCharacter': moreTriggerCharacter
-      };
+  Map toJson() {
+    final $$result = {};
+    final $firstTriggerCharacter = firstTriggerCharacter;
+    if ($firstTriggerCharacter != null) {
+      $$result['firstTriggerCharacter'] = $firstTriggerCharacter;
+    }
+    final $moreTriggerCharacter = moreTriggerCharacter;
+    if ($moreTriggerCharacter != null) {
+      $$result['moreTriggerCharacter'] = $moreTriggerCharacter;
+    }
+    return $$result;
+  }
+
   @override
   int get hashCode {
     var hash = 0;
@@ -1007,7 +1189,15 @@ class DynamicRegistrationCapability {
 
   final bool dynamicRegistration;
 
-  Map toJson() => {'dynamicRegistration': dynamicRegistration};
+  Map toJson() {
+    final $$result = {};
+    final $dynamicRegistration = dynamicRegistration;
+    if ($dynamicRegistration != null) {
+      $$result['dynamicRegistration'] = $dynamicRegistration;
+    }
+    return $$result;
+  }
+
   @override
   int get hashCode {
     var hash = 0;
@@ -1048,7 +1238,15 @@ class ExecuteCommandOptions {
 
   final List<String> commands;
 
-  Map toJson() => {'commands': commands};
+  Map toJson() {
+    final $$result = {};
+    final $commands = commands;
+    if ($commands != null) {
+      $$result['commands'] = $commands;
+    }
+    return $$result;
+  }
+
   @override
   int get hashCode {
     var hash = 0;
@@ -1092,7 +1290,19 @@ class Hover {
 
   final Range range;
 
-  Map toJson() => {'contents': contents, 'range': range?.toJson()};
+  Map toJson() {
+    final $$result = {};
+    final $contents = contents;
+    if ($contents != null) {
+      $$result['contents'] = $contents;
+    }
+    final $range = range?.toJson();
+    if ($range != null) {
+      $$result['range'] = $range;
+    }
+    return $$result;
+  }
+
   @override
   int get hashCode {
     var hash = 0;
@@ -1160,7 +1370,19 @@ class Location {
 
   final String uri;
 
-  Map toJson() => {'range': range?.toJson(), 'uri': uri};
+  Map toJson() {
+    final $$result = {};
+    final $range = range?.toJson();
+    if ($range != null) {
+      $$result['range'] = $range;
+    }
+    final $uri = uri;
+    if ($uri != null) {
+      $$result['uri'] = $uri;
+    }
+    return $$result;
+  }
+
   @override
   int get hashCode {
     var hash = 0;
@@ -1208,7 +1430,19 @@ class Position {
 
   final int line;
 
-  Map toJson() => {'character': character, 'line': line};
+  Map toJson() {
+    final $$result = {};
+    final $character = character;
+    if ($character != null) {
+      $$result['character'] = $character;
+    }
+    final $line = line;
+    if ($line != null) {
+      $$result['line'] = $line;
+    }
+    return $$result;
+  }
+
   @override
   int get hashCode {
     var hash = 0;
@@ -1256,7 +1490,19 @@ class Range {
 
   final Position start;
 
-  Map toJson() => {'end': end?.toJson(), 'start': start?.toJson()};
+  Map toJson() {
+    final $$result = {};
+    final $end = end?.toJson();
+    if ($end != null) {
+      $$result['end'] = $end;
+    }
+    final $start = start?.toJson();
+    if ($start != null) {
+      $$result['start'] = $start;
+    }
+    return $$result;
+  }
+
   @override
   int get hashCode {
     var hash = 0;
@@ -1300,7 +1546,15 @@ class ReferenceContext {
 
   final bool includeDeclaration;
 
-  Map toJson() => {'includeDeclaration': includeDeclaration};
+  Map toJson() {
+    final $$result = {};
+    final $includeDeclaration = includeDeclaration;
+    if ($includeDeclaration != null) {
+      $$result['includeDeclaration'] = $includeDeclaration;
+    }
+    return $$result;
+  }
+
   @override
   int get hashCode {
     var hash = 0;
@@ -1339,7 +1593,15 @@ class SaveOptions {
 
   final bool includeText;
 
-  Map toJson() => {'includeText': includeText};
+  Map toJson() {
+    final $$result = {};
+    final $includeText = includeText;
+    if ($includeText != null) {
+      $$result['includeText'] = $includeText;
+    }
+    return $$result;
+  }
+
   @override
   int get hashCode {
     var hash = 0;
@@ -1490,27 +1752,86 @@ class ServerCapabilities {
 
   final bool workspaceSymbolProvider;
 
-  Map toJson() => {
-        'codeActionProvider': codeActionProvider,
-        'codeLensProvider': codeLensProvider?.toJson(),
-        'completionProvider': completionProvider?.toJson(),
-        'definitionProvider': definitionProvider,
-        'documentFormattingProvider': documentFormattingProvider,
-        'documentHighlightsProvider': documentHighlightsProvider,
-        'documentLinkProvider': documentLinkProvider?.toJson(),
-        'documentOnTypeFormattingProvider':
-            documentOnTypeFormattingProvider?.toJson(),
-        'documentRangeFormattingProvider': documentRangeFormattingProvider,
-        'documentSymbolProvider': documentSymbolProvider,
-        'executeCommandProvider': executeCommandProvider?.toJson(),
-        'hoverProvider': hoverProvider,
-        'implementationProvider': implementationProvider,
-        'referencesProvider': referencesProvider,
-        'renameProvider': renameProvider,
-        'signatureHelpProvider': signatureHelpProvider?.toJson(),
-        'textDocumentSync': textDocumentSync?.toJson(),
-        'workspaceSymbolProvider': workspaceSymbolProvider
-      };
+  Map toJson() {
+    final $$result = {};
+    final $codeActionProvider = codeActionProvider;
+    if ($codeActionProvider != null) {
+      $$result['codeActionProvider'] = $codeActionProvider;
+    }
+    final $codeLensProvider = codeLensProvider?.toJson();
+    if ($codeLensProvider != null) {
+      $$result['codeLensProvider'] = $codeLensProvider;
+    }
+    final $completionProvider = completionProvider?.toJson();
+    if ($completionProvider != null) {
+      $$result['completionProvider'] = $completionProvider;
+    }
+    final $definitionProvider = definitionProvider;
+    if ($definitionProvider != null) {
+      $$result['definitionProvider'] = $definitionProvider;
+    }
+    final $documentFormattingProvider = documentFormattingProvider;
+    if ($documentFormattingProvider != null) {
+      $$result['documentFormattingProvider'] = $documentFormattingProvider;
+    }
+    final $documentHighlightsProvider = documentHighlightsProvider;
+    if ($documentHighlightsProvider != null) {
+      $$result['documentHighlightsProvider'] = $documentHighlightsProvider;
+    }
+    final $documentLinkProvider = documentLinkProvider?.toJson();
+    if ($documentLinkProvider != null) {
+      $$result['documentLinkProvider'] = $documentLinkProvider;
+    }
+    final $documentOnTypeFormattingProvider =
+        documentOnTypeFormattingProvider?.toJson();
+    if ($documentOnTypeFormattingProvider != null) {
+      $$result['documentOnTypeFormattingProvider'] =
+          $documentOnTypeFormattingProvider;
+    }
+    final $documentRangeFormattingProvider = documentRangeFormattingProvider;
+    if ($documentRangeFormattingProvider != null) {
+      $$result['documentRangeFormattingProvider'] =
+          $documentRangeFormattingProvider;
+    }
+    final $documentSymbolProvider = documentSymbolProvider;
+    if ($documentSymbolProvider != null) {
+      $$result['documentSymbolProvider'] = $documentSymbolProvider;
+    }
+    final $executeCommandProvider = executeCommandProvider?.toJson();
+    if ($executeCommandProvider != null) {
+      $$result['executeCommandProvider'] = $executeCommandProvider;
+    }
+    final $hoverProvider = hoverProvider;
+    if ($hoverProvider != null) {
+      $$result['hoverProvider'] = $hoverProvider;
+    }
+    final $implementationProvider = implementationProvider;
+    if ($implementationProvider != null) {
+      $$result['implementationProvider'] = $implementationProvider;
+    }
+    final $referencesProvider = referencesProvider;
+    if ($referencesProvider != null) {
+      $$result['referencesProvider'] = $referencesProvider;
+    }
+    final $renameProvider = renameProvider;
+    if ($renameProvider != null) {
+      $$result['renameProvider'] = $renameProvider;
+    }
+    final $signatureHelpProvider = signatureHelpProvider?.toJson();
+    if ($signatureHelpProvider != null) {
+      $$result['signatureHelpProvider'] = $signatureHelpProvider;
+    }
+    final $textDocumentSync = textDocumentSync?.toJson();
+    if ($textDocumentSync != null) {
+      $$result['textDocumentSync'] = $textDocumentSync;
+    }
+    final $workspaceSymbolProvider = workspaceSymbolProvider;
+    if ($workspaceSymbolProvider != null) {
+      $$result['workspaceSymbolProvider'] = $workspaceSymbolProvider;
+    }
+    return $$result;
+  }
+
   @override
   int get hashCode {
     var hash = 0;
@@ -1623,7 +1944,15 @@ class SignatureHelpOptions {
 
   final List<String> triggerCharacters;
 
-  Map toJson() => {'triggerCharacters': triggerCharacters};
+  Map toJson() {
+    final $$result = {};
+    final $triggerCharacters = triggerCharacters;
+    if ($triggerCharacters != null) {
+      $$result['triggerCharacters'] = $triggerCharacters;
+    }
+    return $$result;
+  }
+
   @override
   int get hashCode {
     var hash = 0;
@@ -1677,12 +2006,27 @@ class SymbolInformation {
 
   final String name;
 
-  Map toJson() => {
-        'containerName': containerName,
-        'kind': kind?.toJson(),
-        'location': location?.toJson(),
-        'name': name
-      };
+  Map toJson() {
+    final $$result = {};
+    final $containerName = containerName;
+    if ($containerName != null) {
+      $$result['containerName'] = $containerName;
+    }
+    final $kind = kind?.toJson();
+    if ($kind != null) {
+      $$result['kind'] = $kind;
+    }
+    final $location = location?.toJson();
+    if ($location != null) {
+      $$result['location'] = $location;
+    }
+    final $name = name;
+    if ($name != null) {
+      $$result['name'] = $name;
+    }
+    return $$result;
+  }
+
   @override
   int get hashCode {
     var hash = 0;
@@ -1847,12 +2191,27 @@ class SynchronizationCapabilities {
 
   final bool willSaveWaitUntil;
 
-  Map toJson() => {
-        'didSave': didSave,
-        'dynamicRegistration': dynamicRegistration,
-        'willSave': willSave,
-        'willSaveWaitUntil': willSaveWaitUntil
-      };
+  Map toJson() {
+    final $$result = {};
+    final $didSave = didSave;
+    if ($didSave != null) {
+      $$result['didSave'] = $didSave;
+    }
+    final $dynamicRegistration = dynamicRegistration;
+    if ($dynamicRegistration != null) {
+      $$result['dynamicRegistration'] = $dynamicRegistration;
+    }
+    final $willSave = willSave;
+    if ($willSave != null) {
+      $$result['willSave'] = $willSave;
+    }
+    final $willSaveWaitUntil = willSaveWaitUntil;
+    if ($willSaveWaitUntil != null) {
+      $$result['willSaveWaitUntil'] = $willSaveWaitUntil;
+    }
+    return $$result;
+  }
+
   @override
   int get hashCode {
     var hash = 0;
@@ -1999,21 +2358,63 @@ class TextDocumentClientCapabilities {
 
   final SynchronizationCapabilities synchronization;
 
-  Map toJson() => {
-        'codeAction': codeAction?.toJson(),
-        'codeLens': codeLens?.toJson(),
-        'completion': completion?.toJson(),
-        'definition': definition?.toJson(),
-        'documentHighlight': documentHighlight?.toJson(),
-        'documentLink': documentLink?.toJson(),
-        'documentSymbol': documentSymbol?.toJson(),
-        'formatting': formatting?.toJson(),
-        'hover': hover?.toJson(),
-        'onTypeFormatting': onTypeFormatting?.toJson(),
-        'references': references?.toJson(),
-        'rename': rename?.toJson(),
-        'synchronization': synchronization?.toJson()
-      };
+  Map toJson() {
+    final $$result = {};
+    final $codeAction = codeAction?.toJson();
+    if ($codeAction != null) {
+      $$result['codeAction'] = $codeAction;
+    }
+    final $codeLens = codeLens?.toJson();
+    if ($codeLens != null) {
+      $$result['codeLens'] = $codeLens;
+    }
+    final $completion = completion?.toJson();
+    if ($completion != null) {
+      $$result['completion'] = $completion;
+    }
+    final $definition = definition?.toJson();
+    if ($definition != null) {
+      $$result['definition'] = $definition;
+    }
+    final $documentHighlight = documentHighlight?.toJson();
+    if ($documentHighlight != null) {
+      $$result['documentHighlight'] = $documentHighlight;
+    }
+    final $documentLink = documentLink?.toJson();
+    if ($documentLink != null) {
+      $$result['documentLink'] = $documentLink;
+    }
+    final $documentSymbol = documentSymbol?.toJson();
+    if ($documentSymbol != null) {
+      $$result['documentSymbol'] = $documentSymbol;
+    }
+    final $formatting = formatting?.toJson();
+    if ($formatting != null) {
+      $$result['formatting'] = $formatting;
+    }
+    final $hover = hover?.toJson();
+    if ($hover != null) {
+      $$result['hover'] = $hover;
+    }
+    final $onTypeFormatting = onTypeFormatting?.toJson();
+    if ($onTypeFormatting != null) {
+      $$result['onTypeFormatting'] = $onTypeFormatting;
+    }
+    final $references = references?.toJson();
+    if ($references != null) {
+      $$result['references'] = $references;
+    }
+    final $rename = rename?.toJson();
+    if ($rename != null) {
+      $$result['rename'] = $rename;
+    }
+    final $synchronization = synchronization?.toJson();
+    if ($synchronization != null) {
+      $$result['synchronization'] = $synchronization;
+    }
+    return $$result;
+  }
+
   @override
   int get hashCode {
     var hash = 0;
@@ -2112,8 +2513,23 @@ class TextDocumentContentChangeEvent {
 
   final String text;
 
-  Map toJson() =>
-      {'range': range?.toJson(), 'rangeLength': rangeLength, 'text': text};
+  Map toJson() {
+    final $$result = {};
+    final $range = range?.toJson();
+    if ($range != null) {
+      $$result['range'] = $range;
+    }
+    final $rangeLength = rangeLength;
+    if ($rangeLength != null) {
+      $$result['rangeLength'] = $rangeLength;
+    }
+    final $text = text;
+    if ($text != null) {
+      $$result['text'] = $text;
+    }
+    return $$result;
+  }
+
   @override
   int get hashCode {
     var hash = 0;
@@ -2162,7 +2578,15 @@ class TextDocumentIdentifier {
 
   final String uri;
 
-  Map toJson() => {'uri': uri};
+  Map toJson() {
+    final $$result = {};
+    final $uri = uri;
+    if ($uri != null) {
+      $$result['uri'] = $uri;
+    }
+    return $$result;
+  }
+
   @override
   int get hashCode {
     var hash = 0;
@@ -2214,8 +2638,27 @@ class TextDocumentItem {
 
   final int version;
 
-  Map toJson() =>
-      {'languageId': languageId, 'text': text, 'uri': uri, 'version': version};
+  Map toJson() {
+    final $$result = {};
+    final $languageId = languageId;
+    if ($languageId != null) {
+      $$result['languageId'] = $languageId;
+    }
+    final $text = text;
+    if ($text != null) {
+      $$result['text'] = $text;
+    }
+    final $uri = uri;
+    if ($uri != null) {
+      $$result['uri'] = $uri;
+    }
+    final $version = version;
+    if ($version != null) {
+      $$result['version'] = $version;
+    }
+    return $$result;
+  }
+
   @override
   int get hashCode {
     var hash = 0;
@@ -2315,13 +2758,31 @@ class TextDocumentSyncOptions {
 
   final bool willSaveWaitUntil;
 
-  Map toJson() => {
-        'change': change?.toJson(),
-        'openClose': openClose,
-        'save': save?.toJson(),
-        'willSave': willSave,
-        'willSaveWaitUntil': willSaveWaitUntil
-      };
+  Map toJson() {
+    final $$result = {};
+    final $change = change?.toJson();
+    if ($change != null) {
+      $$result['change'] = $change;
+    }
+    final $openClose = openClose;
+    if ($openClose != null) {
+      $$result['openClose'] = $openClose;
+    }
+    final $save = save?.toJson();
+    if ($save != null) {
+      $$result['save'] = $save;
+    }
+    final $willSave = willSave;
+    if ($willSave != null) {
+      $$result['willSave'] = $willSave;
+    }
+    final $willSaveWaitUntil = willSaveWaitUntil;
+    if ($willSaveWaitUntil != null) {
+      $$result['willSaveWaitUntil'] = $willSaveWaitUntil;
+    }
+    return $$result;
+  }
+
   @override
   int get hashCode {
     var hash = 0;
@@ -2381,7 +2842,19 @@ class TextEdit {
 
   final Range range;
 
-  Map toJson() => {'newText': newText, 'range': range?.toJson()};
+  Map toJson() {
+    final $$result = {};
+    final $newText = newText;
+    if ($newText != null) {
+      $$result['newText'] = $newText;
+    }
+    final $range = range?.toJson();
+    if ($range != null) {
+      $$result['range'] = $range;
+    }
+    return $$result;
+  }
+
   @override
   int get hashCode {
     var hash = 0;
@@ -2431,7 +2904,19 @@ class VersionedTextDocumentIdentifier {
 
   final int version;
 
-  Map toJson() => {'uri': uri, 'version': version};
+  Map toJson() {
+    final $$result = {};
+    final $uri = uri;
+    if ($uri != null) {
+      $$result['uri'] = $uri;
+    }
+    final $version = version;
+    if ($version != null) {
+      $$result['version'] = $version;
+    }
+    return $$result;
+  }
+
   @override
   int get hashCode {
     var hash = 0;
@@ -2509,13 +2994,31 @@ class WorkspaceClientCapabilities {
 
   final DynamicRegistrationCapability symbol;
 
-  Map toJson() => {
-        'applyEdit': applyEdit,
-        'didChangeConfiguration': didChangeConfiguration?.toJson(),
-        'didChangeWatchedFiles': didChangeWatchedFiles?.toJson(),
-        'executeCommand': executeCommand?.toJson(),
-        'symbol': symbol?.toJson()
-      };
+  Map toJson() {
+    final $$result = {};
+    final $applyEdit = applyEdit;
+    if ($applyEdit != null) {
+      $$result['applyEdit'] = $applyEdit;
+    }
+    final $didChangeConfiguration = didChangeConfiguration?.toJson();
+    if ($didChangeConfiguration != null) {
+      $$result['didChangeConfiguration'] = $didChangeConfiguration;
+    }
+    final $didChangeWatchedFiles = didChangeWatchedFiles?.toJson();
+    if ($didChangeWatchedFiles != null) {
+      $$result['didChangeWatchedFiles'] = $didChangeWatchedFiles;
+    }
+    final $executeCommand = executeCommand?.toJson();
+    if ($executeCommand != null) {
+      $$result['executeCommand'] = $executeCommand;
+    }
+    final $symbol = symbol?.toJson();
+    if ($symbol != null) {
+      $$result['symbol'] = $symbol;
+    }
+    return $$result;
+  }
+
   @override
   int get hashCode {
     var hash = 0;
@@ -2573,12 +3076,18 @@ class WorkspaceEdit {
 
   final Map<String, List<TextEdit>> changes;
 
-  Map toJson() => {
-        'changes': changes == null
-            ? null
-            : new Map.fromIterable(changes.keys,
-                value: (v) => changes[v]?.map((v) => v?.toJson())?.toList())
-      };
+  Map toJson() {
+    final $$result = {};
+    final $changes = changes == null
+        ? null
+        : new Map.fromIterable(changes.keys,
+            value: (v) => changes[v]?.map((v) => v?.toJson())?.toList());
+    if ($changes != null) {
+      $$result['changes'] = $changes;
+    }
+    return $$result;
+  }
+
   @override
   int get hashCode {
     var hash = 0;

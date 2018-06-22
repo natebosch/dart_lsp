@@ -34,7 +34,7 @@ void startLogging(String clientName, String traceLevel) {
     var analyzerLog = new File(path.join(
             Directory.systemTemp.path, 'analyzer-wirelog-$clientName.log'))
         .openWrite();
-    analyzerSink.stream.transform(UTF8.encoder).pipe(analyzerLog);
+    analyzerSink.stream.transform(utf8.encoder).pipe(analyzerLog);
     _logs.add(analyzerLog);
     var lspLog = new File(
             path.join(Directory.systemTemp.path, 'lsp-wirelog-$clientName.log'))
@@ -44,7 +44,7 @@ void startLogging(String clientName, String traceLevel) {
   }
 }
 
-Future<Null> closeLogs() => Future.wait(_logs.map(_close));
+Future<void> closeLogs() => Future.wait(_logs.map(_close));
 
 Future _close(IOSink sink) async {
   await sink?.flush();

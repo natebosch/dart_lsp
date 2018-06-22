@@ -24,9 +24,9 @@ class StdIOStreamChannel extends StreamChannelMixin<String> {
 }
 
 void _serialize(String data, EventSink<List<int>> sink) {
-  var message = UTF8.encode(data);
+  var message = utf8.encode(data);
   var header = 'Content-Length: ${message.length}\r\n\r\n';
-  sink.add(ASCII.encode(header));
+  sink.add(ascii.encode(header));
   for (var chunk in _chunks(message, 1024)) {
     sink.add(chunk);
   }
@@ -49,7 +49,7 @@ class _Parser {
     });
   }
 
-  Future<Null> close() => _subscription.cancel();
+  Future<void> close() => _subscription.cancel();
 
   void _handleByte(int byte) {
     _buffer.add(byte);
@@ -58,7 +58,7 @@ class _Parser {
       _buffer.clear();
       _headerMode = false;
     } else if (!_headerMode && _messageComplete) {
-      _streamCtl.add(UTF8.decode(_buffer));
+      _streamCtl.add(utf8.decode(_buffer));
       _buffer.clear();
       _headerMode = true;
     }
@@ -69,7 +69,7 @@ class _Parser {
 
   /// Decodes [_buffer] into a String and looks for the 'Content-Length' header.
   int _parseContentLength() {
-    var asString = ASCII.decode(_buffer);
+    var asString = ascii.decode(_buffer);
     var headers = asString.split('\r\n');
     var lengthHeader =
         headers.firstWhere((h) => h.startsWith('Content-Length'));

@@ -9,11 +9,10 @@ import 'wireformat.dart';
 
 class StdIOLanguageServer {
   final LanguageServer _server;
-  Future<Null> onDone;
+  Future<void> onDone;
 
   StdIOLanguageServer.start(this._server) {
-    var channel = new StdIOStreamChannel();
-    channel = lspChannel.bind(channel);
+    var channel = lspChannel.bind(new StdIOStreamChannel());
     var peer = new Peer(channel);
 
     _lifecycleMethods(peer);
@@ -181,8 +180,8 @@ ReferenceContext _referenceContext(params) =>
     new ReferenceContext.fromJson(params['context'].value);
 
 List<TextDocumentContentChangeEvent> _contentChanges(params) =>
-    params['contentChanges']
-        .value
-        .map((change) => new TextDocumentContentChangeEvent.fromJson(change));
+    (params['contentChanges'].value as Iterable)
+        .map((change) => new TextDocumentContentChangeEvent.fromJson(change))
+        .toList();
 
 String _query(params) => params['query'].value;

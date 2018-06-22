@@ -18,13 +18,11 @@ Future main(List<String> args) async {
       var shim = await startShimmedServer(startupArgs);
       await new StdIOLanguageServer.start(shim).onDone;
     } catch (e, st) {
-      await new File(path.join(Directory.systemTemp.path, 'lsp-error.txt'))
-          .writeAsString('Caught $e\n$st');
+      stderr.writeln('Uncaught Exception: $e\n$st');
     } finally {
       await closeLogs();
     }
   }, onError: (e, st) {
-    new File(path.join(Directory.systemTemp.path, 'lsp-error.txt'))
-        .writeAsString('UnCaught $e\n$st');
+    stderr.writeln('Uncaught Exception: $e\n$st');
   });
 }

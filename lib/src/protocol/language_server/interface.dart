@@ -5,9 +5,9 @@ import 'package:json_rpc_2/json_rpc_2.dart';
 import 'messages.dart';
 
 abstract class LanguageServer {
-  Future<Null> get onDone;
+  Future<void> get onDone;
 
-  Future<Null> shutdown() async {}
+  Future<void> shutdown() async {}
   void exit() {}
 
   Future<ServerCapabilities> initialize(int clientPid, String rootUri,
@@ -37,7 +37,7 @@ abstract class LanguageServer {
       TextDocumentIdentifier documentId,
       Range range,
       CodeActionContext context);
-  Future<Null> workspaceExecuteCommand(String command);
+  Future<void> workspaceExecuteCommand(String command);
   Future<WorkspaceEdit> textDocumentRename(
       TextDocumentIdentifier documentId, Position position, String newName);
   Stream<Diagnostics> get diagnostics;

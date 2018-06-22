@@ -69,7 +69,7 @@ class AnalysisServerAdapter extends LanguageServer {
 
   /// If [directory] is not already present in or underneath [_openDirectories]
   /// look for a parent that might be a package and add it.
-  Future<Null> _addAnalysisRoot(String directory) async {
+  Future<void> _addAnalysisRoot(String directory) async {
     if (!_openDirectories.contains(directory) &&
         !_openDirectories.any((d) => p.isWithin(d, directory))) {
       var packageDir = findParentPackageDir(directory);
@@ -86,12 +86,12 @@ class AnalysisServerAdapter extends LanguageServer {
   }
 
   @override
-  Future<Null> get onDone => _onDone.future;
-  final _onDone = new Completer<Null>();
+  Future<void> get onDone => _onDone.future;
+  final _onDone = new Completer<void>();
   bool _hasShutdown = false;
 
   @override
-  Future<Null> shutdown() async {
+  Future<void> shutdown() async {
     _hasShutdown = true;
     await _subscriptions.close();
     await _server.dispose();
@@ -108,7 +108,7 @@ class AnalysisServerAdapter extends LanguageServer {
   }
 
   @override
-  Future<Null> textDocumentDidOpen(TextDocumentItem document) {
+  Future<void> textDocumentDidOpen(TextDocumentItem document) {
     final path = _filePath(document.uri);
     return _pools.lock(path, () async {
       _files[path] = findLineLengths(document.text);
@@ -123,7 +123,7 @@ class AnalysisServerAdapter extends LanguageServer {
   }
 
   @override
-  Future<Null> textDocumentDidChange(VersionedTextDocumentIdentifier documentId,
+  Future<void> textDocumentDidChange(VersionedTextDocumentIdentifier documentId,
       List<TextDocumentContentChangeEvent> changes) {
     final path = _filePath(documentId.uri);
     _subscriptions.invalidate(path);
@@ -154,7 +154,7 @@ class AnalysisServerAdapter extends LanguageServer {
   }
 
   @override
-  Future<Null> textDocumentDidClose(TextDocumentIdentifier documentId) {
+  Future<void> textDocumentDidClose(TextDocumentIdentifier documentId) {
     final path = _filePath(documentId.uri);
     _subscriptions.onFileClose(path);
     return _pools.lock(path, () async {
@@ -354,7 +354,7 @@ class AnalysisServerAdapter extends LanguageServer {
     });
   }
 
-  Future<Null> _organizeDirectives(List<int> fileLengths, String path) async {
+  Future<void> _organizeDirectives(List<int> fileLengths, String path) async {
     final sourceFileEdit = (await _server.edit.organizeDirectives(path)).edit;
     final workspaceEdit = new WorkspaceEdit((b) => b
       ..changes = {
@@ -367,7 +367,7 @@ class AnalysisServerAdapter extends LanguageServer {
       ..edit = workspaceEdit));
   }
 
-  Future<Null> _sortMembers(List<int> lineLengths, String path) async {
+  Future<void> _sortMembers(List<int> lineLengths, String path) async {
     final sourceFileEdit = (await _server.edit.sortMembers(path)).edit;
     final workspaceEdit = new WorkspaceEdit((b) => b
       ..changes = {
@@ -381,7 +381,7 @@ class AnalysisServerAdapter extends LanguageServer {
   }
 
   @override
-  Future<Null> workspaceExecuteCommand(String command) {
+  Future<void> workspaceExecuteCommand(String command) {
     _commands[command]();
     return new Future.value();
   }

@@ -1,3 +1,8 @@
+# 0.1.11+6
+
+- Fix compatibility with Dart 2.
+- Write uncaught exceptions to `stderr` instead of a temp file.
+
 # 0.1.11+5
 
 - Bug fix for mishandled edits which could cause offset calculations to become

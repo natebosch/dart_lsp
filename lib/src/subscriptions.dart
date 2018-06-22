@@ -47,7 +47,7 @@ class Subscriptions {
     occurrences._onFileClose(filePath);
   }
 
-  Future<Null> close() =>
+  Future<void> close() =>
       Future.wait([outlines._close(), occurrences._close()]);
 }
 

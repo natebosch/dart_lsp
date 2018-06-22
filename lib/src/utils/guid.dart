@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 
-String makeGuid() => BASE64.encode(_bytes.take(6).toList());
+String makeGuid() => base64Encode(_bytes.take(6).toList());
 
 final _bytes = _randomBytes();
 

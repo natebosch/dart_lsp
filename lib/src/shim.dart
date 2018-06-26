@@ -21,10 +21,12 @@ import 'utils/guid.dart';
 import 'utils/package_dir_detection.dart';
 import 'utils/per_file_pool.dart';
 
+final eol = Platform.isWindows ? '\r\n' : '\n';
+
 Future<LanguageServer> startShimmedServer(StartupArgs args) async {
   var client = await AnalysisServer.create(
-      onRead: (m) => analyzerSink.add('OUT: $m\n'),
-      onWrite: (m) => analyzerSink.add('IN: $m\n'),
+      onRead: (m) => analyzerSink.add('OUT: $m$eol'),
+      onWrite: (m) => analyzerSink.add('IN: $m$eol'),
       serverArgs: args.analysisServerArgs);
   await client.server.onConnected.first;
   return new AnalysisServerAdapter(client, args);

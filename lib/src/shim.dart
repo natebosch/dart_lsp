@@ -293,7 +293,8 @@ class AnalysisServerAdapter extends LanguageServer {
   }
 
   @override
-  Future<Hover> textDocumentHover(
+  // TODO(dantup): How to make this Future<Hover | HoverMarkup>?!
+  Future<dynamic> textDocumentHover(
       TextDocumentIdentifier documentId, Position position) {
     final path = _filePath(documentId.uri);
     return _pools.lock(path, () async {
@@ -302,9 +303,34 @@ class AnalysisServerAdapter extends LanguageServer {
       if (hovers.isEmpty) return null;
       var hover = hovers.first;
       var range = rangeFromOffset(_files[path], hover.offset, hover.length);
-      return new Hover((b) => b
-        ..contents = _hoverMessage(hover)
-        ..range = range);
+
+      final List<String> clientFormats =
+          clientCapabilities?.textDocument?.hover?.contentFormat;
+
+      final List<String> sharedFormats =
+          clientFormats?.where((t) => t == 'markdown' || t == 'plaintext');
+
+      // Return a raw string if the client did provide any formats (this means
+      // they don't know what MarkupContent is).
+      if (sharedFormats == null || sharedFormats.isEmpty) {
+        return new Hover((b) => b
+          ..contents = _hoverContentsMarkdown(hover)
+          ..range = range);
+      } else {
+        if (sharedFormats.first == 'markdown') {
+          return new HoverMarkup((b) => b
+            ..contents = new MarkupContent((mu) => mu
+              ..kind = 'markdown'
+              ..value = _hoverContentsMarkdown(hover))
+            ..range = range);
+        } else {
+          return new HoverMarkup((b) => b
+            ..contents = new MarkupContent((mu) => mu
+              ..kind = 'plaintext'
+              ..value = _hoverContentsPlaintext(hover))
+            ..range = range);
+        }
+      }
     });
   }
 
@@ -470,7 +496,7 @@ class AnalysisServerAdapter extends LanguageServer {
   }
 }
 
-String _hoverMessage(HoverInformation hover) {
+String _hoverContentsMarkdown(HoverInformation hover) {
   var message = new StringBuffer();
   if (hover.elementDescription != null) {
     message.writeln(hover.elementDescription);
@@ -481,6 +507,11 @@ String _hoverMessage(HoverInformation hover) {
     message.writeln(hover.dartdoc);
   }
   return '$message';
+}
+
+String _hoverContentsPlaintext(HoverInformation hover) {
+  // TODO(dantup): Can we do better?
+  return _hoverContentsMarkdown(hover);
 }
 
 String _filePath(String fileUri) => Uri.parse(fileUri).toFilePath();

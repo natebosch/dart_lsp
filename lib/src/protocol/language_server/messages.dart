@@ -1119,6 +1119,106 @@ class Hover$Builder {
   Range range;
 }
 
+class HoverCapabilities {
+  HoverCapabilities._(this.contentFormat, this.dynamicRegistration);
+
+  factory HoverCapabilities(void Function(HoverCapabilities$Builder) init) {
+    final b = new HoverCapabilities$Builder._();
+    init(b);
+    return new HoverCapabilities._(b.contentFormat, b.dynamicRegistration);
+  }
+
+  factory HoverCapabilities.fromJson(Map params) => new HoverCapabilities._(
+      params.containsKey('contentFormat') && params['contentFormat'] != null
+          ? params['contentFormat']
+          : null,
+      params.containsKey('dynamicRegistration') &&
+              params['dynamicRegistration'] != null
+          ? params['dynamicRegistration']
+          : null);
+
+  final List<String> contentFormat;
+
+  final bool dynamicRegistration;
+
+  Map toJson() => {
+        'contentFormat': contentFormat,
+        'dynamicRegistration': dynamicRegistration
+      };
+  @override
+  int get hashCode {
+    var hash = 0;
+    hash = _hashCombine(hash, _deepHashCode(contentFormat));
+    hash = _hashCombine(hash, _deepHashCode(dynamicRegistration));
+    return _hashComplete(hash);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (other is! HoverCapabilities) return false;
+    var o = other as HoverCapabilities;
+    if (!_deepEquals(contentFormat, o.contentFormat)) return false;
+    if (dynamicRegistration != o.dynamicRegistration) return false;
+    return true;
+  }
+}
+
+class HoverCapabilities$Builder {
+  HoverCapabilities$Builder._();
+
+  List<String> contentFormat;
+
+  bool dynamicRegistration;
+}
+
+class HoverMarkup {
+  HoverMarkup._(this.contents, this.range);
+
+  factory HoverMarkup(void Function(HoverMarkup$Builder) init) {
+    final b = new HoverMarkup$Builder._();
+    init(b);
+    return new HoverMarkup._(b.contents, b.range);
+  }
+
+  factory HoverMarkup.fromJson(Map params) => new HoverMarkup._(
+      params.containsKey('contents') && params['contents'] != null
+          ? new MarkupContent.fromJson(params['contents'])
+          : null,
+      params.containsKey('range') && params['range'] != null
+          ? new Range.fromJson(params['range'])
+          : null);
+
+  final MarkupContent contents;
+
+  final Range range;
+
+  Map toJson() => {'contents': contents?.toJson(), 'range': range?.toJson()};
+  @override
+  int get hashCode {
+    var hash = 0;
+    hash = _hashCombine(hash, _deepHashCode(contents));
+    hash = _hashCombine(hash, _deepHashCode(range));
+    return _hashComplete(hash);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (other is! HoverMarkup) return false;
+    var o = other as HoverMarkup;
+    if (contents != o.contents) return false;
+    if (range != o.range) return false;
+    return true;
+  }
+}
+
+class HoverMarkup$Builder {
+  HoverMarkup$Builder._();
+
+  MarkupContent contents;
+
+  Range range;
+}
+
 class InsertTextFormat {
   factory InsertTextFormat.fromJson(int value) {
     const values = const {
@@ -1185,6 +1285,54 @@ class Location$Builder {
   Range range;
 
   String uri;
+}
+
+class MarkupContent {
+  MarkupContent._(this.kind, this.value);
+
+  factory MarkupContent(void Function(MarkupContent$Builder) init) {
+    final b = new MarkupContent$Builder._();
+    init(b);
+    return new MarkupContent._(b.kind, b.value);
+  }
+
+  factory MarkupContent.fromJson(Map params) => new MarkupContent._(
+      params.containsKey('kind') && params['kind'] != null
+          ? params['kind']
+          : null,
+      params.containsKey('value') && params['value'] != null
+          ? params['value']
+          : null);
+
+  final String kind;
+
+  final String value;
+
+  Map toJson() => {'kind': kind, 'value': value};
+  @override
+  int get hashCode {
+    var hash = 0;
+    hash = _hashCombine(hash, _deepHashCode(kind));
+    hash = _hashCombine(hash, _deepHashCode(value));
+    return _hashComplete(hash);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (other is! MarkupContent) return false;
+    var o = other as MarkupContent;
+    if (kind != o.kind) return false;
+    if (value != o.value) return false;
+    return true;
+  }
+}
+
+class MarkupContent$Builder {
+  MarkupContent$Builder._();
+
+  String kind;
+
+  String value;
 }
 
 class Position {
@@ -1955,7 +2103,7 @@ class TextDocumentClientCapabilities {
               ? new DynamicRegistrationCapability.fromJson(params['formatting'])
               : null,
           params.containsKey('hover') && params['hover'] != null
-              ? new DynamicRegistrationCapability.fromJson(params['hover'])
+              ? new HoverCapabilities.fromJson(params['hover'])
               : null,
           params.containsKey('onTypeFormatting') &&
                   params['onTypeFormatting'] != null
@@ -1989,7 +2137,7 @@ class TextDocumentClientCapabilities {
 
   final DynamicRegistrationCapability formatting;
 
-  final DynamicRegistrationCapability hover;
+  final HoverCapabilities hover;
 
   final DynamicRegistrationCapability onTypeFormatting;
 
@@ -2073,7 +2221,7 @@ class TextDocumentClientCapabilities$Builder {
 
   DynamicRegistrationCapability formatting;
 
-  DynamicRegistrationCapability hover;
+  HoverCapabilities hover;
 
   DynamicRegistrationCapability onTypeFormatting;
 

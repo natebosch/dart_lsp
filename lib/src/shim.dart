@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:analysis_server_lib/analysis_server_lib.dart'
     hide Position, Location;
@@ -61,9 +62,14 @@ class AnalysisServerAdapter extends LanguageServer {
   Future<ServerCapabilities> initialize(int clientPid, String rootUri,
       ClientCapabilities clientCapabilities, String trace) async {
     this.clientCapabilities = clientCapabilities;
-    final directory = _filePath(rootUri);
-    final clientName = '${p.basename(directory)}-$clientPid';
-    startLogging(clientName, _args.forceTraceLevel ?? trace);
+    String logFolder = _args.logFolder;
+    if (logFolder == null) {
+      final directory = _filePath(rootUri);
+      final clientName = '${p.basename(directory)}-$clientPid';
+      logFolder =
+          p.join(Directory.systemTemp.path, 'dart-lang-server-$clientName');
+    }
+    startLogging(new Directory(logFolder), _args.forceTraceLevel ?? trace);
     return serverCapabilities;
   }
 

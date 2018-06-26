@@ -14,11 +14,10 @@ StreamChannelTransformer<String, String> lspChannel = _lspWireLog.transformer;
 
 final _logs = <IOSink>[];
 
-void startLogging(String clientName, String traceLevel) {
+void startLogging(Directory logFolder, String traceLevel) {
   if (traceLevel == 'verbose') {
-    var logSink = new File(path.join(
-            Directory.systemTemp.path, 'dart-lang-server-$clientName.log'))
-        .openWrite();
+    logFolder.createSync(recursive: true);
+    var logSink = new File(path.join(logFolder.path, 'server.log')).openWrite();
     _logs.add(logSink);
     Logger.root.level = Level.ALL;
     Logger.root.onRecord.listen((record) {
@@ -31,14 +30,13 @@ void startLogging(String clientName, String traceLevel) {
     });
   }
   if (traceLevel == 'verbose' || traceLevel == 'messages') {
-    var analyzerLog = new File(path.join(
-            Directory.systemTemp.path, 'analyzer-wirelog-$clientName.log'))
-        .openWrite();
+    logFolder.createSync(recursive: true);
+    var analyzerLog =
+        new File(path.join(logFolder.path, 'analyzer-wirelog.log')).openWrite();
     analyzerSink.stream.transform(utf8.encoder).pipe(analyzerLog);
     _logs.add(analyzerLog);
-    var lspLog = new File(
-            path.join(Directory.systemTemp.path, 'lsp-wirelog-$clientName.log'))
-        .openWrite();
+    var lspLog =
+        new File(path.join(logFolder.path, 'lsp-wirelog.log')).openWrite();
     _lspWireLog.attach(lspLog);
     _logs.add(lspLog);
   }

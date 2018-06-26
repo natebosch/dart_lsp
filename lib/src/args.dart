@@ -10,7 +10,7 @@ class StartupArgs {
   factory StartupArgs(List<String> args) {
     final parser = new ArgParser()
       ..addOption(_forceTraceLevel,
-          help: 'Override the `trace` option duriong initialization',
+          help: 'Override the `trace` option during initialization',
           allowed: ['trace', 'verbose', 'off']);
     try {
       final result = parser.parse(args);

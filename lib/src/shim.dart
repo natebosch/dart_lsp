@@ -293,7 +293,6 @@ class AnalysisServerAdapter extends LanguageServer {
   }
 
   @override
-  // TODO(dantup): How to make this Future<Hover | HoverMarkup>?!
   Future<dynamic> textDocumentHover(
       TextDocumentIdentifier documentId, Position position) {
     final path = _filePath(documentId.uri);

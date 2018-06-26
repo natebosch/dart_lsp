@@ -62,14 +62,14 @@ class AnalysisServerAdapter extends LanguageServer {
   Future<ServerCapabilities> initialize(int clientPid, String rootUri,
       ClientCapabilities clientCapabilities, String trace) async {
     this.clientCapabilities = clientCapabilities;
-    String logFolder = _args.logFolder;
-    if (logFolder == null) {
+    String logDirectory = _args.logDirectory;
+    if (logDirectory == null) {
       final directory = _filePath(rootUri);
       final clientName = '${p.basename(directory)}-$clientPid';
-      logFolder =
+      logDirectory =
           p.join(Directory.systemTemp.path, 'dart-lang-server-$clientName');
     }
-    startLogging(new Directory(logFolder), _args.forceTraceLevel ?? trace);
+    startLogging(new Directory(logDirectory), _args.forceTraceLevel ?? trace);
     return serverCapabilities;
   }
 

@@ -301,7 +301,7 @@ class AnalysisServerAdapter extends LanguageServer {
   }
 
   @override
-  Future<Hover> textDocumentHover(
+  Future<dynamic> textDocumentHover(
       TextDocumentIdentifier documentId, Position position) {
     final path = _filePath(documentId.uri);
     return _pools.lock(path, () async {
@@ -310,9 +310,31 @@ class AnalysisServerAdapter extends LanguageServer {
       if (hovers.isEmpty) return null;
       var hover = hovers.first;
       var range = rangeFromOffset(_files[path], hover.offset, hover.length);
-      return new Hover((b) => b
-        ..contents = _hoverMessage(hover)
-        ..range = range);
+
+      final clientFormats =
+          clientCapabilities?.textDocument?.hover?.contentFormat;
+
+      final sharedFormats =
+          clientFormats?.where((t) => t == 'markdown' || t == 'plaintext');
+
+      // Return a raw string if the client didn't provide any formats (this means
+      // they don't know what MarkupContent is).
+      if (sharedFormats == null || sharedFormats.isEmpty) {
+        return new Hover((b) => b
+          ..contents = _hoverContentsMarkdown(hover)
+          ..range = range);
+      } else {
+        // Currently we only support markdown, but we send it as "plaintext" to
+        // clients that only support that so they have something to render.
+        final contentKind = sharedFormats.first == 'markdown'
+            ? MarkupContentKind.markdown
+            : MarkupContentKind.plaintext;
+        return new HoverMarkup((b) => b
+          ..contents = new MarkupContent((mu) => mu
+            ..kind = contentKind
+            ..value = _hoverContentsMarkdown(hover))
+          ..range = range);
+      }
     });
   }
 
@@ -478,7 +500,7 @@ class AnalysisServerAdapter extends LanguageServer {
   }
 }
 
-String _hoverMessage(HoverInformation hover) {
+String _hoverContentsMarkdown(HoverInformation hover) {
   var message = new StringBuffer();
   if (hover.elementDescription != null) {
     message.writeln(hover.elementDescription);

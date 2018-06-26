@@ -121,10 +121,15 @@ CompletionCapabilities:
   dynamicRegistration: bool
   completionItem: CompletionItemCapabilities
 
+HoverCapabilities:
+  dynamicRegistration: bool
+  contentFormat:
+    listType: String
+
 TextDocumentClientCapabilities:
   synchronization: SynchronizationCapabilities
   completion: CompletionCapabilities
-  hover: DynamicRegistrationCapability
+  hover: HoverCapabilities
   references: DynamicRegistrationCapability
   documentHighlight: DynamicRegistrationCapability
   documentSymbol: DynamicRegistrationCapability
@@ -208,6 +213,10 @@ Hover:
   contents: String
   range: Range
 
+HoverMarkup:
+  contents: MarkupContent
+  range: Range
+
 CodeActionContext:
   diagnostics:
     listType: Diagnostic
@@ -269,3 +278,13 @@ SymbolKind:
     operator: 25
     typeParameter: 26
   wireType: int
+
+MarkupContentKind:
+  enumValues:
+    plaintext: 'plaintext'
+    markdown: 'markdown'
+  wireType: String
+
+MarkupContent:
+  kind: MarkupContentKind
+  value: String

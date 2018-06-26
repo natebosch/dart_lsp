@@ -15,6 +15,7 @@ class WireLog {
       new StreamChannelTransformer(_tapLog('In'),
           new StreamSinkTransformer.fromStreamTransformer(_tapLog('Out')));
 
-  _tapLog(String prefix) => tap<String>((data) => _log?.writeln('$prefix: $data'),
-      onDone: () => _log?.writeln('$prefix: Closed'));
+  _tapLog(String prefix) =>
+      tap<String>((data) => _log?.writeln('$prefix: $data'),
+          onDone: () => _log?.writeln('$prefix: Closed'));
 }

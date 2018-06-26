@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:logging/logging.dart';
@@ -9,7 +8,7 @@ import 'package:stream_channel/stream_channel.dart';
 import 'wirelog.dart';
 
 final _lspWireLog = new WireLog();
-final analyzerSink = new StreamController<String>.broadcast();
+StringSink analyzerLog;
 StreamChannelTransformer<String, String> lspChannel = _lspWireLog.transformer;
 
 final _logs = <IOSink>[];
@@ -31,10 +30,9 @@ void startLogging(String clientName, String traceLevel) {
     });
   }
   if (traceLevel == 'verbose' || traceLevel == 'messages') {
-    var analyzerLog = new File(path.join(
+    analyzerLog = new File(path.join(
             Directory.systemTemp.path, 'analyzer-wirelog-$clientName.log'))
         .openWrite();
-    analyzerSink.stream.transform(utf8.encoder).pipe(analyzerLog);
     _logs.add(analyzerLog);
     var lspLog = new File(
             path.join(Directory.systemTemp.path, 'lsp-wirelog-$clientName.log'))

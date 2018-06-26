@@ -23,8 +23,8 @@ import 'utils/per_file_pool.dart';
 
 Future<LanguageServer> startShimmedServer(StartupArgs args) async {
   var client = await AnalysisServer.create(
-      onRead: (m) => analyzerSink.add('OUT: $m\n'),
-      onWrite: (m) => analyzerSink.add('IN: $m\n'),
+      onRead: (m) => analyzerLog?.writeln('OUT: $m'),
+      onWrite: (m) => analyzerLog?.writeln('IN: $m'),
       serverArgs: args.analysisServerArgs);
   await client.server.onConnected.first;
   return new AnalysisServerAdapter(client, args);

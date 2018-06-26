@@ -110,7 +110,7 @@ class CodeActionContext {
 
   factory CodeActionContext.fromJson(Map params) => new CodeActionContext._(
       params.containsKey('diagnostics') && params['diagnostics'] != null
-          ? params['diagnostics']
+          ? (params['diagnostics'] as List)
               .map((v) => new Diagnostic.fromJson(v))
               .toList()
           : null);
@@ -191,7 +191,7 @@ class Command {
 
   factory Command.fromJson(Map params) => new Command._(
       params.containsKey('arguments') && params['arguments'] != null
-          ? params['arguments']
+          ? (params['arguments'] as List).cast<dynamic>()
           : null,
       params.containsKey('command') && params['command'] != null
           ? params['command']
@@ -330,7 +330,7 @@ class CompletionItem {
   factory CompletionItem.fromJson(Map params) => new CompletionItem._(
       params.containsKey('additionalTextEdits') &&
               params['additionalTextEdits'] != null
-          ? params['additionalTextEdits']
+          ? (params['additionalTextEdits'] as List)
               .map((v) => new TextEdit.fromJson(v))
               .toList()
           : null,
@@ -597,7 +597,9 @@ class CompletionList {
           ? params['isIncomplete']
           : null,
       params.containsKey('items') && params['items'] != null
-          ? params['items'].map((v) => new CompletionItem.fromJson(v)).toList()
+          ? (params['items'] as List)
+              .map((v) => new CompletionItem.fromJson(v))
+              .toList()
           : null);
 
   final bool isIncomplete;
@@ -649,7 +651,7 @@ class CompletionOptions {
           : null,
       params.containsKey('triggerCharacters') &&
               params['triggerCharacters'] != null
-          ? params['triggerCharacters']
+          ? (params['triggerCharacters'] as List).cast<String>()
           : null);
 
   final bool resolveProvider;
@@ -778,7 +780,7 @@ class Diagnostics {
 
   factory Diagnostics.fromJson(Map params) => new Diagnostics._(
       params.containsKey('diagnostics') && params['diagnostics'] != null
-          ? params['diagnostics']
+          ? (params['diagnostics'] as List)
               .map((v) => new Diagnostic.fromJson(v))
               .toList()
           : null,
@@ -950,7 +952,7 @@ class DocumentOnTypeFormattingOptions {
               : null,
           params.containsKey('moreTriggerCharacter') &&
                   params['moreTriggerCharacter'] != null
-              ? params['moreTriggerCharacter']
+              ? (params['moreTriggerCharacter'] as List).cast<String>()
               : null);
 
   final String firstTriggerCharacter;
@@ -1043,7 +1045,7 @@ class ExecuteCommandOptions {
   factory ExecuteCommandOptions.fromJson(Map params) =>
       new ExecuteCommandOptions._(params.containsKey('commands') &&
               params['commands'] != null
-          ? params['commands']
+          ? (params['commands'] as List).cast<String>()
           : null);
 
   final List<String> commands;
@@ -1130,7 +1132,7 @@ class HoverCapabilities {
 
   factory HoverCapabilities.fromJson(Map params) => new HoverCapabilities._(
       params.containsKey('contentFormat') && params['contentFormat'] != null
-          ? params['contentFormat']
+          ? (params['contentFormat'] as List).cast<String>()
           : null,
       params.containsKey('dynamicRegistration') &&
               params['dynamicRegistration'] != null
@@ -1786,7 +1788,7 @@ class SignatureHelpOptions {
   factory SignatureHelpOptions.fromJson(Map params) =>
       new SignatureHelpOptions._(params.containsKey('triggerCharacters') &&
               params['triggerCharacters'] != null
-          ? params['triggerCharacters']
+          ? (params['triggerCharacters'] as List).cast<String>()
           : null);
 
   final List<String> triggerCharacters;
@@ -2733,19 +2735,16 @@ class WorkspaceEdit {
 
   factory WorkspaceEdit.fromJson(Map params) => new WorkspaceEdit._(
       params.containsKey('changes') && params['changes'] != null
-          ? new Map.fromIterable(params['changes'].keys,
-              value: (v) => params['changes'][v]
-                  .map((v) => new TextEdit.fromJson(v))
-                  .toList())
+          ? (params['changes'] as Map).map((k, v) =>
+              new MapEntry<String, List<TextEdit>>(
+                  k, (v as List).map((v) => new TextEdit.fromJson(v)).toList()))
           : null);
 
   final Map<String, List<TextEdit>> changes;
 
   Map toJson() => {
-        'changes': changes == null
-            ? null
-            : new Map.fromIterable(changes.keys,
-                value: (v) => changes[v]?.map((v) => v?.toJson())?.toList())
+        'changes': changes?.map((k, v) => new MapEntry<String, dynamic>(
+            k, v?.map((v) => v?.toJson())?.toList()))
       };
   @override
   int get hashCode {

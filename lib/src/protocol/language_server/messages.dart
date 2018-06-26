@@ -1298,17 +1298,17 @@ class MarkupContent {
 
   factory MarkupContent.fromJson(Map params) => new MarkupContent._(
       params.containsKey('kind') && params['kind'] != null
-          ? params['kind']
+          ? new MarkupContentKind.fromJson(params['kind'])
           : null,
       params.containsKey('value') && params['value'] != null
           ? params['value']
           : null);
 
-  final String kind;
+  final MarkupContentKind kind;
 
   final String value;
 
-  Map toJson() => {'kind': kind, 'value': value};
+  Map toJson() => {'kind': kind?.toJson(), 'value': value};
   @override
   int get hashCode {
     var hash = 0;
@@ -1330,9 +1330,29 @@ class MarkupContent {
 class MarkupContent$Builder {
   MarkupContent$Builder._();
 
-  String kind;
+  MarkupContentKind kind;
 
   String value;
+}
+
+class MarkupContentKind {
+  factory MarkupContentKind.fromJson(String value) {
+    const values = const {
+      'markdown': MarkupContentKind.markdown,
+      'plaintext': MarkupContentKind.plaintext
+    };
+    return values[value];
+  }
+
+  const MarkupContentKind._(this._value);
+
+  static const markdown = const MarkupContentKind._('markdown');
+
+  static const plaintext = const MarkupContentKind._('plaintext');
+
+  final String _value;
+
+  String toJson() => _value;
 }
 
 class Position {

@@ -304,32 +304,29 @@ class AnalysisServerAdapter extends LanguageServer {
       var hover = hovers.first;
       var range = rangeFromOffset(_files[path], hover.offset, hover.length);
 
-      final List<String> clientFormats =
+      final clientFormats =
           clientCapabilities?.textDocument?.hover?.contentFormat;
 
-      final List<String> sharedFormats =
+      final sharedFormats =
           clientFormats?.where((t) => t == 'markdown' || t == 'plaintext');
 
-      // Return a raw string if the client did provide any formats (this means
+      // Return a raw string if the client didn't provide any formats (this means
       // they don't know what MarkupContent is).
       if (sharedFormats == null || sharedFormats.isEmpty) {
         return new Hover((b) => b
           ..contents = _hoverContentsMarkdown(hover)
           ..range = range);
       } else {
-        if (sharedFormats.first == 'markdown') {
-          return new HoverMarkup((b) => b
-            ..contents = new MarkupContent((mu) => mu
-              ..kind = 'markdown'
-              ..value = _hoverContentsMarkdown(hover))
-            ..range = range);
-        } else {
-          return new HoverMarkup((b) => b
-            ..contents = new MarkupContent((mu) => mu
-              ..kind = 'plaintext'
-              ..value = _hoverContentsPlaintext(hover))
-            ..range = range);
-        }
+        // Currently we only support markdown, but we send it as "plaintext" to
+        // clients that only support that so they have something to render.
+        final contentKind = sharedFormats.first == 'markdown'
+            ? MarkupContentKind.markdown
+            : MarkupContentKind.plaintext;
+        return new HoverMarkup((b) => b
+          ..contents = new MarkupContent((mu) => mu
+            ..kind = contentKind
+            ..value = _hoverContentsMarkdown(hover))
+          ..range = range);
       }
     });
   }
@@ -507,11 +504,6 @@ String _hoverContentsMarkdown(HoverInformation hover) {
     message.writeln(hover.dartdoc);
   }
   return '$message';
-}
-
-String _hoverContentsPlaintext(HoverInformation hover) {
-  // TODO(dantup): Can we do better?
-  return _hoverContentsMarkdown(hover);
 }
 
 String _filePath(String fileUri) => Uri.parse(fileUri).toFilePath();

@@ -279,6 +279,12 @@ SymbolKind:
     typeParameter: 26
   wireType: int
 
+MarkupContentKind:
+  enumValues:
+    plaintext: 'plaintext'
+    markdown: 'markdown'
+  wireType: String
+
 MarkupContent:
-  kind: String # TODO: This should be 'plaintext' | 'markdown';
+  kind: MarkupContentKind
   value: String

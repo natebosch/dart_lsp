@@ -1,3 +1,9 @@
+# 0.1.12
+
+- Fix more Dart 2 runtime types for collections deserialized from json.
+- Use Windows style newlines in the analyzer wirelog on Windows platform.
+- Add support for using `MarkupContent` for hover.
+
 # 0.1.11+6
 
 - Fix compatibility with Dart 2.

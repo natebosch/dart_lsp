@@ -17,7 +17,8 @@ final _logs = <IOSink>[];
 void startLogging(Directory logDirectory, String traceLevel) {
   if (traceLevel == 'verbose') {
     logDirectory.createSync(recursive: true);
-    var logSink = new File(path.join(logDirectory.path, 'server.log')).openWrite();
+    var logSink =
+        new File(path.join(logDirectory.path, 'server.log')).openWrite();
     _logs.add(logSink);
     Logger.root.level = Level.ALL;
     Logger.root.onRecord.listen((record) {
@@ -32,7 +33,8 @@ void startLogging(Directory logDirectory, String traceLevel) {
   if (traceLevel == 'verbose' || traceLevel == 'messages') {
     logDirectory.createSync(recursive: true);
     var analyzerLog =
-        new File(path.join(logDirectory.path, 'analyzer-wirelog.log')).openWrite();
+        new File(path.join(logDirectory.path, 'analyzer-wirelog.log'))
+            .openWrite();
     analyzerSink.stream.transform(utf8.encoder).pipe(analyzerLog);
     _logs.add(analyzerLog);
     var lspLog =

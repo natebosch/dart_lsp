@@ -505,7 +505,7 @@ String _hoverContentsMarkdown(HoverInformation hover) {
   if (hover.elementDescription != null) {
     message.writeln(hover.elementDescription);
   }
-  if (hover.isDeprecated) message.writeln('(deprecated)');
+  if (hover.isDeprecated ?? false) message.writeln('(deprecated)');
   if (hover.dartdoc != null) {
     if (message.isNotEmpty) message.writeln();
     message.writeln(hover.dartdoc);
@@ -723,7 +723,7 @@ WorkspaceEdit _toWorkspaceEdit(FileCache fileCache, SourceChange change) =>
     new WorkspaceEdit((b) => b
       ..changes = new Map<String, List<TextEdit>>.fromIterable(change.edits,
           key: (edit) => toFileUri(edit.file),
-          value: (edit) => edit.edits
+          value: (edit) => (edit.edits as Iterable)
               .map((e) => _toTextEdit(fileCache[edit.file], e))
               .toList()));
 

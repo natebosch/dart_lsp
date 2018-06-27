@@ -1,3 +1,9 @@
+# 0.1.12+1
+
+- More Dart 2 runtime fixes:
+  - Fix a null boolean when loading an empty hover.
+  - Fix the reified type of the `List<TextEdit>` for applying workspace edits.
+
 # 0.1.12
 
 - Fix more Dart 2 runtime types for collections deserialized from json.

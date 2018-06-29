@@ -37,3 +37,5 @@ previous command if not) the server can be run as `dart_language_server`.
 
 Integration with an editor depends on the details of the editor. All
 communication with this server is through stdin/stdout.
+
+>*Make sure you haved installed Dart SKD 1.x. Dart 2.x isn't supported yet!*

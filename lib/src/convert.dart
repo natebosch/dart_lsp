@@ -8,7 +8,8 @@ import 'utils/file_cache.dart';
 List<SymbolInformation> toSymbolInformation(
         FileCache files, AnalysisOutline outline) =>
     _toSymbolInformations(
-        toFileUri(outline.file), files[outline.file], outline.outline);
+            toFileUri(outline.file), files[outline.file], outline.outline)
+        .toList();
 
 Iterable<SymbolInformation> _toSymbolInformations(
     String fileUri, List<int> lineLengths, Outline outline,

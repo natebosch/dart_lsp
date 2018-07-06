@@ -1,3 +1,8 @@
+# 0.1.12+2
+
+- Yet another Dart 2 runtime fix: Correct type of `List<SymbolInformation>` for
+  `documentSymbols` call.
+
 # 0.1.12+1
 
 - More Dart 2 runtime fixes:

@@ -3,7 +3,6 @@ import 'dart:async';
 
 import 'package:dart_language_server/dart_language_server.dart';
 import 'package:dart_language_server/src/args.dart';
-import 'package:path/path.dart' as path;
 
 Future main(List<String> args) async {
   StartupArgs startupArgs;

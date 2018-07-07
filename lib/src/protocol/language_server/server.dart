@@ -149,8 +149,11 @@ class StdIOLanguageServer {
             .textDocumentCodeAction(
                 _document(params), _range(params), _codeActionContext(params))
             .then((r) => r?.map((e) => e.toJson())?.toList()));
-    _registerRequest(peer, 'workspace/executeCommand',
-        (params) => _server.workspaceExecuteCommand(params['command'].value));
+    _registerRequest(
+        peer,
+        'workspace/executeCommand',
+        (params) => _server.workspaceExecuteCommand(
+            params['command'].value, params['arguments']?.value));
     _registerRequest(
         peer,
         'textDocument/rename',

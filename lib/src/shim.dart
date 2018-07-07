@@ -12,10 +12,10 @@ import 'args.dart';
 import 'capabilities.dart';
 import 'convert.dart';
 import 'logging/logs.dart';
-import 'subscriptions.dart';
 import 'position_convert.dart';
 import 'protocol/language_server/interface.dart';
 import 'protocol/language_server/messages.dart';
+import 'subscriptions.dart';
 import 'utils/command_cache.dart';
 import 'utils/file_cache.dart';
 import 'utils/guid.dart';
@@ -369,27 +369,27 @@ class AnalysisServerAdapter extends LanguageServer {
             (f) => _commands.add(_toCommand(f, prefix), () => _applyEdit(f)));
       }));
 
-      results.add(_commands.add(
-          new Command((b) => b
-            ..title = 'Organize imports'
-            ..command = makeGuid()),
-          () => _organizeDirectives(_files[path], path)));
-      results.add(_commands.add(
-          new Command((b) => b
-            ..title = 'Sort Members'
-            ..command = makeGuid()),
-          () => _sortMembers(_files[path], path)));
+      results.add(new Command((b) => b
+        ..title = 'Organize imports'
+        ..command = 'organize imports'
+        ..arguments = [documentId.uri]));
+      results.add(new Command((b) => b
+        ..title = 'Sort Members'
+        ..command = 'sort members'
+        ..arguments = [documentId.uri]));
 
       return results;
     });
   }
 
-  Future<void> _organizeDirectives(List<int> fileLengths, String path) async {
+  Future<void> _organizeImports(String documentUri) async {
+    final path = _filePath(documentUri);
+    final lineLengths = _files[path];
     final sourceFileEdit = (await _server.edit.organizeDirectives(path)).edit;
     final workspaceEdit = new WorkspaceEdit((b) => b
       ..changes = {
         toFileUri(sourceFileEdit.file): sourceFileEdit.edits
-            .map((e) => _toTextEdit(fileLengths, e))
+            .map((e) => _toTextEdit(lineLengths, e))
             .toList()
       });
     _workspaceEdits.add(new ApplyWorkspaceEditParams((b) => b
@@ -397,7 +397,9 @@ class AnalysisServerAdapter extends LanguageServer {
       ..edit = workspaceEdit));
   }
 
-  Future<void> _sortMembers(List<int> lineLengths, String path) async {
+  Future<void> _sortMembers(String documentUri) async {
+    final path = _filePath(documentUri);
+    final lineLengths = _files[path];
     final sourceFileEdit = (await _server.edit.sortMembers(path)).edit;
     final workspaceEdit = new WorkspaceEdit((b) => b
       ..changes = {
@@ -411,9 +413,18 @@ class AnalysisServerAdapter extends LanguageServer {
   }
 
   @override
-  Future<void> workspaceExecuteCommand(String command) {
+  Future<void> workspaceExecuteCommand(
+      String command, List<dynamic> arguments) async {
+    switch (command) {
+      case 'sort members':
+        _sortMembers(arguments.single);
+        return;
+      case 'organize imports':
+        _organizeImports(arguments.single);
+        return;
+    }
     _commands[command]();
-    return new Future.value();
+    return;
   }
 
   void _applyEdit(SourceChange change) {

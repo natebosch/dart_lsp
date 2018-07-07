@@ -37,7 +37,7 @@ abstract class LanguageServer {
       TextDocumentIdentifier documentId,
       Range range,
       CodeActionContext context);
-  Future<void> workspaceExecuteCommand(String command);
+  Future<void> workspaceExecuteCommand(String command, List<dynamic> arguments);
   Future<WorkspaceEdit> textDocumentRename(
       TextDocumentIdentifier documentId, Position position, String newName);
   Stream<Diagnostics> get diagnostics;

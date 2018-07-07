@@ -1,7 +1,8 @@
 import 'package:args/args.dart';
 import 'package:meta/meta.dart';
 
-const _forceTraceLevel = 'force_trace_level';
+const _forceTraceLevel = 'force-trace-level';
+const _forceTraceLevelLegacy = 'force_trace_level';
 const _logDirectory = 'log-directory';
 
 class StartupArgs {
@@ -14,11 +15,14 @@ class StartupArgs {
       ..addOption(_forceTraceLevel,
           help: 'Override the `trace` option during initialization',
           allowed: ['trace', 'verbose', 'off'])
+      ..addOption(_forceTraceLevelLegacy,
+          hide: true, allowed: ['trace', 'verbose', 'off'])
       ..addOption(_logDirectory, help: 'Override the log directory');
     try {
       final result = parser.parse(args);
       return new StartupArgs._(
-        forceTraceLevel: result[_forceTraceLevel],
+        forceTraceLevel:
+            result[_forceTraceLevel] ?? result[_forceTraceLevelLegacy],
         logDirectory: result[_logDirectory],
         analysisServerArgs: result.rest,
       );

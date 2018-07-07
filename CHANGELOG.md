@@ -1,3 +1,8 @@
+# 0.1.13
+
+- Rename `--force_trace_level` argument to `--force-trace-level`. Keep the old
+  name as a fallback.
+
 # 0.1.12+2
 
 - Yet another Dart 2 runtime fix: Correct type of `List<SymbolInformation>` for

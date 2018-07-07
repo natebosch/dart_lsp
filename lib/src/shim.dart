@@ -339,7 +339,7 @@ class AnalysisServerAdapter extends LanguageServer {
   }
 
   @override
-  Future<List<Command>> textDocumentCodeAction(
+  Future<List<dynamic>> textDocumentCodeAction(
       TextDocumentIdentifier documentId,
       Range range,
       CodeActionContext context) {
@@ -350,7 +350,19 @@ class AnalysisServerAdapter extends LanguageServer {
 
     final path = _filePath(documentId.uri);
     return _pools.lock(path, () async {
-      final results = <Command>[];
+      final results = <dynamic>[];
+      dynamic result(SourceChange change, [String messagePrefix]) {
+        var title = messagePrefix != null
+            ? '$messagePrefix${change.message}'
+            : change.message;
+        if (_supportsCodeActions) {
+          return _toCodeAction(_files, change, title);
+        } else {
+          return _commands.add(
+              _toCommand(change, title), () => _applyEdit(change));
+        }
+      }
+
       List<int> lineLengths = _files[path];
       var offsetLength = offsetLengthFromRange(lineLengths, range);
       var assists = (await _server.edit
@@ -358,16 +370,12 @@ class AnalysisServerAdapter extends LanguageServer {
           .assists
           .where(
               (a) => a.message != 'Convert into block documentation comment');
-      results.addAll(assists
-          .map((a) => _commands.add(_toCommand(a), () => _applyEdit(a))));
+      results.addAll(assists.map(result));
 
       final fixes =
           (await _server.edit.getFixes(path, offsetLength.offset)).fixes;
-      results.addAll(fixes.expand((fix) {
-        final prefix = 'Fix [${fix.error.code}]: ';
-        return fix.fixes.map(
-            (f) => _commands.add(_toCommand(f, prefix), () => _applyEdit(f)));
-      }));
+      results.addAll(fixes.expand((fix) =>
+          fix.fixes.map((f) => result(f, 'Fix [${fix.error.code}]: '))));
 
       results.add(new Command((b) => b
         ..title = 'Organize imports'
@@ -381,6 +389,11 @@ class AnalysisServerAdapter extends LanguageServer {
       return results;
     });
   }
+
+  bool get _supportsCodeActions =>
+      clientCapabilities?.textDocument?.codeAction?.codeActionLiteralSupport
+          ?.codeActionKind?.valueSet !=
+      null;
 
   Future<void> _organizeImports(String documentUri) async {
     final path = _filePath(documentUri);
@@ -722,13 +735,16 @@ SourceEdit _toSourceEdit(
     new SourceEdit(offsetFromPosition(lineLengths, change.range.start),
         change.rangeLength, change.text);
 
-Command _toCommand(SourceChange change, [String messagePrefix]) =>
-    new Command((b) => b
-      ..title = messagePrefix != null
-          ? '$messagePrefix${change.message}'
-          : change.message
-      ..arguments = const []
-      ..command = makeGuid());
+Command _toCommand(SourceChange change, String title) => new Command((b) => b
+  ..title = title
+  ..arguments = const []
+  ..command = makeGuid());
+
+CodeAction _toCodeAction(
+        FileCache fileCache, SourceChange change, String title) =>
+    new CodeAction((b) => b
+      ..title = title
+      ..edit = _toWorkspaceEdit(fileCache, change));
 
 WorkspaceEdit _toWorkspaceEdit(FileCache fileCache, SourceChange change) =>
     new WorkspaceEdit((b) => b

@@ -2,6 +2,7 @@
 
 - Rename `--force_trace_level` argument to `--force-trace-level`. Keep the old
   name as a fallback.
+- Add support for sending edits directly with `CodeAction` literals.
 
 # 0.1.12+2
 

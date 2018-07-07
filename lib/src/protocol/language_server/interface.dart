@@ -33,7 +33,7 @@ abstract class LanguageServer {
   Future<List<SymbolInformation>> workspaceSymbol(String query);
   Future<dynamic> textDocumentHover(
       TextDocumentIdentifier documentId, Position position);
-  Future<List<Command>> textDocumentCodeAction(
+  Future<List<dynamic /*Command|CodeAction*/ >> textDocumentCodeAction(
       TextDocumentIdentifier documentId,
       Range range,
       CodeActionContext context);

@@ -126,19 +126,30 @@ HoverCapabilities:
   contentFormat:
     listType: String
 
+CodeActionCapabilities:
+  dynamicRegistration: bool
+  codeActionLiteralSupport: CodeActionLiteralSupport
+
+CodeActionLiteralSupport:
+  codeActionKind: CodeActionKinds
+
+CodeActionKinds:
+  valueSet:
+    listType: String # open ended enum
+
 TextDocumentClientCapabilities:
-  synchronization: SynchronizationCapabilities
+  codeAction: CodeActionCapabilities
   completion: CompletionCapabilities
   hover: HoverCapabilities
-  references: DynamicRegistrationCapability
+  synchronization: SynchronizationCapabilities
+  codeLens: DynamicRegistrationCapability
+  definition: DynamicRegistrationCapability
   documentHighlight: DynamicRegistrationCapability
+  documentLink: DynamicRegistrationCapability
   documentSymbol: DynamicRegistrationCapability
   formatting: DynamicRegistrationCapability
   onTypeFormatting: DynamicRegistrationCapability
-  definition: DynamicRegistrationCapability
-  codeAction: DynamicRegistrationCapability
-  codeLens: DynamicRegistrationCapability
-  documentLink: DynamicRegistrationCapability
+  references: DynamicRegistrationCapability
   rename: DynamicRegistrationCapability
 
 ClientCapabilities:
@@ -220,6 +231,14 @@ HoverMarkup:
 CodeActionContext:
   diagnostics:
     listType: Diagnostic
+
+CodeAction:
+  title: String
+  kind: String
+  diagnostics:
+    listType: Diagnostic
+  edit: WorkspaceEdit
+  command: Command
 
 ApplyWorkspaceEditParams:
   label: String

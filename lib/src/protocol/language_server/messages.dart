@@ -99,6 +99,148 @@ class ClientCapabilities$Builder {
   WorkspaceClientCapabilities workspace;
 }
 
+class CodeAction {
+  CodeAction._(
+      this.command, this.diagnostics, this.edit, this.kind, this.title);
+
+  factory CodeAction(void Function(CodeAction$Builder) init) {
+    final b = new CodeAction$Builder._();
+    init(b);
+    return new CodeAction._(b.command, b.diagnostics, b.edit, b.kind, b.title);
+  }
+
+  factory CodeAction.fromJson(Map params) => new CodeAction._(
+      params.containsKey('command') && params['command'] != null
+          ? new Command.fromJson(params['command'])
+          : null,
+      params.containsKey('diagnostics') && params['diagnostics'] != null
+          ? (params['diagnostics'] as List)
+              .map((v) => new Diagnostic.fromJson(v))
+              .toList()
+          : null,
+      params.containsKey('edit') && params['edit'] != null
+          ? new WorkspaceEdit.fromJson(params['edit'])
+          : null,
+      params.containsKey('kind') && params['kind'] != null
+          ? params['kind']
+          : null,
+      params.containsKey('title') && params['title'] != null
+          ? params['title']
+          : null);
+
+  final Command command;
+
+  final List<Diagnostic> diagnostics;
+
+  final WorkspaceEdit edit;
+
+  final String kind;
+
+  final String title;
+
+  Map toJson() => {
+        'command': command?.toJson(),
+        'diagnostics': diagnostics?.map((v) => v?.toJson())?.toList(),
+        'edit': edit?.toJson(),
+        'kind': kind,
+        'title': title
+      };
+  @override
+  int get hashCode {
+    var hash = 0;
+    hash = _hashCombine(hash, _deepHashCode(command));
+    hash = _hashCombine(hash, _deepHashCode(diagnostics));
+    hash = _hashCombine(hash, _deepHashCode(edit));
+    hash = _hashCombine(hash, _deepHashCode(kind));
+    hash = _hashCombine(hash, _deepHashCode(title));
+    return _hashComplete(hash);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (other is! CodeAction) return false;
+    var o = other as CodeAction;
+    if (command != o.command) return false;
+    if (!_deepEquals(diagnostics, o.diagnostics)) return false;
+    if (edit != o.edit) return false;
+    if (kind != o.kind) return false;
+    if (title != o.title) return false;
+    return true;
+  }
+}
+
+class CodeAction$Builder {
+  CodeAction$Builder._();
+
+  Command command;
+
+  List<Diagnostic> diagnostics;
+
+  WorkspaceEdit edit;
+
+  String kind;
+
+  String title;
+}
+
+class CodeActionCapabilities {
+  CodeActionCapabilities._(
+      this.codeActionLiteralSupport, this.dynamicRegistration);
+
+  factory CodeActionCapabilities(
+      void Function(CodeActionCapabilities$Builder) init) {
+    final b = new CodeActionCapabilities$Builder._();
+    init(b);
+    return new CodeActionCapabilities._(
+        b.codeActionLiteralSupport, b.dynamicRegistration);
+  }
+
+  factory CodeActionCapabilities.fromJson(Map params) =>
+      new CodeActionCapabilities._(
+          params.containsKey('codeActionLiteralSupport') &&
+                  params['codeActionLiteralSupport'] != null
+              ? new CodeActionLiteralSupport.fromJson(
+                  params['codeActionLiteralSupport'])
+              : null,
+          params.containsKey('dynamicRegistration') &&
+                  params['dynamicRegistration'] != null
+              ? params['dynamicRegistration']
+              : null);
+
+  final CodeActionLiteralSupport codeActionLiteralSupport;
+
+  final bool dynamicRegistration;
+
+  Map toJson() => {
+        'codeActionLiteralSupport': codeActionLiteralSupport?.toJson(),
+        'dynamicRegistration': dynamicRegistration
+      };
+  @override
+  int get hashCode {
+    var hash = 0;
+    hash = _hashCombine(hash, _deepHashCode(codeActionLiteralSupport));
+    hash = _hashCombine(hash, _deepHashCode(dynamicRegistration));
+    return _hashComplete(hash);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (other is! CodeActionCapabilities) return false;
+    var o = other as CodeActionCapabilities;
+    if (codeActionLiteralSupport != o.codeActionLiteralSupport) return false;
+    if (dynamicRegistration != o.dynamicRegistration) return false;
+    return true;
+  }
+}
+
+class CodeActionCapabilities$Builder {
+  CodeActionCapabilities$Builder._();
+
+  CodeActionLiteralSupport codeActionLiteralSupport;
+
+  bool dynamicRegistration;
+}
+
 class CodeActionContext {
   CodeActionContext._(this.diagnostics);
 
@@ -139,6 +281,86 @@ class CodeActionContext$Builder {
   CodeActionContext$Builder._();
 
   List<Diagnostic> diagnostics;
+}
+
+class CodeActionKinds {
+  CodeActionKinds._(this.valueSet);
+
+  factory CodeActionKinds(void Function(CodeActionKinds$Builder) init) {
+    final b = new CodeActionKinds$Builder._();
+    init(b);
+    return new CodeActionKinds._(b.valueSet);
+  }
+
+  factory CodeActionKinds.fromJson(Map params) => new CodeActionKinds._(
+      params.containsKey('valueSet') && params['valueSet'] != null
+          ? (params['valueSet'] as List).cast<String>()
+          : null);
+
+  final List<String> valueSet;
+
+  Map toJson() => {'valueSet': valueSet};
+  @override
+  int get hashCode {
+    var hash = 0;
+    hash = _hashCombine(hash, _deepHashCode(valueSet));
+    return _hashComplete(hash);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (other is! CodeActionKinds) return false;
+    var o = other as CodeActionKinds;
+    if (!_deepEquals(valueSet, o.valueSet)) return false;
+    return true;
+  }
+}
+
+class CodeActionKinds$Builder {
+  CodeActionKinds$Builder._();
+
+  List<String> valueSet;
+}
+
+class CodeActionLiteralSupport {
+  CodeActionLiteralSupport._(this.codeActionKind);
+
+  factory CodeActionLiteralSupport(
+      void Function(CodeActionLiteralSupport$Builder) init) {
+    final b = new CodeActionLiteralSupport$Builder._();
+    init(b);
+    return new CodeActionLiteralSupport._(b.codeActionKind);
+  }
+
+  factory CodeActionLiteralSupport.fromJson(Map params) =>
+      new CodeActionLiteralSupport._(params.containsKey('codeActionKind') &&
+              params['codeActionKind'] != null
+          ? new CodeActionKinds.fromJson(params['codeActionKind'])
+          : null);
+
+  final CodeActionKinds codeActionKind;
+
+  Map toJson() => {'codeActionKind': codeActionKind?.toJson()};
+  @override
+  int get hashCode {
+    var hash = 0;
+    hash = _hashCombine(hash, _deepHashCode(codeActionKind));
+    return _hashComplete(hash);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (other is! CodeActionLiteralSupport) return false;
+    var o = other as CodeActionLiteralSupport;
+    if (codeActionKind != o.codeActionKind) return false;
+    return true;
+  }
+}
+
+class CodeActionLiteralSupport$Builder {
+  CodeActionLiteralSupport$Builder._();
+
+  CodeActionKinds codeActionKind;
 }
 
 class CodeLensOptions {
@@ -2096,7 +2318,7 @@ class TextDocumentClientCapabilities {
   factory TextDocumentClientCapabilities.fromJson(Map params) =>
       new TextDocumentClientCapabilities._(
           params.containsKey('codeAction') && params['codeAction'] != null
-              ? new DynamicRegistrationCapability.fromJson(params['codeAction'])
+              ? new CodeActionCapabilities.fromJson(params['codeAction'])
               : null,
           params.containsKey('codeLens') && params['codeLens'] != null
               ? new DynamicRegistrationCapability.fromJson(params['codeLens'])
@@ -2143,7 +2365,7 @@ class TextDocumentClientCapabilities {
               ? new SynchronizationCapabilities.fromJson(params['synchronization'])
               : null);
 
-  final DynamicRegistrationCapability codeAction;
+  final CodeActionCapabilities codeAction;
 
   final DynamicRegistrationCapability codeLens;
 
@@ -2227,7 +2449,7 @@ class TextDocumentClientCapabilities {
 class TextDocumentClientCapabilities$Builder {
   TextDocumentClientCapabilities$Builder._();
 
-  DynamicRegistrationCapability codeAction;
+  CodeActionCapabilities codeAction;
 
   DynamicRegistrationCapability codeLens;
 

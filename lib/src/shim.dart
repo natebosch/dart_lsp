@@ -30,7 +30,7 @@ Future<LanguageServer> startShimmedServer(StartupArgs args) async {
       onWrite: (m) => analyzerSink.add('IN: $m$_eol'),
       serverArgs: args.analysisServerArgs);
   await client.server.onConnected.first;
-  return new AnalysisServerAdapter(client, args);
+  return AnalysisServerAdapter(client, args);
 }
 
 /// Wraps an [AnalysisServer] and exposes it as a [LanguageServer].
@@ -38,25 +38,25 @@ class AnalysisServerAdapter extends LanguageServer {
   final AnalysisServer _server;
   final StartupArgs _args;
 
-  final _files = new FileCache();
-  final _pools = new PerFilePool();
-  final _commands = new CommandCache();
+  final _files = FileCache();
+  final _pools = PerFilePool();
+  final _commands = CommandCache();
   final _fileVersions = <String, int>{};
   final Subscriptions _subscriptions;
 
-  final _log = new Logger('AnalysisServerAdapter');
+  final _log = Logger('AnalysisServerAdapter');
 
   AnalysisServerAdapter._(this._server, this._subscriptions, this._args) {
     _listeners();
   }
 
   factory AnalysisServerAdapter(AnalysisServer server, StartupArgs args) {
-    final subscriptions = new Subscriptions(server);
-    return new AnalysisServerAdapter._(server, subscriptions, args);
+    final subscriptions = Subscriptions(server);
+    return AnalysisServerAdapter._(server, subscriptions, args);
   }
 
-  final _openDirectories = new Set<String>();
-  final _openFiles = new Set<String>();
+  final _openDirectories = Set<String>();
+  final _openFiles = Set<String>();
 
   ClientCapabilities clientCapabilities;
 
@@ -71,7 +71,7 @@ class AnalysisServerAdapter extends LanguageServer {
       logDirectory =
           p.join(Directory.systemTemp.path, 'dart-lang-server-$clientName');
     }
-    startLogging(new Directory(logDirectory), _args.forceTraceLevel ?? trace);
+    startLogging(Directory(logDirectory), _args.forceTraceLevel ?? trace);
     return serverCapabilities;
   }
 
@@ -95,7 +95,7 @@ class AnalysisServerAdapter extends LanguageServer {
 
   @override
   Future<void> get onDone => _onDone.future;
-  final _onDone = new Completer<void>();
+  final _onDone = Completer<void>();
   bool _hasShutdown = false;
 
   @override
@@ -126,7 +126,7 @@ class AnalysisServerAdapter extends LanguageServer {
       _openFiles.add(path);
       await _server.analysis.setPriorityFiles(_openFiles.toList());
       await _server.analysis
-          .updateContent({path: new AddContentOverlay(document.text)});
+          .updateContent({path: AddContentOverlay(document.text)});
     }, withTimeout: false);
   }
 
@@ -145,9 +145,9 @@ class AnalysisServerAdapter extends LanguageServer {
       if (changes.length == 1 && changes.first.range == null) {
         _files[path] = findLineLengths(changes.single.text);
         await _server.analysis
-            .updateContent({path: new AddContentOverlay(changes.single.text)});
+            .updateContent({path: AddContentOverlay(changes.single.text)});
       } else {
-        var overlay = new ChangeContentOverlay(changes.map((change) {
+        var overlay = ChangeContentOverlay(changes.map((change) {
           var sourceEdit = _toSourceEdit(_files[path], change);
           try {
             _files[path] = applyChange(_files[path], change);
@@ -166,7 +166,7 @@ class AnalysisServerAdapter extends LanguageServer {
     final path = _filePath(documentId.uri);
     _subscriptions.onFileClose(path);
     return _pools.lock(path, () async {
-      await _server.analysis.updateContent({path: new RemoveContentOverlay()});
+      await _server.analysis.updateContent({path: RemoveContentOverlay()});
     }, withTimeout: false);
   }
 
@@ -179,7 +179,7 @@ class AnalysisServerAdapter extends LanguageServer {
       var id = (await _server.completion.getSuggestions(path, offset)).id;
       if (id == null) return null;
       _completionPaths[id] = path;
-      return (_completions[id] = new Completer<CompletionList>()).future;
+      return (_completions[id] = Completer<CompletionList>()).future;
     });
   }
 
@@ -225,7 +225,7 @@ class AnalysisServerAdapter extends LanguageServer {
   Iterable<Location> _navigationLocations(NavigationResult result) =>
       result.targets.map((t) {
         var file = result.files[t.fileIndex];
-        return new Location((b) => b
+        return Location((b) => b
           ..uri = toFileUri(file)
           ..range = rangeFromOffset(_files[file], t.offset, t.length));
       });
@@ -242,7 +242,7 @@ class AnalysisServerAdapter extends LanguageServer {
           (await _server.search.findElementReferences(path, offset, true)).id;
       if (id == null) return const [];
       var references =
-          (_searchResults[id] = new Completer<List<Location>>()).future;
+          (_searchResults[id] = Completer<List<Location>>()).future;
       if (context.includeDeclaration) {
         var definition = await _server.analysis.getNavigation(path, offset, 1);
         return (await references)..addAll(_navigationLocations(definition));
@@ -267,7 +267,7 @@ class AnalysisServerAdapter extends LanguageServer {
               ? item.classElement?.location
               : item.memberElement?.location)
           .where((location) => location != null)
-          .map((location) => new Location((b) => b
+          .map((location) => Location((b) => b
             ..uri = toFileUri(location.file)
             ..range = rangeFromLocation(_files[location.file], location)))
           .toList();
@@ -293,7 +293,7 @@ class AnalysisServerAdapter extends LanguageServer {
       }, orElse: () => null);
       if (matchingOccurrence == null) return const [];
       return matchingOccurrence.offsets
-          .map((o) => new DocumentHighlight((b) => b
+          .map((o) => DocumentHighlight((b) => b
             ..range =
                 rangeFromOffset(_files[path], o, matchingOccurrence.length)))
           .toList();
@@ -320,7 +320,7 @@ class AnalysisServerAdapter extends LanguageServer {
       // Return a raw string if the client didn't provide any formats (this means
       // they don't know what MarkupContent is).
       if (sharedFormats == null || sharedFormats.isEmpty) {
-        return new Hover((b) => b
+        return Hover((b) => b
           ..contents = _hoverContentsMarkdown(hover)
           ..range = range);
       } else {
@@ -329,8 +329,8 @@ class AnalysisServerAdapter extends LanguageServer {
         final contentKind = sharedFormats.first == 'markdown'
             ? MarkupContentKind.markdown
             : MarkupContentKind.plaintext;
-        return new HoverMarkup((b) => b
-          ..contents = new MarkupContent((mu) => mu
+        return HoverMarkup((b) => b
+          ..contents = MarkupContent((mu) => mu
             ..kind = contentKind
             ..value = _hoverContentsMarkdown(hover))
           ..range = range);
@@ -345,7 +345,7 @@ class AnalysisServerAdapter extends LanguageServer {
       CodeActionContext context) {
     // The only actions supported go through workspace/applyEdit
     if (!(clientCapabilities?.workspace?.applyEdit ?? false)) {
-      return new Future.value(const []);
+      return Future.value(const []);
     }
 
     final path = _filePath(documentId.uri);
@@ -377,11 +377,11 @@ class AnalysisServerAdapter extends LanguageServer {
       results.addAll(fixes.expand((fix) =>
           fix.fixes.map((f) => result(f, 'Fix [${fix.error.code}]: '))));
 
-      results.add(new Command((b) => b
+      results.add(Command((b) => b
         ..title = 'Organize imports'
         ..command = 'organize imports'
         ..arguments = [documentId.uri]));
-      results.add(new Command((b) => b
+      results.add(Command((b) => b
         ..title = 'Sort Members'
         ..command = 'sort members'
         ..arguments = [documentId.uri]));
@@ -399,13 +399,13 @@ class AnalysisServerAdapter extends LanguageServer {
     final path = _filePath(documentUri);
     final lineLengths = _files[path];
     final sourceFileEdit = (await _server.edit.organizeDirectives(path)).edit;
-    final workspaceEdit = new WorkspaceEdit((b) => b
+    final workspaceEdit = WorkspaceEdit((b) => b
       ..changes = {
         toFileUri(sourceFileEdit.file): sourceFileEdit.edits
             .map((e) => _toTextEdit(lineLengths, e))
             .toList()
       });
-    _workspaceEdits.add(new ApplyWorkspaceEditParams((b) => b
+    _workspaceEdits.add(ApplyWorkspaceEditParams((b) => b
       ..label = 'Organize Imports'
       ..edit = workspaceEdit));
   }
@@ -414,13 +414,13 @@ class AnalysisServerAdapter extends LanguageServer {
     final path = _filePath(documentUri);
     final lineLengths = _files[path];
     final sourceFileEdit = (await _server.edit.sortMembers(path)).edit;
-    final workspaceEdit = new WorkspaceEdit((b) => b
+    final workspaceEdit = WorkspaceEdit((b) => b
       ..changes = {
         toFileUri(sourceFileEdit.file): sourceFileEdit.edits
             .map((e) => _toTextEdit(lineLengths, e))
             .toList()
       });
-    _workspaceEdits.add(new ApplyWorkspaceEditParams((b) => b
+    _workspaceEdits.add(ApplyWorkspaceEditParams((b) => b
       ..label = 'Sort Members'
       ..edit = workspaceEdit));
   }
@@ -441,7 +441,7 @@ class AnalysisServerAdapter extends LanguageServer {
   }
 
   void _applyEdit(SourceChange change) {
-    final params = new ApplyWorkspaceEditParams((b) => b
+    final params = ApplyWorkspaceEditParams((b) => b
       ..label = change.message
       ..edit = _toWorkspaceEdit(_files, change));
     _workspaceEdits.add(params);
@@ -449,7 +449,7 @@ class AnalysisServerAdapter extends LanguageServer {
 
   final _searchResults = <String, Completer<List<Location>>>{};
 
-  final _filesWithDiagnostics = new Set<String>();
+  final _filesWithDiagnostics = Set<String>();
   @override
   Stream<Diagnostics> get diagnostics => _server.analysis.onErrors
       .map((errors) {
@@ -472,7 +472,7 @@ class AnalysisServerAdapter extends LanguageServer {
 
   @override
   Stream<ApplyWorkspaceEditParams> get workspaceEdits => _workspaceEdits.stream;
-  final _workspaceEdits = new StreamController<ApplyWorkspaceEditParams>();
+  final _workspaceEdits = StreamController<ApplyWorkspaceEditParams>();
 
   @override
   Future<WorkspaceEdit> textDocumentRename(
@@ -481,7 +481,7 @@ class AnalysisServerAdapter extends LanguageServer {
     final offset = offsetFromPosition(_files[path], position);
     return _server.edit
         .getRefactoring('RENAME', path, offset, 0, false,
-            options: new RenameRefactoringOptions(newName: newName))
+            options: RenameRefactoringOptions(newName: newName))
         .then((result) => _toWorkspaceEdit(_files, result.change));
   }
 
@@ -513,19 +513,19 @@ class AnalysisServerAdapter extends LanguageServer {
   final _symbolSearchResults = <String, Completer<List<SymbolInformation>>>{};
   Future<List<SymbolInformation>> _topLevelSearch(String query) async {
     final id = (await _server.search.findTopLevelDeclarations(query)).id;
-    return (_symbolSearchResults[id] = new Completer<List<SymbolInformation>>())
+    return (_symbolSearchResults[id] = Completer<List<SymbolInformation>>())
         .future;
   }
 
   Future<List<SymbolInformation>> _memberSearch(String query) async {
     final id = (await _server.search.findMemberDeclarations(query)).id;
-    return (_symbolSearchResults[id] = new Completer<List<SymbolInformation>>())
+    return (_symbolSearchResults[id] = Completer<List<SymbolInformation>>())
         .future;
   }
 }
 
 String _hoverContentsMarkdown(HoverInformation hover) {
-  var message = new StringBuffer();
+  var message = StringBuffer();
   if (hover.elementDescription != null) {
     message.writeln(hover.elementDescription);
   }
@@ -543,7 +543,7 @@ List<Location> _toLocationList(SearchResults results, FileCache files) =>
     results.results
         .map((result) => result.location)
         .toSet()
-        .map((location) => new Location((b) => b
+        .map((location) => Location((b) => b
           ..uri = toFileUri(location.file)
           ..range = rangeFromLocation(files[location.file], location)))
         .toList();
@@ -551,11 +551,11 @@ List<Location> _toLocationList(SearchResults results, FileCache files) =>
 List<SymbolInformation> _toSymbolInformation(
         SearchResults results, FileCache files) =>
     results.results
-        .map((result) => new SymbolInformation((b) => b
+        .map((result) => SymbolInformation((b) => b
           ..containerName = result.path.length > 1 ? result.path[1].name : ''
           ..name = result.path.first.name
           ..kind = _toSymbolKind(result.path.first)
-          ..location = new Location((b) => b
+          ..location = Location((b) => b
             ..uri = toFileUri(result.location.file)
             ..range = rangeFromLocation(
                 files[result.location.file], result.location))))
@@ -611,7 +611,7 @@ SymbolKind _toSymbolKind(Element element) {
 }
 
 Diagnostics _toDiagnostics(List<int> lineLengths, AnalysisErrors errors) =>
-    new Diagnostics((b) => b
+    Diagnostics((b) => b
       ..uri = toFileUri(errors.file)
       ..diagnostics = errors.errors
           .map((error) => _toDiagnostic(lineLengths, error))
@@ -619,7 +619,7 @@ Diagnostics _toDiagnostics(List<int> lineLengths, AnalysisErrors errors) =>
 
 CompletionList _toCompletionList(
         List<int> lineLengths, CompletionResults results) =>
-    new CompletionList((b) => b
+    CompletionList((b) => b
       ..isIncomplete = !results.isLast
       ..items = results.results
           .map((r) => _toCompletionItem(lineLengths, r, results))
@@ -628,10 +628,10 @@ CompletionList _toCompletionList(
 CompletionItem _toCompletionItem(List<int> lineLengths,
     CompletionSuggestion suggestion, CompletionResults results) {
   final symbol = _completionSymbol(suggestion);
-  return new CompletionItem((b) => b
+  return CompletionItem((b) => b
     ..label = symbol
     ..kind = _completionKind(suggestion)
-    ..textEdit = new TextEdit((b) => b
+    ..textEdit = TextEdit((b) => b
       ..newText = symbol
       ..range = rangeFromOffset(
           lineLengths, results.replacementOffset, results.replacementLength))
@@ -667,7 +667,7 @@ String _completionItemDetail(CompletionSuggestion suggestion) {
 }
 
 Diagnostic _toDiagnostic(List<int> lineLengths, AnalysisError error) =>
-    new Diagnostic((b) => b
+    Diagnostic((b) => b
       ..range = rangeFromLocation(lineLengths, error.location)
       ..severity = _diagnosticSeverity(error.severity, error.type)
       ..code = error.code
@@ -732,29 +732,29 @@ CompletionItemKind _completionKind(CompletionSuggestion suggestion) {
 
 SourceEdit _toSourceEdit(
         Iterable<int> lineLengths, TextDocumentContentChangeEvent change) =>
-    new SourceEdit(offsetFromPosition(lineLengths, change.range.start),
+    SourceEdit(offsetFromPosition(lineLengths, change.range.start),
         change.rangeLength, change.text);
 
-Command _toCommand(SourceChange change, String title) => new Command((b) => b
+Command _toCommand(SourceChange change, String title) => Command((b) => b
   ..title = title
   ..arguments = const []
   ..command = makeGuid());
 
 CodeAction _toCodeAction(
         FileCache fileCache, SourceChange change, String title) =>
-    new CodeAction((b) => b
+    CodeAction((b) => b
       ..title = title
       ..edit = _toWorkspaceEdit(fileCache, change));
 
 WorkspaceEdit _toWorkspaceEdit(FileCache fileCache, SourceChange change) =>
-    new WorkspaceEdit((b) => b
-      ..changes = new Map<String, List<TextEdit>>.fromIterable(change.edits,
+    WorkspaceEdit((b) => b
+      ..changes = Map<String, List<TextEdit>>.fromIterable(change.edits,
           key: (edit) => toFileUri(edit.file),
           value: (edit) => (edit.edits as Iterable)
               .map((e) => _toTextEdit(fileCache[edit.file], e))
               .toList()));
 
 TextEdit _toTextEdit(Iterable<int> lineLengths, SourceEdit edit) =>
-    new TextEdit((b) => b
+    TextEdit((b) => b
       ..newText = edit.replacement
       ..range = rangeFromOffset(lineLengths, edit.offset, edit.length));

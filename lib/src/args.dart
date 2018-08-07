@@ -11,7 +11,7 @@ class StartupArgs {
   String logDirectory;
 
   factory StartupArgs(List<String> args) {
-    final parser = new ArgParser()
+    final parser = ArgParser()
       ..addOption(_forceTraceLevel,
           help: 'Override the `trace` option during initialization',
           allowed: ['trace', 'verbose', 'off'])
@@ -20,14 +20,14 @@ class StartupArgs {
       ..addOption(_logDirectory, help: 'Override the log directory');
     try {
       final result = parser.parse(args);
-      return new StartupArgs._(
+      return StartupArgs._(
         forceTraceLevel:
             result[_forceTraceLevel] ?? result[_forceTraceLevelLegacy],
         logDirectory: result[_logDirectory],
         analysisServerArgs: result.rest,
       );
     } catch (_) {
-      throw new UsageException(parser.usage);
+      throw UsageException(parser.usage);
     }
   }
 

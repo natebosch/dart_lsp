@@ -14,25 +14,25 @@ void main() {
             findLineLengths(windowsFile ? file.replaceAll("\n", "\r\n") : file);
         group('offsetFromPosition', () {
           test('start of file', () async {
-            var start = new Position((b) => b
+            var start = Position((b) => b
               ..line = 0
               ..character = 0);
             expect(offsetFromPosition(lines, start), 0);
           });
           test('start of line', () async {
-            var startOfLine = new Position((b) => b
+            var startOfLine = Position((b) => b
               ..line = 1
               ..character = 0);
             expect(offsetFromPosition(lines, startOfLine), windowsFile ? 8 : 7);
           });
           test('end of line', () async {
-            var endOfLine = new Position((b) => b
+            var endOfLine = Position((b) => b
               ..line = 1
               ..character = 12);
             expect(offsetFromPosition(lines, endOfLine), windowsFile ? 20 : 19);
           });
           test('line after blank', () async {
-            var lineAfterBlank = new Position((b) => b
+            var lineAfterBlank = Position((b) => b
               ..line = 3
               ..character = 0);
             expect(offsetFromPosition(lines, lineAfterBlank),
@@ -44,7 +44,7 @@ void main() {
           test('start of file', () async {
             expect(
                 positionFromOffset(lines, 0).toJson(),
-                new Position((b) => b
+                Position((b) => b
                   ..line = 0
                   ..character = 0).toJson());
           });
@@ -52,7 +52,7 @@ void main() {
           test('start of line', () async {
             expect(
                 positionFromOffset(lines, windowsFile ? 8 : 7).toJson(),
-                new Position(((b) => b
+                Position(((b) => b
                       ..line = 1
                       ..character = 0))
                     .toJson());
@@ -61,14 +61,14 @@ void main() {
           test('end of line', () async {
             expect(
                 positionFromOffset(lines, windowsFile ? 20 : 19).toJson(),
-                new Position((b) => b
+                Position((b) => b
                   ..line = 1
                   ..character = 12).toJson());
           });
           test('after blank line', () async {
             expect(
                 positionFromOffset(lines, windowsFile ? 25 : 22).toJson(),
-                new Position((b) => b
+                Position((b) => b
                   ..line = 3
                   ..character = 0).toJson());
           });
@@ -78,11 +78,11 @@ void main() {
           test('start of file', () async {
             expect(
                 rangeFromOffset(lines, 0, 3).toJson(),
-                new Range((b) => b
-                  ..start = new Position((b) => b
+                Range((b) => b
+                  ..start = Position((b) => b
                     ..line = 0
                     ..character = 0)
-                  ..end = new Position((b) => b
+                  ..end = Position((b) => b
                     ..line = 0
                     ..character = 3)).toJson());
           });
@@ -90,11 +90,11 @@ void main() {
           test('start of line', () async {
             expect(
                 rangeFromOffset(lines, windowsFile ? 8 : 7, 5).toJson(),
-                new Range((b) => b
-                  ..start = new Position((b) => b
+                Range((b) => b
+                  ..start = Position((b) => b
                     ..line = 1
                     ..character = 0)
-                  ..end = new Position((b) => b
+                  ..end = Position((b) => b
                     ..line = 1
                     ..character = 5)).toJson());
           });
@@ -104,11 +104,11 @@ void main() {
                 rangeFromOffset(
                         lines, windowsFile ? 15 : 14, windowsFile ? 13 : 11)
                     .toJson(),
-                new Range((b) => b
-                  ..start = new Position((b) => b
+                Range((b) => b
+                  ..start = Position((b) => b
                     ..line = 1
                     ..character = 7)
-                  ..end = new Position((b) => b
+                  ..end = Position((b) => b
                     ..line = 3
                     ..character = 3)).toJson());
           });

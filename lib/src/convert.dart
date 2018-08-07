@@ -18,11 +18,11 @@ Iterable<SymbolInformation> _toSymbolInformations(
   // Omit the top "<unit>"
   if (outline.element.kind != 'COMPILATION_UNIT') {
     name = outline.element.name;
-    yield new SymbolInformation((b) => b
+    yield SymbolInformation((b) => b
       ..containerName = containerName
       ..kind = _toSymbolKind(outline.element)
       ..name = name
-      ..location = new Location((b) => b
+      ..location = Location((b) => b
         ..uri = fileUri
         ..range = rangeFromOffset(lineLengths, outline.element.location.offset,
             outline.element.location.length)));
@@ -81,4 +81,4 @@ SymbolKind _toSymbolKind(Element element) {
   }
 }
 
-String toFileUri(String path) => '${new Uri.file(path)}';
+String toFileUri(String path) => '${Uri.file(path)}';

@@ -12,8 +12,8 @@ class WireLog {
   StreamChannelTransformer<String, String> _transformer;
   StreamChannelTransformer<String, String> get transformer =>
       _transformer ??
-      new StreamChannelTransformer(_tapLog('In'),
-          new StreamSinkTransformer.fromStreamTransformer(_tapLog('Out')));
+      StreamChannelTransformer(_tapLog('In'),
+          StreamSinkTransformer.fromStreamTransformer(_tapLog('Out')));
 
   _tapLog(String prefix) =>
       tap<String>((data) => _log?.writeln('$prefix: $data'),

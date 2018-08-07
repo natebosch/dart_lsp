@@ -2,7 +2,7 @@ import 'dart:async';
 
 StreamTransformer<String, String> splitMarker([marker = '\n']) {
   String buffer;
-  return new StreamTransformer.fromHandlers(
+  return StreamTransformer.fromHandlers(
       handleData: (String input, EventSink<String> sink) {
     var split = input.split(marker);
     if (buffer != null) split[0] = buffer + split[0];

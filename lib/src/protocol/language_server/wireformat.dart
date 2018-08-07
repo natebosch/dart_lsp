@@ -10,14 +10,14 @@ class StdIOStreamChannel extends StreamChannelMixin<String> {
   final Stream<String> stream;
 
   factory StdIOStreamChannel() {
-    var parser = new _Parser();
-    var outSink = new StreamSinkTransformer.fromHandlers(
+    var parser = _Parser();
+    var outSink = StreamSinkTransformer.fromHandlers(
         handleData: _serialize,
         handleDone: (sink) {
           sink.close();
           parser.close();
         }).bind(stdout);
-    return new StdIOStreamChannel._(parser.stream, outSink);
+    return StdIOStreamChannel._(parser.stream, outSink);
   }
 
   StdIOStreamChannel._(this.stream, this.sink);
@@ -33,7 +33,7 @@ void _serialize(String data, EventSink<List<int>> sink) {
 }
 
 class _Parser {
-  final _streamCtl = new StreamController<String>();
+  final _streamCtl = StreamController<String>();
   Stream<String> get stream => _streamCtl.stream;
 
   final _buffer = <int>[];

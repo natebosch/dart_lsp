@@ -1,13 +1,13 @@
 import 'protocol/language_server/messages.dart';
 
-final serverCapabilities = new ServerCapabilities((b) => b
-  ..textDocumentSync = new TextDocumentSyncOptions((b) => b
+final serverCapabilities = ServerCapabilities((b) => b
+  ..textDocumentSync = TextDocumentSyncOptions((b) => b
     ..openClose = true
     ..change = TextDocumentSyncKind.incremental
     ..willSave = false
     ..willSaveWaitUntil = false
-    ..save = new SaveOptions((b) => b..includeText = false))
-  ..completionProvider = new CompletionOptions((b) => b
+    ..save = SaveOptions((b) => b..includeText = false))
+  ..completionProvider = CompletionOptions((b) => b
     ..resolveProvider = false
     ..triggerCharacters = const ['.'])
   ..codeActionProvider = true

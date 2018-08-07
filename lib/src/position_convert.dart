@@ -11,7 +11,7 @@ int _offset(Iterable<int> lineLengths, int line, int character) {
 }
 
 Range rangeFromOffset(Iterable<int> lineLengths, int offset, int length) =>
-    new Range((b) => b
+    Range((b) => b
       ..start = positionFromOffset(lineLengths, offset)
       ..end = positionFromOffset(lineLengths, offset + length));
 
@@ -30,7 +30,7 @@ Position positionFromOffset(Iterable<int> lineLengths, int offset) {
     consumedLines += 1;
     consumedCharacters += length + 1;
   }
-  return new Position((b) => b
+  return Position((b) => b
     ..line = consumedLines
     ..character = offset - consumedCharacters);
 }
@@ -38,7 +38,7 @@ Position positionFromOffset(Iterable<int> lineLengths, int offset) {
 OffsetLength offsetLengthFromRange(Iterable<int> lineLengths, Range range) {
   var offset = offsetFromPosition(lineLengths, range.start);
   var endOffset = offsetFromPosition(lineLengths, range.end);
-  return new OffsetLength(offset, endOffset - offset);
+  return OffsetLength(offset, endOffset - offset);
 }
 
 List<int> findLineLengths(String file) =>

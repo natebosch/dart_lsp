@@ -6,7 +6,7 @@ import 'dart:io';
 /// A directory is assumed to be package diectory if it contains either a
 /// `pubspec.yaml` or a `BUILD` file.
 String findParentPackageDir(String path) =>
-    _findParentPackageDir(new Directory(path))?.path;
+    _findParentPackageDir(Directory(path))?.path;
 
 Directory _findParentPackageDir(Directory dir) {
   if (_isPackageRoot(dir)) return dir;

@@ -17,14 +17,14 @@ class Subscriptions {
   final Subscription<AnalysisOccurrences> occurrences;
 
   Subscriptions._(AnalysisServer server, _Updater updater)
-      : outlines = new Subscription<AnalysisOutline>(
+      : outlines = Subscription<AnalysisOutline>(
           server,
           updater,
           subscriptionName: 'OUTLINE',
           findStream: (server) => server.analysis.onOutline,
           findFile: (outline) => outline.file,
         ),
-        occurrences = new Subscription<AnalysisOccurrences>(
+        occurrences = Subscription<AnalysisOccurrences>(
           server,
           updater,
           subscriptionName: 'OCCURRENCES',
@@ -33,8 +33,8 @@ class Subscriptions {
         );
 
   factory Subscriptions(AnalysisServer server) {
-    final updater = new _Updater(server);
-    return new Subscriptions._(server, updater);
+    final updater = _Updater(server);
+    return Subscriptions._(server, updater);
   }
 
   void onFileClose(String filePath) {
@@ -61,7 +61,7 @@ class _Updater {
   _Updater(this._server);
 
   void _subscribe(String name, String filePath) {
-    _subscriptions.putIfAbsent(name, () => new Set<String>());
+    _subscriptions.putIfAbsent(name, () => Set<String>());
     if (!_subscriptions[name].add(filePath)) return;
     _updateSubscriptions();
   }
@@ -73,8 +73,8 @@ class _Updater {
   }
 
   void _updateSubscriptions() {
-    _server.analysis.setSubscriptions(_subscriptions
-        .map((name, files) => new MapEntry(name, files.toList())));
+    _server.analysis.setSubscriptions(
+        _subscriptions.map((name, files) => MapEntry(name, files.toList())));
   }
 }
 
@@ -118,15 +118,15 @@ class Subscription<T> {
   Future<T> requestFor(String filePath) {
     _updater._subscribe(_subscriptionName, filePath);
     if (_results.containsKey(filePath)) {
-      return new Future.value(_results[filePath]);
+      return Future.value(_results[filePath]);
     }
     var resultFromStream =
-        _requests.putIfAbsent(filePath, () => new Completer()).future;
+        _requests.putIfAbsent(filePath, () => Completer()).future;
     if (_staleResults.containsKey(filePath)) {
       var oldResult = _staleResults[filePath];
       return Future.any([
         resultFromStream,
-        new Future.delayed(const Duration(seconds: 1), () => oldResult)
+        Future.delayed(const Duration(seconds: 1), () => oldResult)
       ]);
     } else {
       return resultFromStream;

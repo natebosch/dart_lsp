@@ -6,7 +6,7 @@ const _size = 1000;
 
 class CommandCache {
   /// Commands in insertion order
-  final _commands = new LinkedHashMap<String, void Function()>();
+  final _commands = LinkedHashMap<String, void Function()>();
 
   /// Store [change] in the cache as a [Command] and return the command.
   Command add(Command command, void Function() callback) {

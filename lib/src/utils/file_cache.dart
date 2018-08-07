@@ -17,7 +17,7 @@ class FileCache {
     assert(filePath is String);
     if (_activeFiles.containsKey(filePath)) return _activeFiles[filePath];
     // Don't use readAsLines() or we'll lose track of the different line endings (\r\n).
-    return findLineLengths(new File(filePath).readAsStringSync());
+    return findLineLengths(File(filePath).readAsStringSync());
   }
 
   void operator []=(String filePath, List<int> lines) {

@@ -7,7 +7,7 @@ import 'package:dart_language_server/src/args.dart';
 Future main(List<String> args) async {
   StartupArgs startupArgs;
   try {
-    startupArgs = new StartupArgs(args);
+    startupArgs = StartupArgs(args);
   } on UsageException catch (e) {
     print(e.usage);
     return;
@@ -15,7 +15,7 @@ Future main(List<String> args) async {
   await runZoned(() async {
     try {
       var shim = await startShimmedServer(startupArgs);
-      await new StdIOLanguageServer.start(shim).onDone;
+      await StdIOLanguageServer.start(shim).onDone;
     } catch (e, st) {
       stderr.writeln('Uncaught Exception: $e\n$st');
     } finally {

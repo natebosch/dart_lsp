@@ -94,12 +94,12 @@ void main() {
 
 TextDocumentContentChangeEvent _change(int startLine, int startCharacter,
         int endLine, int endCharacter, int rangeLength, String text) =>
-    new TextDocumentContentChangeEvent((b) => b
-      ..range = new Range((b) => b
-        ..start = new Position((b) => b
+    TextDocumentContentChangeEvent((b) => b
+      ..range = Range((b) => b
+        ..start = Position((b) => b
           ..line = startLine
           ..character = startCharacter)
-        ..end = new Position((b) => b
+        ..end = Position((b) => b
           ..line = endLine
           ..character = endCharacter))
       ..rangeLength = rangeLength

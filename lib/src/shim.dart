@@ -102,7 +102,7 @@ class AnalysisServerAdapter extends LanguageServer {
   Future<void> shutdown() async {
     _hasShutdown = true;
     await _subscriptions.close();
-    await _server.dispose();
+    _server.dispose();
   }
 
   @override

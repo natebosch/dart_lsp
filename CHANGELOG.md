@@ -1,3 +1,7 @@
+# 0.1.13+1
+
+- Fix some static warnings for dev SDK.
+
 # 0.1.13
 
 - Rename `--force_trace_level` argument to `--force-trace-level`. Keep the old

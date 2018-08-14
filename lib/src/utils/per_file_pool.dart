@@ -16,5 +16,6 @@ class PerFilePool {
   Future<T> Function() _timeout<T>(Future<T> Function() operation) =>
       () => operation().timeout(const Duration(seconds: 2), onTimeout: () {
             _log.warning('Operation timed out!');
+            return null;
           });
 }

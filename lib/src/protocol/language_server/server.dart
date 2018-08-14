@@ -64,15 +64,15 @@ class StdIOLanguageServer {
   }
 
   void _fileHandlingMethods(Peer peer) {
-    _registerNotification(peer, 'textDocument/didOpen', (params) async {
-      await _server.textDocumentDidOpen(_documentItem(params));
+    _registerNotification(peer, 'textDocument/didOpen', (params) {
+      _server.textDocumentDidOpen(_documentItem(params));
     });
-    _registerNotification(peer, 'textDocument/didChange', (params) async {
-      await _server.textDocumentDidChange(
+    _registerNotification(peer, 'textDocument/didChange', (params) {
+      _server.textDocumentDidChange(
           _versionedDocument(params), _contentChanges(params));
     });
-    _registerNotification(peer, 'textDocument/didClose', (params) async {
-      await _server.textDocumentDidClose(_document(params));
+    _registerNotification(peer, 'textDocument/didClose', (params) {
+      _server.textDocumentDidClose(_document(params));
     });
   }
 

@@ -631,10 +631,6 @@ CompletionItem _toCompletionItem(List<int> lineLengths,
   return CompletionItem((b) => b
     ..label = symbol
     ..kind = _completionKind(suggestion)
-    // The LSP doesn't allow for nulls. Visual Studio hangs if it gets a null
-    // insertTextFormat so we explicitly set it to plainText here while we don't
-    // support snippets.
-    // https://github.com/natebosch/dart_language_server/issues/34
     ..insertTextFormat = InsertTextFormat.plainText
     ..textEdit = TextEdit((b) => b
       ..newText = symbol

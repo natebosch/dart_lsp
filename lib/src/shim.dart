@@ -631,6 +631,7 @@ CompletionItem _toCompletionItem(List<int> lineLengths,
   return CompletionItem((b) => b
     ..label = symbol
     ..kind = _completionKind(suggestion)
+    ..insertTextFormat = InsertTextFormat.plainText
     ..textEdit = TextEdit((b) => b
       ..newText = symbol
       ..range = rangeFromOffset(

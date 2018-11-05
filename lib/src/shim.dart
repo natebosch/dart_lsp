@@ -275,7 +275,7 @@ class AnalysisServerAdapter extends LanguageServer {
   }
 
   @override
-  Future<List<DocumentHighlight>> textDocumentHighlights(
+  Future<List<DocumentHighlight>> textDocumentHighlight(
       TextDocumentIdentifier documentId, Position position) {
     final path = _filePath(documentId.uri);
     return _pools.lock(path, () async {

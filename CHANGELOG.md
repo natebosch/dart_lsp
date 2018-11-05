@@ -1,3 +1,7 @@
+# 0.1.13+2
+
+- Correct `documentHighlightsProviers` capability `documentHighlightProvider`.
+
 # 0.1.13+1
 
 - Fix some static warnings for dev SDK.

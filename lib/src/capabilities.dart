@@ -12,7 +12,7 @@ final serverCapabilities = ServerCapabilities((b) => b
     ..triggerCharacters = const ['.'])
   ..codeActionProvider = true
   ..definitionProvider = true
-  ..documentHighlightsProvider = true
+  ..documentHighlightProvider = true
   ..documentSymbolProvider = true
   ..hoverProvider = true
   ..implementationProvider = true

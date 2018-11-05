@@ -203,7 +203,7 @@ ServerCapabilities:
   completionProvider: CompletionOptions
   definitionProvider: bool
   documentFormattingProvider: bool
-  documentHighlightsProvider: bool
+  documentHighlightProvider: bool
   documentLinkProvider: DocumentLinkOptions
   documentOnTypeFormattingProvider: DocumentOnTypeFormattingOptions
   documentRangeFormattingProvider: bool

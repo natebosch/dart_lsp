@@ -1761,7 +1761,7 @@ class ServerCapabilities {
       this.completionProvider,
       this.definitionProvider,
       this.documentFormattingProvider,
-      this.documentHighlightsProvider,
+      this.documentHighlightProvider,
       this.documentLinkProvider,
       this.documentOnTypeFormattingProvider,
       this.documentRangeFormattingProvider,
@@ -1784,7 +1784,7 @@ class ServerCapabilities {
         b.completionProvider,
         b.definitionProvider,
         b.documentFormattingProvider,
-        b.documentHighlightsProvider,
+        b.documentHighlightProvider,
         b.documentLinkProvider,
         b.documentOnTypeFormattingProvider,
         b.documentRangeFormattingProvider,
@@ -1815,13 +1815,14 @@ class ServerCapabilities {
       params.containsKey('documentFormattingProvider') && params['documentFormattingProvider'] != null
           ? params['documentFormattingProvider']
           : null,
-      params.containsKey('documentHighlightsProvider') && params['documentHighlightsProvider'] != null
-          ? params['documentHighlightsProvider']
+      params.containsKey('documentHighlightProvider') && params['documentHighlightProvider'] != null
+          ? params['documentHighlightProvider']
           : null,
       params.containsKey('documentLinkProvider') && params['documentLinkProvider'] != null
           ? new DocumentLinkOptions.fromJson(params['documentLinkProvider'])
           : null,
-      params.containsKey('documentOnTypeFormattingProvider') && params['documentOnTypeFormattingProvider'] != null
+      params.containsKey('documentOnTypeFormattingProvider') &&
+              params['documentOnTypeFormattingProvider'] != null
           ? new DocumentOnTypeFormattingOptions.fromJson(
               params['documentOnTypeFormattingProvider'])
           : null,
@@ -1834,12 +1835,8 @@ class ServerCapabilities {
       params.containsKey('executeCommandProvider') && params['executeCommandProvider'] != null
           ? new ExecuteCommandOptions.fromJson(params['executeCommandProvider'])
           : null,
-      params.containsKey('hoverProvider') && params['hoverProvider'] != null
-          ? params['hoverProvider']
-          : null,
-      params.containsKey('implementationProvider') && params['implementationProvider'] != null
-          ? params['implementationProvider']
-          : null,
+      params.containsKey('hoverProvider') && params['hoverProvider'] != null ? params['hoverProvider'] : null,
+      params.containsKey('implementationProvider') && params['implementationProvider'] != null ? params['implementationProvider'] : null,
       params.containsKey('referencesProvider') && params['referencesProvider'] != null ? params['referencesProvider'] : null,
       params.containsKey('renameProvider') && params['renameProvider'] != null ? params['renameProvider'] : null,
       params.containsKey('signatureHelpProvider') && params['signatureHelpProvider'] != null ? new SignatureHelpOptions.fromJson(params['signatureHelpProvider']) : null,
@@ -1856,7 +1853,7 @@ class ServerCapabilities {
 
   final bool documentFormattingProvider;
 
-  final bool documentHighlightsProvider;
+  final bool documentHighlightProvider;
 
   final DocumentLinkOptions documentLinkProvider;
 
@@ -1888,7 +1885,7 @@ class ServerCapabilities {
         'completionProvider': completionProvider?.toJson(),
         'definitionProvider': definitionProvider,
         'documentFormattingProvider': documentFormattingProvider,
-        'documentHighlightsProvider': documentHighlightsProvider,
+        'documentHighlightProvider': documentHighlightProvider,
         'documentLinkProvider': documentLinkProvider?.toJson(),
         'documentOnTypeFormattingProvider':
             documentOnTypeFormattingProvider?.toJson(),
@@ -1911,7 +1908,7 @@ class ServerCapabilities {
     hash = _hashCombine(hash, _deepHashCode(completionProvider));
     hash = _hashCombine(hash, _deepHashCode(definitionProvider));
     hash = _hashCombine(hash, _deepHashCode(documentFormattingProvider));
-    hash = _hashCombine(hash, _deepHashCode(documentHighlightsProvider));
+    hash = _hashCombine(hash, _deepHashCode(documentHighlightProvider));
     hash = _hashCombine(hash, _deepHashCode(documentLinkProvider));
     hash = _hashCombine(hash, _deepHashCode(documentOnTypeFormattingProvider));
     hash = _hashCombine(hash, _deepHashCode(documentRangeFormattingProvider));
@@ -1937,8 +1934,7 @@ class ServerCapabilities {
     if (definitionProvider != o.definitionProvider) return false;
     if (documentFormattingProvider != o.documentFormattingProvider)
       return false;
-    if (documentHighlightsProvider != o.documentHighlightsProvider)
-      return false;
+    if (documentHighlightProvider != o.documentHighlightProvider) return false;
     if (documentLinkProvider != o.documentLinkProvider) return false;
     if (documentOnTypeFormattingProvider != o.documentOnTypeFormattingProvider)
       return false;
@@ -1970,7 +1966,7 @@ class ServerCapabilities$Builder {
 
   bool documentFormattingProvider;
 
-  bool documentHighlightsProvider;
+  bool documentHighlightProvider;
 
   DocumentLinkOptions documentLinkProvider;
 

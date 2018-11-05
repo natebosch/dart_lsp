@@ -125,7 +125,7 @@ class StdIOLanguageServer {
         peer,
         'textDocument/documentHighlight',
         (params) => _server
-            .textDocumentHighlights(_document(params), _position(params))
+            .textDocumentHighlight(_document(params), _position(params))
             .then((r) => r?.map((e) => e.toJson())?.toList()));
     _registerRequest(
         peer,

@@ -10,6 +10,8 @@ final serverCapabilities = ServerCapabilities((b) => b
   ..completionProvider = CompletionOptions((b) => b
     ..resolveProvider = false
     ..triggerCharacters = const ['.'])
+  ..executeCommandProvider = ExecuteCommandOptions(
+      (b) => b..commands = const ['sort members', 'organize imports'])
   ..codeActionProvider = true
   ..definitionProvider = true
   ..documentHighlightProvider = true

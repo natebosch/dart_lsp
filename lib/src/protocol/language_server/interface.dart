@@ -12,6 +12,7 @@ abstract class LanguageServer {
 
   Future<ServerCapabilities> initialize(int clientPid, String rootUri,
       ClientCapabilities clientCapabilities, String trace);
+  void initialized();
   void textDocumentDidOpen(TextDocumentItem document) {}
   void textDocumentDidChange(VersionedTextDocumentIdentifier documentId,
       List<TextDocumentContentChangeEvent> changes) {}
@@ -42,6 +43,7 @@ abstract class LanguageServer {
       TextDocumentIdentifier documentId, Position position, String newName);
   Stream<Diagnostics> get diagnostics;
   Stream<ApplyWorkspaceEditParams> get workspaceEdits;
+  Stream<ShowMessageParams> get showMessages;
 
   void setupExtraMethods(Peer peer) {}
 }

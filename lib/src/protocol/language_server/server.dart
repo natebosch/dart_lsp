@@ -42,6 +42,7 @@ class StdIOLanguageServer {
         _isInitialized = true;
         return {'capabilities': serverCapabilities.toJson()};
       })
+      ..registerMethod('initalized', (params) => _server.initialized())
       ..registerMethod('shutdown', _server.shutdown)
       ..registerMethod('exit', _server.exit);
   }
@@ -77,13 +78,15 @@ class StdIOLanguageServer {
   }
 
   void _notifications(Peer peer) {
-    _server.diagnostics.map((d) => d.toJson()).listen((diagnostics) {
-      peer.sendNotification('textDocument/publishDiagnostics', diagnostics);
-    });
-    _server.workspaceEdits.map((e) => e.toJson()).listen((edit) {
-      // Ignore response?
-      peer.sendRequest('workspace/applyEdit', edit);
-    });
+    _server
+      ..diagnostics.map((d) => d.toJson()).forEach((diagnostics) =>
+          peer.sendNotification('textDocument/publishDiagnostics', diagnostics))
+      ..workspaceEdits.map((e) => e.toJson()).forEach((edit) {
+        // Ignore response?
+        peer.sendRequest('workspace/applyEdit', edit);
+      })
+      ..showMessages.map((e) => e.toJson()).forEach(
+          (message) => peer.sendNotification('window/showMessage', message));
   }
 
   void _completionMethods(Peer peer) {

@@ -75,6 +75,9 @@ class AnalysisServerAdapter extends LanguageServer {
     return serverCapabilities;
   }
 
+  @override
+  void initialized() {}
+
   /// If [directory] is not already present in or underneath [_openDirectories]
   /// look for a parent that might be a package and add it.
   Future<void> _addAnalysisRoot(String directory) async {
@@ -473,6 +476,10 @@ class AnalysisServerAdapter extends LanguageServer {
   @override
   Stream<ApplyWorkspaceEditParams> get workspaceEdits => _workspaceEdits.stream;
   final _workspaceEdits = StreamController<ApplyWorkspaceEditParams>();
+
+  @override
+  Stream<ShowMessageParams> get showMessages => _showMessages.stream;
+  final _showMessages = new StreamController<ShowMessageParams>();
 
   @override
   Future<WorkspaceEdit> textDocumentRename(

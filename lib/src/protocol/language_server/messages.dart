@@ -1579,6 +1579,32 @@ class MarkupContentKind {
   String toJson() => _value;
 }
 
+class MessageType {
+  factory MessageType.fromJson(int value) {
+    const values = const {
+      1: MessageType.error,
+      3: MessageType.info,
+      4: MessageType.log,
+      2: MessageType.warning
+    };
+    return values[value];
+  }
+
+  const MessageType._(this._value);
+
+  static const error = const MessageType._(1);
+
+  static const info = const MessageType._(3);
+
+  static const log = const MessageType._(4);
+
+  static const warning = const MessageType._(2);
+
+  final int _value;
+
+  int toJson() => _value;
+}
+
 class Position {
   Position._(this.character, this.line);
 
@@ -1991,6 +2017,54 @@ class ServerCapabilities$Builder {
   TextDocumentSyncOptions textDocumentSync;
 
   bool workspaceSymbolProvider;
+}
+
+class ShowMessageParams {
+  ShowMessageParams._(this.message, this.type);
+
+  factory ShowMessageParams(void Function(ShowMessageParams$Builder) init) {
+    final b = new ShowMessageParams$Builder._();
+    init(b);
+    return new ShowMessageParams._(b.message, b.type);
+  }
+
+  factory ShowMessageParams.fromJson(Map params) => new ShowMessageParams._(
+      params.containsKey('message') && params['message'] != null
+          ? params['message']
+          : null,
+      params.containsKey('type') && params['type'] != null
+          ? new MessageType.fromJson(params['type'])
+          : null);
+
+  final String message;
+
+  final MessageType type;
+
+  Map toJson() => {'message': message, 'type': type?.toJson()};
+  @override
+  int get hashCode {
+    var hash = 0;
+    hash = _hashCombine(hash, _deepHashCode(message));
+    hash = _hashCombine(hash, _deepHashCode(type));
+    return _hashComplete(hash);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (other is! ShowMessageParams) return false;
+    var o = other as ShowMessageParams;
+    if (message != o.message) return false;
+    if (type != o.type) return false;
+    return true;
+  }
+}
+
+class ShowMessageParams$Builder {
+  ShowMessageParams$Builder._();
+
+  String message;
+
+  MessageType type;
 }
 
 class SignatureHelpOptions {

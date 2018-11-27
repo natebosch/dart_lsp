@@ -307,3 +307,15 @@ MarkupContentKind:
 MarkupContent:
   kind: MarkupContentKind
   value: String
+
+MessageType:
+  enumValues:
+    error: 1
+    warning: 2
+    info: 3
+    log: 4
+  wireType: int
+
+ShowMessageParams:
+  type: MessageType
+  message: String

@@ -1,3 +1,7 @@
+# 0.1.14
+
+- Set the `executeCommandProvider` capability.
+
 # 0.1.13+2
 
 - Correct `documentHighlightsProviers` capability `documentHighlightProvider`.

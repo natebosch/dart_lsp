@@ -42,7 +42,7 @@ class StdIOLanguageServer {
         _isInitialized = true;
         return {'capabilities': serverCapabilities.toJson()};
       })
-      ..registerMethod('initalized', (params) => _server.initialized())
+      ..registerMethod('initialized', (params) => _server.initialized())
       ..registerMethod('shutdown', _server.shutdown)
       ..registerMethod('exit', _server.exit);
   }

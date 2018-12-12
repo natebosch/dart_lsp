@@ -455,21 +455,13 @@ class AnalysisServerAdapter extends LanguageServer {
   final _filesWithDiagnostics = Set<String>();
   @override
   Stream<Diagnostics> get diagnostics => _server.analysis.onErrors
-      .map((errors) {
-        var lines = _files[errors.file];
-        return _toDiagnostics(lines, errors);
-      })
-      .distinct()
-      .where((diagnostics) {
+          .map((errors) => _toDiagnostics(_files[errors.file], errors))
+          .distinct()
+          .where((diagnostics) {
         if (diagnostics.diagnostics.isEmpty) {
-          if (!_filesWithDiagnostics.contains(diagnostics.uri)) {
-            return false;
-          } else {
-            _filesWithDiagnostics.remove(diagnostics.uri);
-          }
-        } else {
-          _filesWithDiagnostics.add(diagnostics.uri);
+          return _filesWithDiagnostics.remove(diagnostics.uri);
         }
+        _filesWithDiagnostics.add(diagnostics.uri);
         return true;
       });
 

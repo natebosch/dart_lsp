@@ -1,6 +1,8 @@
 # 0.1.14
 
 - Set the `executeCommandProvider` capability.
+- Fix bug searching for a package root when receiving a `didOpen` for a document
+  in a directory that doesn't exist.
 
 # 0.1.13+2
 

@@ -16,6 +16,8 @@ Directory _findParentPackageDir(Directory dir) {
   return _findParentPackageDir(parent);
 }
 
-bool _isPackageRoot(Directory dir) => dir.listSync().any((f) =>
-    f.path.endsWith('${Platform.pathSeparator}pubspec.yaml') ||
-    f.path.endsWith('${Platform.pathSeparator}BUILD'));
+bool _isPackageRoot(Directory dir) =>
+    dir.existsSync() &&
+    dir.listSync().any((f) =>
+        f.path.endsWith('${Platform.pathSeparator}pubspec.yaml') ||
+        f.path.endsWith('${Platform.pathSeparator}BUILD'));

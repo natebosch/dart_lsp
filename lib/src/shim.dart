@@ -474,6 +474,10 @@ class AnalysisServerAdapter extends LanguageServer {
   final _showMessages = new StreamController<ShowMessageParams>();
 
   @override
+  Stream<ShowMessageParams> get logMessages => _logMessages.stream;
+  final _logMessages = new StreamController<ShowMessageParams>();
+
+  @override
   Future<WorkspaceEdit> textDocumentRename(
       TextDocumentIdentifier documentId, Position position, String newName) {
     final path = _filePath(documentId.uri);

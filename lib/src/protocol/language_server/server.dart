@@ -85,6 +85,8 @@ class StdIOLanguageServer {
         // Ignore response?
         peer.sendRequest('workspace/applyEdit', edit);
       })
+      ..logMessages.map((e) => e.toJson()).forEach(
+          (message) => peer.sendNotification('window/logMessage', message))
       ..showMessages.map((e) => e.toJson()).forEach(
           (message) => peer.sendNotification('window/showMessage', message));
   }

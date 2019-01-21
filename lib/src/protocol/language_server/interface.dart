@@ -44,6 +44,7 @@ abstract class LanguageServer {
   Stream<Diagnostics> get diagnostics;
   Stream<ApplyWorkspaceEditParams> get workspaceEdits;
   Stream<ShowMessageParams> get showMessages;
+  Stream<ShowMessageParams> get logMessages;
 
   void setupExtraMethods(Peer peer) {}
 }

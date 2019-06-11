@@ -471,11 +471,11 @@ class AnalysisServerAdapter extends LanguageServer {
 
   @override
   Stream<ShowMessageParams> get showMessages => _showMessages.stream;
-  final _showMessages = new StreamController<ShowMessageParams>();
+  final _showMessages = StreamController<ShowMessageParams>();
 
   @override
   Stream<ShowMessageParams> get logMessages => _logMessages.stream;
-  final _logMessages = new StreamController<ShowMessageParams>();
+  final _logMessages = StreamController<ShowMessageParams>();
 
   @override
   Future<WorkspaceEdit> textDocumentRename(

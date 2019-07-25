@@ -1,8 +1,3 @@
-[![Pub Package](https://img.shields.io/pub/v/dart_language_server.svg)](https://pub.dartlang.org/packages/dart_language_server)
-[![Build Status](https://travis-ci.org/natebosch/dart_language_server.svg?branch=master)](https://travis-ci.org/natebosch/dart_language_server)
-[![Build status](https://ci.appveyor.com/api/projects/status/ydol1ue3oql4g6hw/branch/master?svg=true)](https://ci.appveyor.com/project/natebosch/dart-language-server/branch/master)
-
-
 # Dart Language Server
 
 Wraps the [dart analysis server] and adapts its [default protocol] to the
@@ -12,28 +7,15 @@ Wraps the [dart analysis server] and adapts its [default protocol] to the
 [default protocol]: https://goo.gl/02kGvm
 [language server protocol]: https://github.com/Microsoft/language-server-protocol
 
-## Features
+This project is obsolete. The Dart SDK ships with an analysis server which can
+run in LSP mode with the `--lsp` flag.
 
-This server supports:
+To start up the server use the analysis server snapshot from the `bin` directory
+of the SDK.
 
-- Diagnostic notifications
-- Completion suggestions
-- Jump to definition
-- List references
-- List implementations
-- Hover information
-- Document reference highlights
-- Document outlines
-- Workspace symbol search
-- Quick Fixes / Code Actions
-- Symbol Rename
+For example, if the Dart SDK is at `$DART_SDK` and `$DART_SDK/bin/` is on your
+`$PATH` (which makes commands like `dart` and `pub` available) the analysis
+server can be launched with:
+`dart $DART_SDK/snapshots/analysis_server.dart.snapshot --lsp`
 
-## Installing
-
-`pub global activate dart_language_server`
-
-If you have the pub bin directory in your path (you should be warned during the
-previous command if not) the server can be run as `dart_language_server`.
-
-Integration with an editor depends on the details of the editor. All
-communication with this server is through stdin/stdout.
+You can see an example of configuring the `vim-lsc` client at https://github.com/natebosch/vim-lsc-dart

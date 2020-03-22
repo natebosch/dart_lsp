@@ -53,9 +53,8 @@ void main() {
             expect(
                 positionFromOffset(lines, windowsFile ? 8 : 7).toJson(),
                 Position(((b) => b
-                      ..line = 1
-                      ..character = 0))
-                    .toJson());
+                  ..line = 1
+                  ..character = 0)).toJson());
           });
 
           test('end of line', () async {

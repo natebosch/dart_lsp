@@ -37,10 +37,10 @@ class StdIOLanguageServer {
     peer
       ..registerMethod('initialize', (params) async {
         var serverCapabilities = await _server.initialize(
-            params['processId'].valueOr(0),
-            params['rootUri'].valueOr(''),
-            ClientCapabilities.fromJson(params['capabilities'].value),
-            params['trace'].valueOr('off'));
+            params['processId'].valueOr(0) as int,
+            params['rootUri'].valueOr('') as String,
+            ClientCapabilities.fromJson(params['capabilities'].value as Map),
+            params['trace'].valueOr('off') as String);
         _isInitialized = true;
         return {'capabilities': serverCapabilities.toJson()};
       })
@@ -160,7 +160,8 @@ class StdIOLanguageServer {
         peer,
         'workspace/executeCommand',
         (params) => _server.workspaceExecuteCommand(
-            params['command'].value, params['arguments']?.value));
+            params['command'].value as String,
+            params['arguments']?.value as List));
     _registerRequest(
         peer,
         'textDocument/rename',
@@ -171,27 +172,29 @@ class StdIOLanguageServer {
 }
 
 TextDocumentItem _documentItem(params) =>
-    TextDocumentItem.fromJson(params['textDocument'].value);
+    TextDocumentItem.fromJson(params['textDocument'].value as Map);
 
 VersionedTextDocumentIdentifier _versionedDocument(params) =>
-    VersionedTextDocumentIdentifier.fromJson(params['textDocument'].value);
+    VersionedTextDocumentIdentifier.fromJson(
+        params['textDocument'].value as Map);
 
 TextDocumentIdentifier _document(params) =>
-    TextDocumentIdentifier.fromJson(params['textDocument'].value);
+    TextDocumentIdentifier.fromJson(params['textDocument'].value as Map);
 
-Range _range(params) => Range.fromJson(params['range'].value);
+Range _range(params) => Range.fromJson(params['range'].value as Map);
 
-Position _position(params) => Position.fromJson(params['position'].value);
+Position _position(params) =>
+    Position.fromJson(params['position'].value as Map);
 
 CodeActionContext _codeActionContext(params) =>
-    CodeActionContext.fromJson(params['context'].value);
+    CodeActionContext.fromJson(params['context'].value as Map);
 
 ReferenceContext _referenceContext(params) =>
-    ReferenceContext.fromJson(params['context'].value);
+    ReferenceContext.fromJson(params['context'].value as Map);
 
 List<TextDocumentContentChangeEvent> _contentChanges(params) =>
     (params['contentChanges'].value as Iterable)
-        .map((change) => TextDocumentContentChangeEvent.fromJson(change))
+        .map((change) => TextDocumentContentChangeEvent.fromJson(change as Map))
         .toList();
 
-String _query(params) => params['query'].value;
+String _query(params) => params['query'].value as String;

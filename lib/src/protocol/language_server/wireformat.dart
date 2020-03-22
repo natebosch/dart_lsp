@@ -6,7 +6,9 @@ import 'package:stream_channel/stream_channel.dart';
 import 'package:async/async.dart';
 
 class StdIOStreamChannel extends StreamChannelMixin<String> {
+  @override
   final StreamSink<String> sink;
+  @override
   final Stream<String> stream;
 
   factory StdIOStreamChannel() {
@@ -93,7 +95,7 @@ Iterable<List<T>> _chunks<T>(List<T> data, int chunkSize) sync* {
     yield data;
     return;
   }
-  int low = 0;
+  var low = 0;
   while (low < data.length) {
     if (data.length > low + chunkSize) {
       yield data.sublist(low, low + chunkSize);

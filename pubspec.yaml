@@ -20,7 +20,8 @@ dependencies:
 
 dev_dependencies:
   build_runner: ^1.0.0
-  message_builder: ^0.1.5
+  message_builder: ^0.1.6
+  pedantic: ^1.9.0
   test: ^1.0.0
 
 executables:

@@ -31,13 +31,10 @@ class ApplyWorkspaceEditParams {
   }
 
   @override
-  bool operator ==(Object other) {
-    if (other is! ApplyWorkspaceEditParams) return false;
-    final o = other as ApplyWorkspaceEditParams;
-    if (edit != o.edit) return false;
-    if (label != o.label) return false;
-    return true;
-  }
+  bool operator ==(Object other) =>
+      other is ApplyWorkspaceEditParams &&
+      edit == other.edit &&
+      label == other.label;
 }
 
 class ApplyWorkspaceEditParams$Builder {
@@ -83,13 +80,10 @@ class ClientCapabilities {
   }
 
   @override
-  bool operator ==(Object other) {
-    if (other is! ClientCapabilities) return false;
-    final o = other as ClientCapabilities;
-    if (textDocument != o.textDocument) return false;
-    if (workspace != o.workspace) return false;
-    return true;
-  }
+  bool operator ==(Object other) =>
+      other is ClientCapabilities &&
+      textDocument == other.textDocument &&
+      workspace == other.workspace;
 }
 
 class ClientCapabilities$Builder {
@@ -158,16 +152,13 @@ class CodeAction {
   }
 
   @override
-  bool operator ==(Object other) {
-    if (other is! CodeAction) return false;
-    final o = other as CodeAction;
-    if (command != o.command) return false;
-    if (!_deepEquals(diagnostics, o.diagnostics)) return false;
-    if (edit != o.edit) return false;
-    if (kind != o.kind) return false;
-    if (title != o.title) return false;
-    return true;
-  }
+  bool operator ==(Object other) =>
+      other is CodeAction &&
+      command == other.command &&
+      _deepEquals(diagnostics, other.diagnostics) &&
+      edit == other.edit &&
+      kind == other.kind &&
+      title == other.title;
 }
 
 class CodeAction$Builder {
@@ -225,13 +216,10 @@ class CodeActionCapabilities {
   }
 
   @override
-  bool operator ==(Object other) {
-    if (other is! CodeActionCapabilities) return false;
-    final o = other as CodeActionCapabilities;
-    if (codeActionLiteralSupport != o.codeActionLiteralSupport) return false;
-    if (dynamicRegistration != o.dynamicRegistration) return false;
-    return true;
-  }
+  bool operator ==(Object other) =>
+      other is CodeActionCapabilities &&
+      codeActionLiteralSupport == other.codeActionLiteralSupport &&
+      dynamicRegistration == other.dynamicRegistration;
 }
 
 class CodeActionCapabilities$Builder {
@@ -270,12 +258,8 @@ class CodeActionContext {
   }
 
   @override
-  bool operator ==(Object other) {
-    if (other is! CodeActionContext) return false;
-    final o = other as CodeActionContext;
-    if (!_deepEquals(diagnostics, o.diagnostics)) return false;
-    return true;
-  }
+  bool operator ==(Object other) =>
+      other is CodeActionContext && _deepEquals(diagnostics, other.diagnostics);
 }
 
 class CodeActionContext$Builder {
@@ -309,12 +293,8 @@ class CodeActionKinds {
   }
 
   @override
-  bool operator ==(Object other) {
-    if (other is! CodeActionKinds) return false;
-    final o = other as CodeActionKinds;
-    if (!_deepEquals(valueSet, o.valueSet)) return false;
-    return true;
-  }
+  bool operator ==(Object other) =>
+      other is CodeActionKinds && _deepEquals(valueSet, other.valueSet);
 }
 
 class CodeActionKinds$Builder {
@@ -350,12 +330,9 @@ class CodeActionLiteralSupport {
   }
 
   @override
-  bool operator ==(Object other) {
-    if (other is! CodeActionLiteralSupport) return false;
-    final o = other as CodeActionLiteralSupport;
-    if (codeActionKind != o.codeActionKind) return false;
-    return true;
-  }
+  bool operator ==(Object other) =>
+      other is CodeActionLiteralSupport &&
+      codeActionKind == other.codeActionKind;
 }
 
 class CodeActionLiteralSupport$Builder {
@@ -389,12 +366,8 @@ class CodeLensOptions {
   }
 
   @override
-  bool operator ==(Object other) {
-    if (other is! CodeLensOptions) return false;
-    final o = other as CodeLensOptions;
-    if (resolveProvider != o.resolveProvider) return false;
-    return true;
-  }
+  bool operator ==(Object other) =>
+      other is CodeLensOptions && resolveProvider == other.resolveProvider;
 }
 
 class CodeLensOptions$Builder {
@@ -440,14 +413,11 @@ class Command {
   }
 
   @override
-  bool operator ==(Object other) {
-    if (other is! Command) return false;
-    final o = other as Command;
-    if (!_deepEquals(arguments, o.arguments)) return false;
-    if (command != o.command) return false;
-    if (title != o.title) return false;
-    return true;
-  }
+  bool operator ==(Object other) =>
+      other is Command &&
+      _deepEquals(arguments, other.arguments) &&
+      command == other.command &&
+      title == other.title;
 }
 
 class Command$Builder {
@@ -499,13 +469,10 @@ class CompletionCapabilities {
   }
 
   @override
-  bool operator ==(Object other) {
-    if (other is! CompletionCapabilities) return false;
-    final o = other as CompletionCapabilities;
-    if (completionItem != o.completionItem) return false;
-    if (dynamicRegistration != o.dynamicRegistration) return false;
-    return true;
-  }
+  bool operator ==(Object other) =>
+      other is CompletionCapabilities &&
+      completionItem == other.completionItem &&
+      dynamicRegistration == other.dynamicRegistration;
 }
 
 class CompletionCapabilities$Builder {
@@ -649,23 +616,20 @@ class CompletionItem {
   }
 
   @override
-  bool operator ==(Object other) {
-    if (other is! CompletionItem) return false;
-    final o = other as CompletionItem;
-    if (!_deepEquals(additionalTextEdits, o.additionalTextEdits)) return false;
-    if (command != o.command) return false;
-    if (data != o.data) return false;
-    if (detail != o.detail) return false;
-    if (documentation != o.documentation) return false;
-    if (filterText != o.filterText) return false;
-    if (insertText != o.insertText) return false;
-    if (insertTextFormat != o.insertTextFormat) return false;
-    if (kind != o.kind) return false;
-    if (label != o.label) return false;
-    if (sortText != o.sortText) return false;
-    if (textEdit != o.textEdit) return false;
-    return true;
-  }
+  bool operator ==(Object other) =>
+      other is CompletionItem &&
+      _deepEquals(additionalTextEdits, other.additionalTextEdits) &&
+      command == other.command &&
+      data == other.data &&
+      detail == other.detail &&
+      documentation == other.documentation &&
+      filterText == other.filterText &&
+      insertText == other.insertText &&
+      insertTextFormat == other.insertTextFormat &&
+      kind == other.kind &&
+      label == other.label &&
+      sortText == other.sortText &&
+      textEdit == other.textEdit;
 }
 
 class CompletionItem$Builder {
@@ -723,12 +687,9 @@ class CompletionItemCapabilities {
   }
 
   @override
-  bool operator ==(Object other) {
-    if (other is! CompletionItemCapabilities) return false;
-    final o = other as CompletionItemCapabilities;
-    if (snippetSupport != o.snippetSupport) return false;
-    return true;
-  }
+  bool operator ==(Object other) =>
+      other is CompletionItemCapabilities &&
+      snippetSupport == other.snippetSupport;
 }
 
 class CompletionItemCapabilities$Builder {
@@ -841,13 +802,10 @@ class CompletionList {
   }
 
   @override
-  bool operator ==(Object other) {
-    if (other is! CompletionList) return false;
-    final o = other as CompletionList;
-    if (isIncomplete != o.isIncomplete) return false;
-    if (!_deepEquals(items, o.items)) return false;
-    return true;
-  }
+  bool operator ==(Object other) =>
+      other is CompletionList &&
+      isIncomplete == other.isIncomplete &&
+      _deepEquals(items, other.items);
 }
 
 class CompletionList$Builder {
@@ -893,13 +851,10 @@ class CompletionOptions {
   }
 
   @override
-  bool operator ==(Object other) {
-    if (other is! CompletionOptions) return false;
-    final o = other as CompletionOptions;
-    if (resolveProvider != o.resolveProvider) return false;
-    if (!_deepEquals(triggerCharacters, o.triggerCharacters)) return false;
-    return true;
-  }
+  bool operator ==(Object other) =>
+      other is CompletionOptions &&
+      resolveProvider == other.resolveProvider &&
+      _deepEquals(triggerCharacters, other.triggerCharacters);
 }
 
 class CompletionOptions$Builder {
@@ -965,16 +920,13 @@ class Diagnostic {
   }
 
   @override
-  bool operator ==(Object other) {
-    if (other is! Diagnostic) return false;
-    final o = other as Diagnostic;
-    if (code != o.code) return false;
-    if (message != o.message) return false;
-    if (range != o.range) return false;
-    if (severity != o.severity) return false;
-    if (source != o.source) return false;
-    return true;
-  }
+  bool operator ==(Object other) =>
+      other is Diagnostic &&
+      code == other.code &&
+      message == other.message &&
+      range == other.range &&
+      severity == other.severity &&
+      source == other.source;
 }
 
 class Diagnostic$Builder {
@@ -1027,13 +979,10 @@ class Diagnostics {
   }
 
   @override
-  bool operator ==(Object other) {
-    if (other is! Diagnostics) return false;
-    final o = other as Diagnostics;
-    if (!_deepEquals(diagnostics, o.diagnostics)) return false;
-    if (uri != o.uri) return false;
-    return true;
-  }
+  bool operator ==(Object other) =>
+      other is Diagnostics &&
+      _deepEquals(diagnostics, other.diagnostics) &&
+      uri == other.uri;
 }
 
 class Diagnostics$Builder {
@@ -1075,13 +1024,8 @@ class DocumentHighlight {
   }
 
   @override
-  bool operator ==(Object other) {
-    if (other is! DocumentHighlight) return false;
-    final o = other as DocumentHighlight;
-    if (kind != o.kind) return false;
-    if (range != o.range) return false;
-    return true;
-  }
+  bool operator ==(Object other) =>
+      other is DocumentHighlight && kind == other.kind && range == other.range;
 }
 
 class DocumentHighlight$Builder {
@@ -1140,12 +1084,8 @@ class DocumentLinkOptions {
   }
 
   @override
-  bool operator ==(Object other) {
-    if (other is! DocumentLinkOptions) return false;
-    final o = other as DocumentLinkOptions;
-    if (resolveProvider != o.resolveProvider) return false;
-    return true;
-  }
+  bool operator ==(Object other) =>
+      other is DocumentLinkOptions && resolveProvider == other.resolveProvider;
 }
 
 class DocumentLinkOptions$Builder {
@@ -1194,14 +1134,10 @@ class DocumentOnTypeFormattingOptions {
   }
 
   @override
-  bool operator ==(Object other) {
-    if (other is! DocumentOnTypeFormattingOptions) return false;
-    final o = other as DocumentOnTypeFormattingOptions;
-    if (firstTriggerCharacter != o.firstTriggerCharacter) return false;
-    if (!_deepEquals(moreTriggerCharacter, o.moreTriggerCharacter))
-      return false;
-    return true;
-  }
+  bool operator ==(Object other) =>
+      other is DocumentOnTypeFormattingOptions &&
+      firstTriggerCharacter == other.firstTriggerCharacter &&
+      _deepEquals(moreTriggerCharacter, other.moreTriggerCharacter);
 }
 
 class DocumentOnTypeFormattingOptions$Builder {
@@ -1240,12 +1176,9 @@ class DynamicRegistrationCapability {
   }
 
   @override
-  bool operator ==(Object other) {
-    if (other is! DynamicRegistrationCapability) return false;
-    final o = other as DynamicRegistrationCapability;
-    if (dynamicRegistration != o.dynamicRegistration) return false;
-    return true;
-  }
+  bool operator ==(Object other) =>
+      other is DynamicRegistrationCapability &&
+      dynamicRegistration == other.dynamicRegistration;
 }
 
 class DynamicRegistrationCapability$Builder {
@@ -1280,12 +1213,8 @@ class ExecuteCommandOptions {
   }
 
   @override
-  bool operator ==(Object other) {
-    if (other is! ExecuteCommandOptions) return false;
-    final o = other as ExecuteCommandOptions;
-    if (!_deepEquals(commands, o.commands)) return false;
-    return true;
-  }
+  bool operator ==(Object other) =>
+      other is ExecuteCommandOptions && _deepEquals(commands, other.commands);
 }
 
 class ExecuteCommandOptions$Builder {
@@ -1325,13 +1254,8 @@ class Hover {
   }
 
   @override
-  bool operator ==(Object other) {
-    if (other is! Hover) return false;
-    final o = other as Hover;
-    if (contents != o.contents) return false;
-    if (range != o.range) return false;
-    return true;
-  }
+  bool operator ==(Object other) =>
+      other is Hover && contents == other.contents && range == other.range;
 }
 
 class Hover$Builder {
@@ -1377,13 +1301,10 @@ class HoverCapabilities {
   }
 
   @override
-  bool operator ==(Object other) {
-    if (other is! HoverCapabilities) return false;
-    final o = other as HoverCapabilities;
-    if (!_deepEquals(contentFormat, o.contentFormat)) return false;
-    if (dynamicRegistration != o.dynamicRegistration) return false;
-    return true;
-  }
+  bool operator ==(Object other) =>
+      other is HoverCapabilities &&
+      _deepEquals(contentFormat, other.contentFormat) &&
+      dynamicRegistration == other.dynamicRegistration;
 }
 
 class HoverCapabilities$Builder {
@@ -1425,13 +1346,10 @@ class HoverMarkup {
   }
 
   @override
-  bool operator ==(Object other) {
-    if (other is! HoverMarkup) return false;
-    final o = other as HoverMarkup;
-    if (contents != o.contents) return false;
-    if (range != o.range) return false;
-    return true;
-  }
+  bool operator ==(Object other) =>
+      other is HoverMarkup &&
+      contents == other.contents &&
+      range == other.range;
 }
 
 class HoverMarkup$Builder {
@@ -1490,13 +1408,8 @@ class Location {
   }
 
   @override
-  bool operator ==(Object other) {
-    if (other is! Location) return false;
-    final o = other as Location;
-    if (range != o.range) return false;
-    if (uri != o.uri) return false;
-    return true;
-  }
+  bool operator ==(Object other) =>
+      other is Location && range == other.range && uri == other.uri;
 }
 
 class Location$Builder {
@@ -1538,13 +1451,8 @@ class MarkupContent {
   }
 
   @override
-  bool operator ==(Object other) {
-    if (other is! MarkupContent) return false;
-    final o = other as MarkupContent;
-    if (kind != o.kind) return false;
-    if (value != o.value) return false;
-    return true;
-  }
+  bool operator ==(Object other) =>
+      other is MarkupContent && kind == other.kind && value == other.value;
 }
 
 class MarkupContent$Builder {
@@ -1632,13 +1540,8 @@ class Position {
   }
 
   @override
-  bool operator ==(Object other) {
-    if (other is! Position) return false;
-    final o = other as Position;
-    if (character != o.character) return false;
-    if (line != o.line) return false;
-    return true;
-  }
+  bool operator ==(Object other) =>
+      other is Position && character == other.character && line == other.line;
 }
 
 class Position$Builder {
@@ -1680,13 +1583,8 @@ class Range {
   }
 
   @override
-  bool operator ==(Object other) {
-    if (other is! Range) return false;
-    final o = other as Range;
-    if (end != o.end) return false;
-    if (start != o.start) return false;
-    return true;
-  }
+  bool operator ==(Object other) =>
+      other is Range && end == other.end && start == other.start;
 }
 
 class Range$Builder {
@@ -1723,12 +1621,9 @@ class ReferenceContext {
   }
 
   @override
-  bool operator ==(Object other) {
-    if (other is! ReferenceContext) return false;
-    final o = other as ReferenceContext;
-    if (includeDeclaration != o.includeDeclaration) return false;
-    return true;
-  }
+  bool operator ==(Object other) =>
+      other is ReferenceContext &&
+      includeDeclaration == other.includeDeclaration;
 }
 
 class ReferenceContext$Builder {
@@ -1762,12 +1657,8 @@ class SaveOptions {
   }
 
   @override
-  bool operator ==(Object other) {
-    if (other is! SaveOptions) return false;
-    final o = other as SaveOptions;
-    if (includeText != o.includeText) return false;
-    return true;
-  }
+  bool operator ==(Object other) =>
+      other is SaveOptions && includeText == other.includeText;
 }
 
 class SaveOptions$Builder {
@@ -1947,32 +1838,28 @@ class ServerCapabilities {
   }
 
   @override
-  bool operator ==(Object other) {
-    if (other is! ServerCapabilities) return false;
-    final o = other as ServerCapabilities;
-    if (codeActionProvider != o.codeActionProvider) return false;
-    if (codeLensProvider != o.codeLensProvider) return false;
-    if (completionProvider != o.completionProvider) return false;
-    if (definitionProvider != o.definitionProvider) return false;
-    if (documentFormattingProvider != o.documentFormattingProvider)
-      return false;
-    if (documentHighlightProvider != o.documentHighlightProvider) return false;
-    if (documentLinkProvider != o.documentLinkProvider) return false;
-    if (documentOnTypeFormattingProvider != o.documentOnTypeFormattingProvider)
-      return false;
-    if (documentRangeFormattingProvider != o.documentRangeFormattingProvider)
-      return false;
-    if (documentSymbolProvider != o.documentSymbolProvider) return false;
-    if (executeCommandProvider != o.executeCommandProvider) return false;
-    if (hoverProvider != o.hoverProvider) return false;
-    if (implementationProvider != o.implementationProvider) return false;
-    if (referencesProvider != o.referencesProvider) return false;
-    if (renameProvider != o.renameProvider) return false;
-    if (signatureHelpProvider != o.signatureHelpProvider) return false;
-    if (textDocumentSync != o.textDocumentSync) return false;
-    if (workspaceSymbolProvider != o.workspaceSymbolProvider) return false;
-    return true;
-  }
+  bool operator ==(Object other) =>
+      other is ServerCapabilities &&
+      codeActionProvider == other.codeActionProvider &&
+      codeLensProvider == other.codeLensProvider &&
+      completionProvider == other.completionProvider &&
+      definitionProvider == other.definitionProvider &&
+      documentFormattingProvider == other.documentFormattingProvider &&
+      documentHighlightProvider == other.documentHighlightProvider &&
+      documentLinkProvider == other.documentLinkProvider &&
+      documentOnTypeFormattingProvider ==
+          other.documentOnTypeFormattingProvider &&
+      documentRangeFormattingProvider ==
+          other.documentRangeFormattingProvider &&
+      documentSymbolProvider == other.documentSymbolProvider &&
+      executeCommandProvider == other.executeCommandProvider &&
+      hoverProvider == other.hoverProvider &&
+      implementationProvider == other.implementationProvider &&
+      referencesProvider == other.referencesProvider &&
+      renameProvider == other.renameProvider &&
+      signatureHelpProvider == other.signatureHelpProvider &&
+      textDocumentSync == other.textDocumentSync &&
+      workspaceSymbolProvider == other.workspaceSymbolProvider;
 }
 
 class ServerCapabilities$Builder {
@@ -2046,13 +1933,10 @@ class ShowMessageParams {
   }
 
   @override
-  bool operator ==(Object other) {
-    if (other is! ShowMessageParams) return false;
-    final o = other as ShowMessageParams;
-    if (message != o.message) return false;
-    if (type != o.type) return false;
-    return true;
-  }
+  bool operator ==(Object other) =>
+      other is ShowMessageParams &&
+      message == other.message &&
+      type == other.type;
 }
 
 class ShowMessageParams$Builder {
@@ -2090,12 +1974,9 @@ class SignatureHelpOptions {
   }
 
   @override
-  bool operator ==(Object other) {
-    if (other is! SignatureHelpOptions) return false;
-    final o = other as SignatureHelpOptions;
-    if (!_deepEquals(triggerCharacters, o.triggerCharacters)) return false;
-    return true;
-  }
+  bool operator ==(Object other) =>
+      other is SignatureHelpOptions &&
+      _deepEquals(triggerCharacters, other.triggerCharacters);
 }
 
 class SignatureHelpOptions$Builder {
@@ -2152,15 +2033,12 @@ class SymbolInformation {
   }
 
   @override
-  bool operator ==(Object other) {
-    if (other is! SymbolInformation) return false;
-    final o = other as SymbolInformation;
-    if (containerName != o.containerName) return false;
-    if (kind != o.kind) return false;
-    if (location != o.location) return false;
-    if (name != o.name) return false;
-    return true;
-  }
+  bool operator ==(Object other) =>
+      other is SymbolInformation &&
+      containerName == other.containerName &&
+      kind == other.kind &&
+      location == other.location &&
+      name == other.name;
 }
 
 class SymbolInformation$Builder {
@@ -2322,15 +2200,12 @@ class SynchronizationCapabilities {
   }
 
   @override
-  bool operator ==(Object other) {
-    if (other is! SynchronizationCapabilities) return false;
-    final o = other as SynchronizationCapabilities;
-    if (didSave != o.didSave) return false;
-    if (dynamicRegistration != o.dynamicRegistration) return false;
-    if (willSave != o.willSave) return false;
-    if (willSaveWaitUntil != o.willSaveWaitUntil) return false;
-    return true;
-  }
+  bool operator ==(Object other) =>
+      other is SynchronizationCapabilities &&
+      didSave == other.didSave &&
+      dynamicRegistration == other.dynamicRegistration &&
+      willSave == other.willSave &&
+      willSaveWaitUntil == other.willSaveWaitUntil;
 }
 
 class SynchronizationCapabilities$Builder {
@@ -2486,24 +2361,21 @@ class TextDocumentClientCapabilities {
   }
 
   @override
-  bool operator ==(Object other) {
-    if (other is! TextDocumentClientCapabilities) return false;
-    final o = other as TextDocumentClientCapabilities;
-    if (codeAction != o.codeAction) return false;
-    if (codeLens != o.codeLens) return false;
-    if (completion != o.completion) return false;
-    if (definition != o.definition) return false;
-    if (documentHighlight != o.documentHighlight) return false;
-    if (documentLink != o.documentLink) return false;
-    if (documentSymbol != o.documentSymbol) return false;
-    if (formatting != o.formatting) return false;
-    if (hover != o.hover) return false;
-    if (onTypeFormatting != o.onTypeFormatting) return false;
-    if (references != o.references) return false;
-    if (rename != o.rename) return false;
-    if (synchronization != o.synchronization) return false;
-    return true;
-  }
+  bool operator ==(Object other) =>
+      other is TextDocumentClientCapabilities &&
+      codeAction == other.codeAction &&
+      codeLens == other.codeLens &&
+      completion == other.completion &&
+      definition == other.definition &&
+      documentHighlight == other.documentHighlight &&
+      documentLink == other.documentLink &&
+      documentSymbol == other.documentSymbol &&
+      formatting == other.formatting &&
+      hover == other.hover &&
+      onTypeFormatting == other.onTypeFormatting &&
+      references == other.references &&
+      rename == other.rename &&
+      synchronization == other.synchronization;
 }
 
 class TextDocumentClientCapabilities$Builder {
@@ -2576,14 +2448,11 @@ class TextDocumentContentChangeEvent {
   }
 
   @override
-  bool operator ==(Object other) {
-    if (other is! TextDocumentContentChangeEvent) return false;
-    final o = other as TextDocumentContentChangeEvent;
-    if (range != o.range) return false;
-    if (rangeLength != o.rangeLength) return false;
-    if (text != o.text) return false;
-    return true;
-  }
+  bool operator ==(Object other) =>
+      other is TextDocumentContentChangeEvent &&
+      range == other.range &&
+      rangeLength == other.rangeLength &&
+      text == other.text;
 }
 
 class TextDocumentContentChangeEvent$Builder {
@@ -2623,12 +2492,8 @@ class TextDocumentIdentifier {
   }
 
   @override
-  bool operator ==(Object other) {
-    if (other is! TextDocumentIdentifier) return false;
-    final o = other as TextDocumentIdentifier;
-    if (uri != o.uri) return false;
-    return true;
-  }
+  bool operator ==(Object other) =>
+      other is TextDocumentIdentifier && uri == other.uri;
 }
 
 class TextDocumentIdentifier$Builder {
@@ -2681,15 +2546,12 @@ class TextDocumentItem {
   }
 
   @override
-  bool operator ==(Object other) {
-    if (other is! TextDocumentItem) return false;
-    final o = other as TextDocumentItem;
-    if (languageId != o.languageId) return false;
-    if (text != o.text) return false;
-    if (uri != o.uri) return false;
-    if (version != o.version) return false;
-    return true;
-  }
+  bool operator ==(Object other) =>
+      other is TextDocumentItem &&
+      languageId == other.languageId &&
+      text == other.text &&
+      uri == other.uri &&
+      version == other.version;
 }
 
 class TextDocumentItem$Builder {
@@ -2788,16 +2650,13 @@ class TextDocumentSyncOptions {
   }
 
   @override
-  bool operator ==(Object other) {
-    if (other is! TextDocumentSyncOptions) return false;
-    final o = other as TextDocumentSyncOptions;
-    if (change != o.change) return false;
-    if (openClose != o.openClose) return false;
-    if (save != o.save) return false;
-    if (willSave != o.willSave) return false;
-    if (willSaveWaitUntil != o.willSaveWaitUntil) return false;
-    return true;
-  }
+  bool operator ==(Object other) =>
+      other is TextDocumentSyncOptions &&
+      change == other.change &&
+      openClose == other.openClose &&
+      save == other.save &&
+      willSave == other.willSave &&
+      willSaveWaitUntil == other.willSaveWaitUntil;
 }
 
 class TextDocumentSyncOptions$Builder {
@@ -2845,13 +2704,8 @@ class TextEdit {
   }
 
   @override
-  bool operator ==(Object other) {
-    if (other is! TextEdit) return false;
-    final o = other as TextEdit;
-    if (newText != o.newText) return false;
-    if (range != o.range) return false;
-    return true;
-  }
+  bool operator ==(Object other) =>
+      other is TextEdit && newText == other.newText && range == other.range;
 }
 
 class TextEdit$Builder {
@@ -2895,13 +2749,10 @@ class VersionedTextDocumentIdentifier {
   }
 
   @override
-  bool operator ==(Object other) {
-    if (other is! VersionedTextDocumentIdentifier) return false;
-    final o = other as VersionedTextDocumentIdentifier;
-    if (uri != o.uri) return false;
-    if (version != o.version) return false;
-    return true;
-  }
+  bool operator ==(Object other) =>
+      other is VersionedTextDocumentIdentifier &&
+      uri == other.uri &&
+      version == other.version;
 }
 
 class VersionedTextDocumentIdentifier$Builder {
@@ -2979,16 +2830,13 @@ class WorkspaceClientCapabilities {
   }
 
   @override
-  bool operator ==(Object other) {
-    if (other is! WorkspaceClientCapabilities) return false;
-    final o = other as WorkspaceClientCapabilities;
-    if (applyEdit != o.applyEdit) return false;
-    if (didChangeConfiguration != o.didChangeConfiguration) return false;
-    if (didChangeWatchedFiles != o.didChangeWatchedFiles) return false;
-    if (executeCommand != o.executeCommand) return false;
-    if (symbol != o.symbol) return false;
-    return true;
-  }
+  bool operator ==(Object other) =>
+      other is WorkspaceClientCapabilities &&
+      applyEdit == other.applyEdit &&
+      didChangeConfiguration == other.didChangeConfiguration &&
+      didChangeWatchedFiles == other.didChangeWatchedFiles &&
+      executeCommand == other.executeCommand &&
+      symbol == other.symbol;
 }
 
 class WorkspaceClientCapabilities$Builder {
@@ -3038,12 +2886,8 @@ class WorkspaceEdit {
   }
 
   @override
-  bool operator ==(Object other) {
-    if (other is! WorkspaceEdit) return false;
-    final o = other as WorkspaceEdit;
-    if (!_deepEquals(changes, o.changes)) return false;
-    return true;
-  }
+  bool operator ==(Object other) =>
+      other is WorkspaceEdit && _deepEquals(changes, other.changes);
 }
 
 class WorkspaceEdit$Builder {

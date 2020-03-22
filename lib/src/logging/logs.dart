@@ -42,6 +42,8 @@ void startLogging(Directory logDirectory, String traceLevel) {
   }
 }
 
+/// Flush and close all file handles that were opened for logging.
+@deprecated
 Future<void> closeLogs() => Future.wait(_logs.map(_close));
 
 Future _close(IOSink sink) async {

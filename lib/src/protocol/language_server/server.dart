@@ -7,10 +7,14 @@ import 'interface.dart';
 import 'messages.dart';
 import 'wireformat.dart';
 
+/// A Language Server communicating over stdin and stdout.
 class StdIOLanguageServer {
   final LanguageServer _server;
   Future<void> onDone;
 
+  /// Wrap [_server] and register RPC methods using the LSP wire protocol.
+  ///
+  /// Methods are guarded against being called before the server is initialized.
   StdIOLanguageServer.start(this._server) {
     var channel = lspChannel.bind(StdIOStreamChannel());
     var peer = Peer(channel);
@@ -47,7 +51,7 @@ class StdIOLanguageServer {
       ..registerMethod('exit', _server.exit);
   }
 
-  /// Requests throw if they are made before initialization.
+  /// Register a request that will throw if throw if used before initialization.
   void _registerRequest(Peer peer, String methodName, Function callback) {
     peer.registerMethod(methodName, (params) {
       if (!_isInitialized) {

@@ -1,3 +1,8 @@
+# 0.1.15
+
+- Add a deprecation warning on `stderr`. This will be the last version that can
+  be run as a binary.
+
 # 0.1.14
 
 - Set the `executeCommandProvider` capability.

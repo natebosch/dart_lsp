@@ -1,4 +1,2 @@
 analyzer:
   strong-mode: true
-  errors:
-    todo: ignore

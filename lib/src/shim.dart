@@ -24,6 +24,8 @@ import 'utils/per_file_pool.dart';
 
 final _eol = Platform.isWindows ? '\r\n' : '\n';
 
+/// Start the Dart Analysis Server and wrap it as a [LanguageServer].
+@deprecated
 Future<LanguageServer> startShimmedServer(StartupArgs args) async {
   var client = await AnalysisServer.create(
       onRead: (m) => analyzerSink.add('OUT: $m$_eol'),

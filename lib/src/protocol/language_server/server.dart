@@ -15,7 +15,7 @@ class StdIOLanguageServer {
   ///
   /// Methods are guarded against being called before the server is initialized.
   StdIOLanguageServer.start(this._server) {
-    var peer = Peer(StdIOStreamChannel());
+    final peer = Peer(StdIOStreamChannel());
 
     _lifecycleMethods(peer);
     _fileHandlingMethods(peer);
@@ -36,7 +36,7 @@ class StdIOLanguageServer {
   void _lifecycleMethods(Peer peer) {
     peer
       ..registerMethod('initialize', (params) async {
-        var serverCapabilities = await _server.initialize(
+        final serverCapabilities = await _server.initialize(
             params['processId'].valueOr(0) as int,
             params['rootUri'].valueOr('') as String,
             ClientCapabilities.fromJson(params['capabilities'].value as Map),

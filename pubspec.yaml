@@ -1,5 +1,5 @@
-name: dart_language_server
-version: 0.2.0-dev
+name: lsp
+version: 0.1.0-dev
 description: Tools for writing a server following the Language Server Protocol.
 homepage: https://github.com/natebosch/dart_language_server
 

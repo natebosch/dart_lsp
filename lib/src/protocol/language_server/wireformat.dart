@@ -12,8 +12,8 @@ class StdIOStreamChannel extends StreamChannelMixin<String> {
   final Stream<String> stream;
 
   factory StdIOStreamChannel() {
-    var parser = _Parser();
-    var outSink = StreamSinkTransformer.fromHandlers(
+    final parser = _Parser();
+    final outSink = StreamSinkTransformer.fromHandlers(
         handleData: _serialize,
         handleDone: (sink) {
           sink.close();
@@ -26,8 +26,8 @@ class StdIOStreamChannel extends StreamChannelMixin<String> {
 }
 
 void _serialize(String data, EventSink<List<int>> sink) {
-  var message = utf8.encode(data);
-  var header = 'Content-Length: ${message.length}\r\n\r\n';
+  final message = utf8.encode(data);
+  final header = 'Content-Length: ${message.length}\r\n\r\n';
   sink.add(ascii.encode(header));
   for (var chunk in _chunks(message, 1024)) {
     sink.add(chunk);
@@ -71,17 +71,17 @@ class _Parser {
 
   /// Decodes [_buffer] into a String and looks for the 'Content-Length' header.
   int _parseContentLength() {
-    var asString = ascii.decode(_buffer);
-    var headers = asString.split('\r\n');
-    var lengthHeader =
+    final asString = ascii.decode(_buffer);
+    final headers = asString.split('\r\n');
+    final lengthHeader =
         headers.firstWhere((h) => h.startsWith('Content-Length'));
-    var length = lengthHeader.split(':').last.trim();
+    final length = lengthHeader.split(':').last.trim();
     return int.parse(length);
   }
 
   /// Whether [_buffer] ends in '\r\n\r\n'.
   bool get _headerComplete {
-    var l = _buffer.length;
+    final l = _buffer.length;
     return l > 4 &&
         _buffer[l - 1] == 10 &&
         _buffer[l - 2] == 13 &&

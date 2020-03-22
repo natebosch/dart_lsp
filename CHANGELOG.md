@@ -1,3 +1,5 @@
+# 0.2.0-dev
+
 # 0.1.15
 
 - Add a deprecation warning on `stderr`. This will be the last version that can

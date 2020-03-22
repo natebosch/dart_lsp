@@ -1,7 +1,6 @@
 name: dart_language_server
-version: 0.1.15
-description: >-
-  A shim on the analysis server following the language server protocol
+version: 0.2.0-dev
+description: Tools for writing an LSP server
 homepage: https://github.com/natebosch/dart_language_server
 
 environment:

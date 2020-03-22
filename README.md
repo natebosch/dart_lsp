@@ -1,21 +1,15 @@
-# Dart Language Server
+Tools for writing a language server following the [Language Server
+Protocol][LSP].
 
-Wraps the [dart analysis server] and adapts its [default protocol] to the
-[language server protocol].
+[LSP]: https://github.com/Microsoft/language-server-protocol
 
-[dart analysis server]: https://github.com/dart-lang/sdk/tree/master/pkg/analysis_server
-[default protocol]: https://goo.gl/02kGvm
-[language server protocol]: https://github.com/Microsoft/language-server-protocol
+Any class implementing `LanguageServer` can be started as a server communicating
+over `stdin` and `stdout`. Includes types for all the messages that can be sent
+to and from the client.
 
-This project is obsolete. The Dart SDK ships with an analysis server which can
-run in LSP mode with the `--lsp` flag.
+# Looking for a Dart language server?
 
-To start up the server use the analysis server snapshot from the `bin` directory
-of the SDK.
+The Dart language server implemented in this package is deprecated. Instead, use
+the [analysis server][] from the Dart SDK with the `--lsp` flag.
 
-For example, if the Dart SDK is at `$DART_SDK` and `$DART_SDK/bin/` is on your
-`$PATH` (which makes commands like `dart` and `pub` available) the analysis
-server can be launched with:
-`dart $DART_SDK/snapshots/analysis_server.dart.snapshot --lsp`
-
-You can see an example of configuring the `vim-lsc` client at https://github.com/natebosch/vim-lsc-dart
+[analysis server]: https://github.com/dart-lang/sdk/blob/master/pkg/analysis_server/tool/lsp_spec/README.md

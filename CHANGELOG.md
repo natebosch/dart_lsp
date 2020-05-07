@@ -1,3 +1,12 @@
+# 0.1.16
+
+- Start the analysis server and forward stdin/stdout directly. This command now
+  serves as a wrapper that can find the correct analysis server snapshot to run.
+  There is a behavior difference - if the `rootUri` during initialization is a
+  higher directory than the packages that should be analyzed, the
+  `initializationOptions` should include `onlyAnalyzeProjectsWithOpenFiles` set
+  to `true`.
+
 # 0.1.15
 
 - Add a deprecation warning on `stderr`. This will be the last version that can

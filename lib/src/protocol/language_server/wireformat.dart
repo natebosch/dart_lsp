@@ -1,28 +1,19 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:stream_channel/stream_channel.dart';
 import 'package:async/async.dart';
 
-class StdIOStreamChannel extends StreamChannelMixin<String> {
-  @override
-  final StreamSink<String> sink;
-  @override
-  final Stream<String> stream;
-
-  factory StdIOStreamChannel() {
-    final parser = _Parser();
-    final outSink = StreamSinkTransformer.fromHandlers(
-        handleData: _serialize,
-        handleDone: (sink) {
-          sink.close();
-          parser.close();
-        }).bind(stdout);
-    return StdIOStreamChannel._(parser.stream, outSink);
-  }
-
-  StdIOStreamChannel._(this.stream, this.sink);
+StreamChannel<String> lspChannel(
+    Stream<List<int>> stream, StreamSink<List<int>> sink) {
+  final parser = _Parser(stream);
+  final outSink = StreamSinkTransformer.fromHandlers(
+      handleData: _serialize,
+      handleDone: (sink) {
+        sink.close();
+        parser.close();
+      }).bind(sink);
+  return StreamChannel.withGuarantees(parser.stream, outSink);
 }
 
 void _serialize(String data, EventSink<List<int>> sink) {
@@ -44,9 +35,9 @@ class _Parser {
 
   StreamSubscription _subscription;
 
-  _Parser() {
+  _Parser(Stream<List<int>> stream) {
     _subscription =
-        stdin.expand((bytes) => bytes).listen(_handleByte, onDone: () {
+        stream.expand((bytes) => bytes).listen(_handleByte, onDone: () {
       _streamCtl.close();
     });
   }

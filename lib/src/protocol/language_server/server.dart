@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:json_rpc_2/json_rpc_2.dart';
 
@@ -15,7 +16,7 @@ class StdIOLanguageServer {
   ///
   /// Methods are guarded against being called before the server is initialized.
   StdIOLanguageServer.start(this._server) {
-    final peer = Peer(StdIOStreamChannel());
+    final peer = Peer(lspChannel(stdin, stdout));
 
     _lifecycleMethods(peer);
     _fileHandlingMethods(peer);
